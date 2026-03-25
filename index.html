@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>알바숲</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--p:#2563EB;--pd:#1D4ED8;--a:#10B981;--dk:#0F172A;--g:#64748B;--l:#F8FAFC;--b:#E2E8F0}
+    body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;color:var(--dk);background:#fff}
+    html{scroll-behavior:smooth}
+
+    nav{position:fixed;top:0;width:100%;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 4%;height:64px;z-index:200;gap:12px}
+    .logo{font-size:1.3rem;font-weight:900;color:var(--p);cursor:pointer;white-space:nowrap}
+    .logo span{color:var(--a)}
+    .nav-center{display:flex;gap:4px;flex:1;justify-content:center}
+    .nav-tab{padding:8px 14px;border-radius:8px;font-size:.88rem;font-weight:600;color:var(--g);cursor:pointer;border:none;background:none;transition:all .2s;white-space:nowrap}
+    .nav-tab:hover,.nav-tab.active{background:#EFF6FF;color:var(--p)}
+    .nav-right{display:flex;gap:8px;align-items:center}
+    .btn-login{padding:7px 16px;border-radius:8px;font-size:.88rem;font-weight:600;color:var(--p);border:2px solid var(--p);background:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .btn-login:hover{background:#EFF6FF}
+    .btn-signup{padding:7px 16px;border-radius:8px;font-size:.88rem;font-weight:600;color:#fff;background:var(--p);border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .btn-signup:hover{background:var(--pd)}
+
+    .lang-picker{position:relative}
+    .lang-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;border:1.5px solid var(--b);border-radius:8px;background:#fff;font-size:.83rem;font-weight:600;cursor:pointer;color:var(--dk);transition:all .2s;white-space:nowrap}
+    .lang-btn:hover{border-color:var(--p);color:var(--p)}
+    .lang-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1.5px solid var(--b);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.12);min-width:185px;overflow:hidden;z-index:300}
+    .lang-dropdown.open{display:block}
+    .lang-btn.active{border-color:var(--p);color:var(--p)}
+    .lang-option{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:.87rem;font-weight:500;cursor:pointer;transition:background .15s;color:var(--dk)}
+    .lang-option:hover{background:var(--l)}
+    .lang-option.active{background:#EFF6FF;color:var(--p);font-weight:700}
+    .coming{font-size:.7rem;color:var(--g);margin-left:auto;background:var(--l);padding:2px 7px;border-radius:999px}
+
+    .page{display:none;padding-top:64px;min-height:100vh}
+    .page.active{display:block}
+
+    /* HOME */
+    .hero{background:linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 100%);padding:72px 5% 52px;display:flex;align-items:center;gap:56px;flex-wrap:wrap}
+    .hero-text{flex:1;min-width:280px}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:#DBEAFE;color:var(--p);font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:999px;margin-bottom:18px}
+    .loc-dot{width:8px;height:8px;background:var(--a);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+    .hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1.25;margin-bottom:14px}
+    .hero h1 em{color:var(--p);font-style:normal}
+    .hero p{color:var(--g);font-size:1rem;line-height:1.7;margin-bottom:28px}
+    .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-p{background:var(--p);color:#fff;padding:13px 26px;border-radius:10px;font-size:.93rem;font-weight:700;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(37,99,235,.3)}
+    .btn-p:hover{background:var(--pd);transform:translateY(-1px)}
+    .btn-s{background:#fff;color:var(--p);padding:13px 26px;border-radius:10px;font-size:.93rem;font-weight:700;border:2px solid var(--p);cursor:pointer;transition:all .2s}
+    .btn-s:hover{background:#EFF6FF;transform:translateY(-1px)}
+    .hero-stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px}
+    .stat .num{font-size:1.7rem;font-weight:900;color:var(--p)}
+    .stat .lbl{font-size:.8rem;color:var(--g);margin-top:2px}
+    .hero-visual{flex:1;min-width:260px;background:#fff;border-radius:20px;box-shadow:0 8px 36px rgba(0,0,0,.1);padding:26px;max-width:400px}
+    .salary-ttl{font-size:.85rem;color:var(--g);margin-bottom:14px;font-weight:600}
+    .salary-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b);font-size:.88rem}
+    .salary-row:last-of-type{border:none}
+    .salary-row .lbl{color:var(--g)}
+    .salary-row .val{font-weight:700}
+    .salary-row .val.g{color:var(--a)}
+    .salary-total{background:#EFF6FF;border-radius:10px;padding:13px 15px;margin-top:14px;display:flex;justify-content:space-between;align-items:center}
+    .salary-total .lbl{font-weight:700;font-size:.93rem}
+    .salary-total .val{font-size:1.25rem;font-weight:900;color:var(--p)}
+
+    .quick-search{padding:36px 5%;background:#fff;border-bottom:1px solid var(--b)}
+    .search-box{display:flex;gap:10px;max-width:780px;margin:0 auto;background:var(--l);border:2px solid var(--b);border-radius:14px;padding:7px 7px 7px 18px;align-items:center}
+    .search-box input{flex:1;border:none;background:none;font-size:1rem;outline:none;color:var(--dk)}
+    .search-filters{display:flex;gap:8px;flex-wrap:wrap;max-width:780px;margin:12px auto 0}
+    .filter-chip{padding:5px 13px;border-radius:999px;font-size:.81rem;font-weight:600;border:1.5px solid var(--b);background:#fff;color:var(--g);cursor:pointer;transition:all .2s}
+    .filter-chip:hover,.filter-chip.on{background:var(--p);color:#fff;border-color:var(--p)}
+    .loc-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:999px;font-size:.81rem;font-weight:600;border:1.5px solid var(--a);background:#D1FAE5;color:#065F46}
+
+    .section{padding:52px 5%}
+    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+    .section-header h2{font-size:1.35rem;font-weight:800}
+    .see-all{font-size:.88rem;color:var(--p);cursor:pointer;font-weight:600}
+    .see-all:hover{text-decoration:underline}
+    .jobs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+    .job-card{border:1.5px solid var(--b);border-radius:16px;padding:20px 18px;cursor:pointer;transition:all .2s;position:relative}
+    .job-card:hover{border-color:var(--p);box-shadow:0 4px 18px rgba(37,99,235,.1);transform:translateY(-2px)}
+    .job-badges{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+    .badge{padding:3px 9px;border-radius:999px;font-size:.71rem;font-weight:700}
+    .badge.v{background:#D1FAE5;color:#065F46}
+    .badge.u{background:#FEE2E2;color:#991B1B}
+    .badge.n{background:#DBEAFE;color:#1E40AF}
+    .job-card h3{font-size:.97rem;font-weight:800;margin-bottom:5px}
+    .job-meta{font-size:.83rem;color:var(--g);margin-bottom:12px;line-height:1.5}
+    .job-pay{font-size:1.08rem;font-weight:900;color:var(--p);margin-bottom:10px}
+    .job-pay span{font-size:.78rem;font-weight:500;color:var(--g)}
+    .job-tags{display:flex;gap:5px;flex-wrap:wrap}
+    .job-tag{padding:3px 9px;background:var(--l);border-radius:6px;font-size:.76rem;color:var(--g)}
+    .job-score{position:absolute;top:16px;right:16px;font-size:.8rem;font-weight:700;color:var(--a)}
+    .job-dist{font-size:.75rem;color:var(--p);font-weight:600;margin-bottom:4px}
+
+    .community-list{display:flex;flex-direction:column;gap:1px;background:var(--b);border-radius:16px;overflow:hidden}
+    .community-item{background:#fff;padding:16px 20px;cursor:pointer;transition:background .15s;display:flex;justify-content:space-between;align-items:center;gap:14px}
+    .community-item:hover{background:var(--l)}
+    .community-left{flex:1}
+    .community-cat{font-size:.73rem;font-weight:700;color:var(--p);margin-bottom:3px}
+    .community-title{font-size:.93rem;font-weight:600;margin-bottom:3px}
+    .community-meta{font-size:.78rem;color:var(--g)}
+    .community-right{display:flex;gap:12px;font-size:.8rem;color:var(--g);white-space:nowrap}
+
+    /* JOBS PAGE */
+    .jobs-page{padding:72px 5% 52px}
+    .page-hdr{margin-bottom:28px}
+    .page-hdr h1{font-size:1.7rem;font-weight:900;margin-bottom:6px}
+    .page-hdr p{color:var(--g)}
+    .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+
+    /* MAP PAGE */
+    .map-page{padding:64px 0 0}
+    #map{height:calc(100vh - 64px);width:100%}
+    .map-job-popup h3{font-size:.93rem;font-weight:800;margin-bottom:4px}
+    .map-job-popup .pay{font-size:.95rem;font-weight:900;color:var(--p);margin-bottom:6px}
+    .map-job-popup .meta{font-size:.8rem;color:var(--g);margin-bottom:8px}
+    .map-job-popup button{background:var(--p);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;width:100%}
+
+    /* COMMUNITY PAGE */
+    .comm-page{padding:72px 5% 52px;max-width:840px;margin:0 auto}
+    .comm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+    .comm-header h1{font-size:1.7rem;font-weight:900}
+    .comm-tabs{display:flex;gap:4px;background:var(--l);border-radius:10px;padding:4px;margin-bottom:18px}
+    .comm-tab{flex:1;text-align:center;padding:7px;border-radius:7px;font-size:.85rem;font-weight:600;cursor:pointer;color:var(--g);transition:all .2s;border:none;background:none}
+    .comm-tab.active{background:#fff;color:var(--p);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .comm-list{display:flex;flex-direction:column;gap:1px;background:var(--b);border-radius:16px;overflow:hidden}
+    .comm-item{background:#fff;padding:18px 22px;cursor:pointer;transition:background .15s}
+    .comm-item:hover{background:var(--l)}
+    .comm-item-cat{font-size:.73rem;font-weight:700;color:var(--p);margin-bottom:5px}
+    .comm-item-title{font-size:.97rem;font-weight:700;margin-bottom:5px}
+    .comm-item-preview{font-size:.86rem;color:var(--g);line-height:1.5;margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .comm-item-footer{display:flex;justify-content:space-between;font-size:.78rem;color:var(--g)}
+
+    /* CALC PAGE */
+    .calc-page{padding:72px 5% 52px;max-width:620px;margin:0 auto}
+    .calc-page h1{font-size:1.7rem;font-weight:900;margin-bottom:7px}
+    .calc-page>p{color:var(--g);margin-bottom:32px}
+    .calc-card{background:var(--l);border-radius:20px;padding:28px;margin-bottom:18px}
+    .calc-card h3{font-size:.97rem;font-weight:800;margin-bottom:18px}
+    .input-group{margin-bottom:16px}
+    .input-group label{display:block;font-size:.83rem;font-weight:700;color:var(--g);margin-bottom:7px}
+    .calc-input{width:100%;padding:11px 15px;border:2px solid var(--b);border-radius:10px;font-size:1rem;outline:none;transition:border .2s;background:#fff}
+    .calc-input:focus{border-color:var(--p)}
+    .calc-btn{width:100%;background:var(--p);color:#fff;padding:15px;border-radius:12px;font-size:.97rem;font-weight:700;border:none;cursor:pointer;transition:background .2s;margin-top:6px}
+    .calc-btn:hover{background:var(--pd)}
+    .result-card{background:#fff;border:2px solid var(--p);border-radius:20px;padding:26px;display:none}
+    .result-card.show{display:block}
+    .result-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b);font-size:.9rem}
+    .result-row:last-child{border:none}
+    .result-row .rl{color:var(--g)}
+    .result-row .rv{font-weight:700}
+    .result-row .rv.g{color:var(--a)}
+    .result-total{background:var(--p);color:#fff;border-radius:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+    .result-total .tl{font-weight:700;font-size:.97rem}
+    .result-total .tv{font-size:1.55rem;font-weight:900}
+
+    /* MODALS */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.active{display:flex}
+    .modal{background:#fff;border-radius:24px;padding:40px 36px;max-width:440px;width:100%;position:relative;animation:mIn .22s ease}
+    @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(8px)}}
+    .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--g)}
+    .modal h2{font-size:1.45rem;font-weight:900;margin-bottom:5px}
+    .modal>p{color:var(--g);font-size:.88rem;margin-bottom:24px}
+    .mform{display:flex;flex-direction:column;gap:11px}
+    .minput{padding:12px 15px;border:2px solid var(--b);border-radius:10px;font-size:.93rem;outline:none;transition:border .2s;font-family:inherit}
+    .minput:focus{border-color:var(--p)}
+    .msubmit{background:var(--p);color:#fff;padding:14px;border-radius:10px;font-size:.93rem;font-weight:700;border:none;cursor:pointer;transition:background .2s;margin-top:3px}
+    .msubmit:hover{background:var(--pd)}
+    .modal-switch{text-align:center;margin-top:14px;font-size:.86rem;color:var(--g)}
+    .modal-switch a{color:var(--p);font-weight:700;cursor:pointer}
+    .job-modal{max-width:540px}
+    .jm-pay{font-size:1.45rem;font-weight:900;color:var(--p);margin:7px 0}
+    .jm-rows{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+    .jm-row{display:flex;gap:12px;font-size:.88rem}
+    .jm-row .jl{color:var(--g);min-width:76px}
+    .jm-row .jv{font-weight:600}
+    .score-bar{background:var(--l);border-radius:12px;padding:14px;margin-bottom:20px}
+    .score-bar h4{font-size:.82rem;font-weight:700;color:var(--g);margin-bottom:9px}
+    .score-items{display:flex;gap:14px}
+    .score-item{text-align:center;flex:1}
+    .score-item .sn{font-size:1.25rem;font-weight:900;color:var(--a)}
+    .score-item .sl{font-size:.72rem;color:var(--g)}
+    .apply-btn{width:100%;background:var(--p);color:#fff;padding:15px;border-radius:12px;font-size:.97rem;font-weight:700;border:none;cursor:pointer;transition:background .2s}
+    .apply-btn:hover{background:var(--pd)}
+    .report-textarea{width:100%;padding:12px 15px;border:2px solid var(--b);border-radius:10px;font-size:.9rem;outline:none;resize:vertical;min-height:100px;font-family:inherit;transition:border .2s}
+    .report-textarea:focus{border-color:var(--p)}
+
+    /* REVIEW SYSTEM */
+    .workplace-list{display:flex;flex-direction:column;gap:1px;background:var(--b);border-radius:16px;overflow:hidden;margin-bottom:16px}
+    .workplace-item{background:#fff;padding:16px 20px;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:16px}
+    .workplace-item:hover{background:var(--l)}
+    .wp-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+    .wp-info{flex:1}
+    .wp-name{font-size:.97rem;font-weight:700;margin-bottom:3px}
+    .wp-meta{font-size:.8rem;color:var(--g)}
+    .wp-rating{text-align:right;flex-shrink:0}
+    .wp-stars{font-size:1.1rem;font-weight:900;color:#F59E0B}
+    .wp-cnt{font-size:.75rem;color:var(--g);margin-top:2px}
+    .star-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .star-row label{font-size:.83rem;color:var(--g);width:90px;flex-shrink:0}
+    .stars-input{display:flex;gap:4px}
+    .stars-input span{font-size:1.5rem;cursor:pointer;color:#D1D5DB;transition:color .15s;user-select:none}
+    .stars-input span.on,.stars-input span:hover,.stars-input span:hover~span{color:#F59E0B}
+    .stars-input:hover span{color:#F59E0B}
+    .stars-input span:hover~span{color:#D1D5DB}
+    .review-card{background:#fff;border-radius:14px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:12px}
+    .review-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+    .review-wp{font-size:.85rem;font-weight:700;color:var(--p)}
+    .review-stars{color:#F59E0B;font-size:.9rem;font-weight:700}
+    .review-date{font-size:.75rem;color:var(--g)}
+    .review-cats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .review-cat{font-size:.75rem;background:var(--l);border-radius:6px;padding:3px 8px;color:var(--g)}
+    .review-cat strong{color:var(--dk)}
+    .review-pros{font-size:.88rem;line-height:1.6;margin-bottom:6px}
+    .review-pros::before{content:'👍 ';font-size:.8rem}
+    .review-cons{font-size:.88rem;line-height:1.6;color:var(--g)}
+    .review-cons::before{content:'👎 ';font-size:.8rem}
+    .rating-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+    .rating-bar label{font-size:.8rem;color:var(--g);width:80px;flex-shrink:0}
+    .rating-track{flex:1;height:6px;background:var(--b);border-radius:3px;overflow:hidden}
+    .rating-fill{height:100%;background:#F59E0B;border-radius:3px;transition:width .4s}
+    .back-btn{display:flex;align-items:center;gap:6px;font-size:.88rem;font-weight:600;color:var(--g);cursor:pointer;margin-bottom:18px;background:none;border:none;padding:0}
+    .back-btn:hover{color:var(--p)}
+
+    .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dk);color:#fff;padding:11px 22px;border-radius:999px;font-size:.88rem;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    @media(max-width:700px){.nav-center{display:none}.modal{padding:28px 22px}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
+  <div class="nav-center">
+    <button class="nav-tab active" data-i18n="nav_home" onclick="showPage('home')">홈</button>
+    <button class="nav-tab" data-i18n="nav_jobs" onclick="showPage('jobs')">알바 찾기</button>
+    <button class="nav-tab" data-i18n="nav_map" onclick="showPage('map')">📍 지도</button>
+    <button class="nav-tab" data-i18n="nav_community" onclick="showPage('community')">커뮤니티</button>
+    <button class="nav-tab" data-i18n="nav_calc" onclick="showPage('calc')">급여 계산기</button>
+  </div>
+  <div class="nav-right">
+    <div class="lang-picker">
+      <button class="lang-btn" id="lang-btn">🇰🇷 한국어 ▾</button>
+      <div class="lang-dropdown">
+        <div class="lang-option active" onclick="setLang('ko')">🇰🇷 한국어</div>
+        <div class="lang-option" onclick="setLang('en')">🇺🇸 English</div>
+        <div class="lang-option" onclick="setLang('ja')">🇯🇵 日本語</div>
+        <div class="lang-option" onclick="setLang('zh')">🇨🇳 中文</div>
+        <div class="lang-option" onclick="setLang('vi')">🇻🇳 Tiếng Việt <span class="coming">준비중</span></div>
+        <div class="lang-option" onclick="setLang('th')">🇹🇭 ภาษาไทย <span class="coming">준비중</span></div>
+        <div class="lang-option" onclick="setLang('ph')">🇵🇭 Filipino <span class="coming">준비중</span></div>
+        <div class="lang-option" onclick="setLang('id')">🇮🇩 Indonesia <span class="coming">준비중</span></div>
+        <div class="lang-option" onclick="setLang('mn')">🇲🇳 Монгол <span class="coming">준비중</span></div>
+        <div class="lang-option" onclick="setLang('uz')">🇺🇿 O'zbek <span class="coming">준비중</span></div>
+      </div>
+    </div>
+    <button class="btn-login" data-i18n="nav_login" onclick="openModal('loginModal')">로그인</button>
+    <button class="btn-signup" data-i18n="nav_signup" onclick="openModal('signupModal')">회원가입</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-text">
+      <div class="hero-badge"><span class="loc-dot"></span><span id="loc-badge">내 위치 감지 중...</span></div>
+      <h1 data-i18n-html="hero_h1">당신의 <em>노동권</em>을<br>지켜드립니다</h1>
+      <p data-i18n-html="hero_p">주휴수당·야간수당 자동 계산, 공정 업장 인증, 익명 커뮤니티까지.<br>모든 노동자를 위한 통합 플랫폼.</p>
+      <div class="hero-btns">
+        <button class="btn-p" data-i18n="hero_btn1" onclick="showPage('jobs')">알바 찾기</button>
+        <button class="btn-s" data-i18n="hero_btn2" onclick="showPage('calc')">급여 계산해보기</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">47만+</div><div class="lbl" data-i18n="stat_members">누적 회원</div></div>
+        <div class="stat"><div class="num">1.2만</div><div class="lbl" data-i18n="stat_jobs">등록 공고</div></div>
+        <div class="stat"><div class="num">4.8★</div><div class="lbl" data-i18n="stat_rating">앱스토어 평점</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="salary-ttl" data-i18n="salary_title">이번 달 예상 급여 💰</div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_base">기본급 (80h × 10,030원)</span><span class="val">802,400원</span></div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_holiday">주휴수당</span><span class="val g">+160,480원</span></div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_night">야간수당 (10h)</span><span class="val g">+50,150원</span></div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_tax">공제 (세금)</span><span class="val" style="color:#EF4444">-23,200원</span></div>
+      <div class="salary-total"><span class="lbl" data-i18n="salary_takehome">실수령액</span><span class="val">989,830원</span></div>
+    </div>
+  </div>
+
+  <div class="quick-search">
+    <div class="search-box">
+      <span style="font-size:1.15rem">🔍</span>
+      <input type="text" id="search-input" data-i18n-ph="search_ph" placeholder="업종, 지역, 업장명으로 검색..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="btn-p" style="padding:9px 18px;font-size:.88rem" onclick="doSearch()" data-i18n="search_btn">검색</button>
+    </div>
+    <div class="search-filters">
+      <div class="loc-chip" id="loc-chip" onclick="showPage('map')">📍 <span id="loc-label">위치 감지 중...</span></div>
+      <div class="filter-chip" data-i18n="fc_conv" onclick="toggleFilter(this)">편의점</div>
+      <div class="filter-chip" data-i18n="fc_cafe" onclick="toggleFilter(this)">카페</div>
+      <div class="filter-chip" data-i18n="fc_rest" onclick="toggleFilter(this)">식당</div>
+      <div class="filter-chip" data-i18n="fc_logi" onclick="toggleFilter(this)">물류</div>
+      <div class="filter-chip" data-i18n="fc_cert" onclick="toggleFilter(this)">공정 인증</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2 data-i18n="sec_popular">🔥 지금 인기 공고</h2>
+      <span class="see-all" data-i18n="see_all" onclick="showPage('jobs')">전체보기 →</span>
+    </div>
+    <div class="jobs-grid" id="home-jobs"></div>
+  </div>
+
+  <div class="section" style="background:var(--l);margin:0;padding:52px 5%">
+    <div class="section-header">
+      <h2 data-i18n="sec_community">💬 커뮤니티 인기글</h2>
+      <span class="see-all" data-i18n="see_all" onclick="showPage('community')">전체보기 →</span>
+    </div>
+    <div class="community-list" id="home-community"></div>
+  </div>
+</div>
+
+<!-- JOBS PAGE -->
+<div class="page" id="page-jobs">
+  <div class="jobs-page">
+    <div class="page-hdr">
+      <h1 data-i18n="nav_jobs">알바 찾기</h1>
+      <p data-i18n-html="jobs_count">총 <strong>12,847</strong>개의 공고가 있습니다</p>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-chip on" data-i18n="fc_all" onclick="toggleFilter(this)">전체</div>
+      <div class="filter-chip" data-i18n="fc_conv" onclick="toggleFilter(this)">편의점</div>
+      <div class="filter-chip" data-i18n="fc_cafe" onclick="toggleFilter(this)">카페</div>
+      <div class="filter-chip" data-i18n="fc_rest" onclick="toggleFilter(this)">식당</div>
+      <div class="filter-chip" data-i18n="fc_logi" onclick="toggleFilter(this)">물류·배송</div>
+      <div class="filter-chip" data-i18n="fc_cert" onclick="toggleFilter(this)">공정 인증</div>
+    </div>
+    <div class="jobs-grid" id="all-jobs"></div>
+  </div>
+</div>
+
+<!-- MAP PAGE -->
+<div class="page" id="page-map">
+  <div class="map-page">
+    <div id="map"></div>
+  </div>
+</div>
+
+<!-- COMMUNITY PAGE -->
+<div class="page" id="page-community">
+  <div class="comm-page">
+    <div class="comm-header">
+      <h1 data-i18n="nav_community">커뮤니티</h1>
+      <button class="btn-p" id="comm-write-btn" style="padding:9px 18px;font-size:.88rem" onclick="onCommWriteBtn()">글쓰기</button>
+    </div>
+    <div class="comm-tabs">
+      <button class="comm-tab active" data-i18n="ct_all" onclick="switchCommTab(this,'all')">전체</button>
+      <button class="comm-tab" data-i18n="ct_free" onclick="switchCommTab(this,'free')">자유</button>
+      <button class="comm-tab" data-i18n="ct_wage" onclick="switchCommTab(this,'wage')">임금체불</button>
+      <button class="comm-tab" data-i18n="ct_review" onclick="switchCommTab(this,'review')">업장후기 ⭐</button>
+      <button class="comm-tab" data-i18n="ct_info" onclick="switchCommTab(this,'info')">노동정보</button>
+    </div>
+    <!-- 일반 게시판 -->
+    <div id="comm-board">
+      <div class="comm-list" id="all-community"></div>
+    </div>
+    <!-- 업장 후기 -->
+    <div id="comm-review-section" style="display:none">
+      <!-- 업장 목록 -->
+      <div id="review-workplace-list">
+        <div class="workplace-list" id="wp-list"></div>
+        <button class="btn-p" style="width:100%;margin-top:4px" onclick="openModal('writeReviewModal')">✏️ 업장 후기 쓰기</button>
+      </div>
+      <!-- 특정 업장 후기 -->
+      <div id="review-detail" style="display:none">
+        <button class="back-btn" onclick="backToWpList()">← <span data-i18n="back_btn">업장 목록으로</span></button>
+        <div id="review-detail-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALC PAGE -->
+<div class="page" id="page-calc">
+  <div class="calc-page">
+    <h1 data-i18n="nav_calc">급여 계산기</h1>
+    <p data-i18n="calc_p">근무 조건을 입력하면 주휴수당·야간수당을 포함한 실수령액을 계산해드려요.</p>
+    <div class="calc-card">
+      <h3 data-i18n="calc_input_title">근무 조건 입력</h3>
+      <div class="input-group"><label data-i18n="calc_wage">시급 (원)</label><input class="calc-input" id="c-wage" type="number" value="10030"></div>
+      <div class="input-group"><label data-i18n="calc_weekly">주 근무시간 (시간)</label><input class="calc-input" id="c-weekly" type="number" placeholder="20"></div>
+      <div class="input-group"><label data-i18n="calc_weeks">월 근무 주수</label><input class="calc-input" id="c-weeks" type="number" value="4"></div>
+      <div class="input-group"><label data-i18n="calc_night">야간 근무시간 (월 기준, 오후 10시 이후)</label><input class="calc-input" id="c-night" type="number" value="0"></div>
+      <button class="calc-btn" data-i18n="calc_btn" onclick="calcSalary()">계산하기</button>
+    </div>
+    <div class="result-card" id="result-card">
+      <h3 data-i18n="calc_result" style="font-size:.97rem;font-weight:800;margin-bottom:14px">계산 결과</h3>
+      <div id="result-rows"></div>
+      <div class="result-total"><span class="tl" data-i18n="calc_total">월 예상 실수령액</span><span class="tv" id="result-total-val"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 data-i18n="login_h2">로그인</h2>
+    <p data-i18n="login_p">알바지킴이 계정으로 로그인하세요.</p>
+    <div class="mform">
+      <input class="minput" id="l-email" type="email" data-i18n-ph="login_email" placeholder="이메일">
+      <input class="minput" id="l-pw" type="password" data-i18n-ph="login_pw" placeholder="비밀번호">
+      <button class="msubmit" data-i18n="login_submit" onclick="doLogin()">로그인</button>
+    </div>
+    <div class="modal-switch" data-i18n-html="login_switch">계정이 없으신가요? <a onclick="switchModal('loginModal','signupModal')">회원가입</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="signupModal" onclick="if(event.target===this)closeModal('signupModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('signupModal')">✕</button>
+    <h2 data-i18n="signup_h2">회원가입</h2>
+    <p data-i18n="signup_p">무료로 가입하고 모든 기능을 이용하세요.</p>
+    <div class="mform">
+      <input class="minput" id="s-name" type="text" data-i18n-ph="signup_name" placeholder="이름">
+      <input class="minput" id="s-email" type="email" data-i18n-ph="signup_email" placeholder="이메일">
+      <input class="minput" id="s-pw" type="password" data-i18n-ph="signup_pw" placeholder="비밀번호 (8자 이상)">
+      <select class="minput" id="s-role">
+        <option value="" data-i18n="role_select">역할 선택</option>
+        <option value="worker" data-i18n="role_worker">알바생 / 노동자</option>
+        <option value="employer" data-i18n="role_employer">업장주 / 사업자</option>
+        <option value="foreign" data-i18n="role_foreign">외국인 노동자</option>
+      </select>
+      <button class="msubmit" data-i18n="signup_submit" onclick="doSignup()">가입하기</button>
+    </div>
+    <div class="modal-switch" data-i18n-html="signup_switch">이미 계정이 있으신가요? <a onclick="switchModal('signupModal','loginModal')">로그인</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="jobModal" onclick="if(event.target===this)closeModal('jobModal')">
+  <div class="modal job-modal">
+    <button class="modal-close" onclick="closeModal('jobModal')">✕</button>
+    <div id="job-modal-content"></div>
+    <button class="apply-btn" data-i18n="apply_btn" onclick="applyJob()">지원하기</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="writeModal" onclick="if(event.target===this)closeModal('writeModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('writeModal')">✕</button>
+    <h2 data-i18n="write_h2">글쓰기</h2>
+    <p data-i18n="write_p">익명으로 작성됩니다.</p>
+    <div class="mform">
+      <select class="minput" id="w-cat">
+        <option value="free" data-i18n="ct_free">자유</option>
+        <option value="wage" data-i18n="ct_wage">임금체불 제보</option>
+        <option value="review" data-i18n="ct_review">업장 후기</option>
+        <option value="info" data-i18n="ct_info">노동 정보</option>
+      </select>
+      <input class="minput" id="w-title" type="text" data-i18n-ph="write_title_ph" placeholder="제목">
+      <textarea class="minput report-textarea" id="w-content" data-i18n-ph="write_content_ph" placeholder="내용을 작성해주세요..."></textarea>
+      <button class="msubmit" data-i18n="write_submit" onclick="submitPost()">등록하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeModal('reportModal')">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-close" onclick="closeModal('reportModal')">✕</button>
+    <h2 data-i18n="report_h2">익명 신고</h2>
+    <p data-i18n="report_p">신고 내용은 완전히 익명으로 처리됩니다.</p>
+    <div class="mform">
+      <input class="minput" id="r-place" type="text" data-i18n-ph="report_place" placeholder="업장명 (선택)">
+      <select class="minput" id="r-type">
+        <option value="" data-i18n="report_type_sel">신고 유형</option>
+        <option value="wage" data-i18n="rt_wage">임금 체불</option>
+        <option value="holiday" data-i18n="rt_holiday">주휴수당 미지급</option>
+        <option value="night" data-i18n="rt_night">야간수당 미지급</option>
+        <option value="abuse" data-i18n="rt_abuse">갑질 / 폭언</option>
+        <option value="fraud" data-i18n="rt_fraud">사기 / 착취</option>
+        <option value="etc" data-i18n="rt_etc">기타</option>
+      </select>
+      <textarea class="minput report-textarea" id="r-content" data-i18n-ph="report_content_ph" placeholder="구체적인 내용..."></textarea>
+      <button class="msubmit" data-i18n="report_submit" onclick="submitReport()">신고 접수</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="postModal" onclick="if(event.target===this)closeModal('postModal')">
+  <div class="modal" style="max-width:540px">
+    <button class="modal-close" onclick="closeModal('postModal')">✕</button>
+    <div id="post-modal-content"></div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="msubmit" style="flex:1" data-i18n="like_btn" onclick="likePost()">👍 공감</button>
+      <button class="msubmit" style="flex:1;background:#EFF6FF;color:var(--p)" data-i18n="close_btn" onclick="closeModal('postModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- WRITE REVIEW MODAL -->
+<div class="modal-overlay" id="writeReviewModal" onclick="if(event.target===this)closeModal('writeReviewModal')">
+  <div class="modal" style="max-width:520px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('writeReviewModal')">✕</button>
+    <h2>업장 후기 쓰기</h2>
+    <p>익명으로 작성됩니다. 솔직한 후기가 모두에게 도움이 돼요.</p>
+    <div class="mform">
+      <select class="minput" id="rv-workplace">
+        <option value="">업장 선택</option>
+        <option value="GS25 강원대학교점">GS25 강원대학교점</option>
+        <option value="스타벅스 춘천명동점">스타벅스 춘천명동점</option>
+        <option value="쿠팡 춘천물류센터">쿠팡 춘천물류센터</option>
+        <option value="본죽 춘천효자점">본죽 춘천효자점</option>
+        <option value="다이소 춘천중앙점">다이소 춘천중앙점</option>
+        <option value="맥도날드 춘천점">맥도날드 춘천점</option>
+        <option value="직접입력">직접 입력...</option>
+      </select>
+      <input class="minput" id="rv-workplace-custom" type="text" placeholder="업장명 직접 입력" style="display:none">
+
+      <div style="background:var(--l);border-radius:12px;padding:16px">
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--dk)">종합 별점</div>
+        <div style="display:flex;justify-content:center;margin-bottom:6px">
+          <div class="stars-input" id="star-overall" data-val="0">
+            <span onclick="setStar('overall',1)">★</span><span onclick="setStar('overall',2)">★</span>
+            <span onclick="setStar('overall',3)">★</span><span onclick="setStar('overall',4)">★</span>
+            <span onclick="setStar('overall',5)">★</span>
+          </div>
+        </div>
+        <div id="star-overall-label" style="text-align:center;font-size:.82rem;color:var(--g);min-height:18px"></div>
+      </div>
+
+      <div style="background:var(--l);border-radius:12px;padding:16px">
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--dk)">세부 평가</div>
+        <div class="star-row"><label>💰 급여 정직성</label><div class="stars-input" id="star-pay" data-val="0"><span onclick="setStar('pay',1)">★</span><span onclick="setStar('pay',2)">★</span><span onclick="setStar('pay',3)">★</span><span onclick="setStar('pay',4)">★</span><span onclick="setStar('pay',5)">★</span></div></div>
+        <div class="star-row"><label>🏢 근무환경</label><div class="stars-input" id="star-env" data-val="0"><span onclick="setStar('env',1)">★</span><span onclick="setStar('env',2)">★</span><span onclick="setStar('env',3)">★</span><span onclick="setStar('env',4)">★</span><span onclick="setStar('env',5)">★</span></div></div>
+        <div class="star-row"><label>💼 업무강도</label><div class="stars-input" id="star-work" data-val="0"><span onclick="setStar('work',1)">★</span><span onclick="setStar('work',2)">★</span><span onclick="setStar('work',3)">★</span><span onclick="setStar('work',4)">★</span><span onclick="setStar('work',5)">★</span></div></div>
+        <div class="star-row"><label>🤝 사장님 소통</label><div class="stars-input" id="star-mgmt" data-val="0"><span onclick="setStar('mgmt',1)">★</span><span onclick="setStar('mgmt',2)">★</span><span onclick="setStar('mgmt',3)">★</span><span onclick="setStar('mgmt',4)">★</span><span onclick="setStar('mgmt',5)">★</span></div></div>
+      </div>
+
+      <textarea class="minput report-textarea" id="rv-pros" placeholder="👍 좋았던 점 (급여, 분위기, 근무환경 등)"></textarea>
+      <textarea class="minput report-textarea" id="rv-cons" placeholder="👎 아쉬웠던 점 (개선됐으면 하는 점)"></textarea>
+      <button class="msubmit" onclick="submitReview()">후기 등록하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== LOCATION =====
+const FALLBACK = { lat: 37.8694, lng: 127.7443, name: '강원대학교' };
+let userLocation = FALLBACK;
+
+function initLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude, name: null };
+        reverseGeocode(userLocation.lat, userLocation.lng);
+      },
+      () => {
+        setLocationDisplay(FALLBACK.name);
+        userLocation = FALLBACK;
+      },
+      { timeout: 6000 }
+    );
+  } else {
+    setLocationDisplay(FALLBACK.name);
+  }
+}
+
+function reverseGeocode(lat, lng) {
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ko`)
+    .then(r => r.json())
+    .then(d => {
+      const addr = d.address;
+      const name = addr.quarter || addr.suburb || addr.neighbourhood || addr.city_district || addr.city || addr.town || '내 주변';
+      userLocation.name = name;
+      setLocationDisplay(name);
+      renderJobs();
+      if (mapInstance) updateMap();
+    })
+    .catch(() => setLocationDisplay('내 주변'));
+}
+
+function setLocationDisplay(name) {
+  const t = LANGS[currentLang];
+  document.getElementById('loc-badge').textContent = (t.near || '내 주변') + ' ' + name;
+  document.getElementById('loc-label').textContent = name;
+}
+
+// ===== DATA =====
+const JOBS = [
+  { id:1, lat:37.8698, lng:127.7447, score:4.8, badges:['v','n'],
+    t:{
+      ko:{title:'GS25 강원대학교점', type:'편의점', pay:'시급 11,500원', loc:'강원 춘천시 효자2동', time:'주말 포함 협의', tags:['주휴보장','야간수당','4대보험'], desc:'캠퍼스 내 위치, 깨끗한 환경. 주휴수당 100% 지급. 야간근무 가능자 우대.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      en:{title:'GS25 Kangwon Univ.', type:'Convenience Store', pay:'₩11,500/hr', loc:'Hyoja-dong, Chuncheon', time:'Weekends negotiable', tags:['Holiday Pay','Night Pay','Insurance'], desc:'On-campus location. Clean environment. Weekly holiday pay 100% guaranteed.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
+      ja:{title:'GS25 江原大学店', type:'コンビニ', pay:'時給 11,500ウォン', loc:'春川市 孝子洞', time:'週末含む要相談', tags:['週休保障','深夜手当','社会保険'], desc:'キャンパス内。清潔な職場環境。週休手当100%支給。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
+      zh:{title:'GS25 江原大学店', type:'便利店', pay:'时薪 11,500韩元', loc:'春川市 孝子洞', time:'周末可商量', tags:['周休保障','夜班补贴','四大保险'], desc:'校内位置，环境整洁，周休津贴100%支付。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
+    }
+  },
+  { id:2, lat:37.8801, lng:127.7269, score:4.9, badges:['v'],
+    t:{
+      ko:{title:'스타벅스 춘천명동점', type:'카페', pay:'시급 12,000원', loc:'강원 춘천시 중앙로', time:'주 3~5일 선택', tags:['교육지원','인센티브','주휴보장'], desc:'음료 교육 제공, 유니폼 지급, 성과 인센티브 별도. 장기 근무 우대.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      en:{title:'Starbucks Chuncheon', type:'Cafe', pay:'₩12,000/hr', loc:'Jungang-ro, Chuncheon', time:'3~5 days/week', tags:['Training','Incentives','Holiday Pay'], desc:'Drink training provided, uniform supplied, performance incentives available.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
+      ja:{title:'スターバックス春川明洞店', type:'カフェ', pay:'時給 12,000ウォン', loc:'春川市 中央路', time:'週3〜5日選択', tags:['研修あり','インセンティブ','週休保障'], desc:'ドリンク研修・ユニフォーム支給。成果インセンティブあり。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
+      zh:{title:'星巴克春川明洞店', type:'咖啡', pay:'时薪 12,000韩元', loc:'春川市 中央路', time:'每周3~5天', tags:['培训支持','绩效奖励','周休保障'], desc:'提供饮品培训及制服，另有绩效奖励。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
+    }
+  },
+  { id:3, lat:37.8510, lng:127.7012, score:4.2, badges:['u'],
+    t:{
+      ko:{title:'쿠팡 춘천물류센터', type:'물류', pay:'시급 14,000원', loc:'강원 춘천시 동면', time:'주 5일 (고정)', tags:['4대보험','식사제공','셔틀버스'], desc:'주간/야간 선택 가능. 식사 제공, 셔틀버스 운행. 당일 바로 지원 가능.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      en:{title:'Coupang Logistics Chuncheon', type:'Logistics', pay:'₩14,000/hr', loc:'Dong-myeon, Chuncheon', time:'5 days/week', tags:['Insurance','Meals','Shuttle'], desc:'Day/night shifts available. Meals provided, shuttle bus available.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
+      ja:{title:'クーパン春川物流センター', type:'物流', pay:'時給 14,000ウォン', loc:'春川市 東面', time:'週5日（固定）', tags:['社会保険','食事支給','シャトルバス'], desc:'昼夜シフト選択可。食事支給・シャトルバスあり。当日応募可能。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
+      zh:{title:'酷澎春川物流中心', type:'物流', pay:'时薪 14,000韩元', loc:'春川市 东面', time:'每周5天（固定）', tags:['四大保险','提供餐食','班车服务'], desc:'可选日班/夜班，提供餐食及班车，当天即可投递。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
+    }
+  },
+  { id:4, lat:37.8653, lng:127.7198, score:4.5, badges:['v'],
+    t:{
+      ko:{title:'본죽 춘천효자점', type:'식당', pay:'시급 10,500원', loc:'강원 춘천시 효자동', time:'평일 점심 (11~14시)', tags:['주휴보장','식사제공'], desc:'점심시간 한정, 단기 가능. 조리 경험 우대.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      en:{title:'Bonjuk Hyoja Branch', type:'Restaurant', pay:'₩10,500/hr', loc:'Hyoja-dong, Chuncheon', time:'Weekdays 11am~2pm', tags:['Holiday Pay','Meals'], desc:'Lunch shift only. Short-term available. Cooking experience preferred.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
+      ja:{title:'本粥 春川孝子店', type:'飲食店', pay:'時給 10,500ウォン', loc:'春川市 孝子洞', time:'平日ランチ（11〜14時）', tags:['週休保障','食事支給'], desc:'ランチタイム限定。短期勤務可。調理経験優遇。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
+      zh:{title:'本粥 春川孝子店', type:'餐厅', pay:'时薪 10,500韩元', loc:'春川市 孝子洞', time:'工作日午餐（11~14时）', tags:['周休保障','提供餐食'], desc:'仅限午餐时间，可短期，有烹饪经验优先。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
+    }
+  },
+  { id:5, lat:37.8765, lng:127.7289, score:4.6, badges:['n'],
+    t:{
+      ko:{title:'다이소 춘천중앙점', type:'유통', pay:'시급 11,000원', loc:'강원 춘천시 중앙로', time:'주 3~4일', tags:['4대보험','주휴보장'], desc:'재고 정리, 계산 보조 업무. 외국어 가능자 우대.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      en:{title:'Daiso Chuncheon Central', type:'Retail', pay:'₩11,000/hr', loc:'Jungang-ro, Chuncheon', time:'3~4 days/week', tags:['Insurance','Holiday Pay'], desc:'Stock management and cashier duties. Multilingual candidates preferred.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
+      ja:{title:'ダイソー春川中央店', type:'小売', pay:'時給 11,000ウォン', loc:'春川市 中央路', time:'週3〜4日', tags:['社会保険','週休保障'], desc:'在庫管理・レジ補助業務。外国語話者優遇。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
+      zh:{title:'大创 春川中央店', type:'零售', pay:'时薪 11,000韩元', loc:'春川市 中央路', time:'每周3~4天', tags:['四大保险','周休保障'], desc:'库存整理及收银辅助。会外语者优先。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
+    }
+  },
+  { id:6, lat:37.8789, lng:127.7301, score:4.7, badges:['v'],
+    t:{
+      ko:{title:'맥도날드 춘천점', type:'패스트푸드', pay:'시급 10,800원', loc:'강원 춘천시 중앙로', time:'풀타임/파트 선택', tags:['교육지원','승진기회','4대보험'], desc:'체계적인 트레이닝 제공. 장기 근무 시 시급 인상.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      en:{title:"McDonald's Chuncheon", type:'Fast Food', pay:'₩10,800/hr', loc:'Jungang-ro, Chuncheon', time:'Full/Part-time', tags:['Training','Promotion','Insurance'], desc:'Systematic training provided. Pay increase for long-term staff.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
+      ja:{title:'マクドナルド春川店', type:'ファストフード', pay:'時給 10,800ウォン', loc:'春川市 中央路', time:'フル/パート選択', tags:['研修あり','昇進機会','社会保険'], desc:'体系的な研修あり。長期勤務で時給アップ。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
+      zh:{title:'麦当劳 春川店', type:'快餐', pay:'时薪 10,800韩元', loc:'春川市 中央路', time:'全职/兼职均可', tags:['培训支持','晋升机会','四大保险'], desc:'提供系统培训，长期工作者涨薪。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
+    }
+  },
+];
+
+const POSTS = [
+  { id:1, cat:'wage', score:4.8,
+    t:{
+      ko:{cat:'임금체불', title:'편의점 알바 3개월 주휴수당 한 번도 못 받았어요', preview:'주 25시간 넘게 일했는데 주휴수당이 뭔지도 몰랐고...', content:'주 25시간씩 3개월 일했는데 주휴수당을 한 번도 못 받았어요. 이번에 알바지킴이 앱으로 계산해보니까 약 120만원이 밀려 있더라고요.'},
+      en:{cat:'Wage Theft', title:"3 months at convenience store, never received weekly holiday pay", preview:'I worked 25+ hours a week but had no idea what holiday pay was...', content:"I worked 25 hours a week for 3 months and never got weekly holiday pay. I calculated with this app and found ₩1.2M owed to me."},
+      ja:{cat:'未払い', title:'コンビニバイト3ヶ月、週休手当を一度も受け取れなかった', preview:'週25時間以上働いたのに、週休手当が何かも知らなかった...', content:'週25時間×3ヶ月働いたのに週休手当を一度も受け取れませんでした。アプリで計算したら約120万ウォン未払いでした。'},
+      zh:{cat:'欠薪', title:'便利店打工3个月，从未收到过周休津贴', preview:'我每周工作25小时以上，但根本不知道周休津贴是什么...', content:'我每周工作25小时，连续3个月，从未收到周休津贴。用这个App一算，竟欠了约120万韩元。'},
+    }, likes:234, comments:67, time:'2시간 전'
+  },
+  { id:2, cat:'review',
+    t:{
+      ko:{cat:'후기', title:'강원대 스타벅스 정말 좋았어요 (공정업장 인증 이유 있음)', preview:'면접부터 친절하고 주휴수당 꼬박꼬박 입금...', content:'춘천명동점에서 6개월 일했는데 진짜 좋았어요. 시급도 12,000원이고 주휴수당은 매달 자동으로 입금돼요.'},
+      en:{cat:'Review', title:'Starbucks Chuncheon was great (certified for a reason)', preview:'Friendly from the interview, holiday pay always on time...', content:'Worked at Chuncheon Myeongdong branch for 6 months. ₩12,000/hr, holiday pay auto-deposited monthly.'},
+      ja:{cat:'レビュー', title:'春川スタバは最高でした（認定の理由がわかった）', preview:'面接から親切で、週休手当もきちんと振込...', content:'春川明洞店で6ヶ月働きました。時給12,000ウォン、週休手当は毎月自動振込です。'},
+      zh:{cat:'职场评价', title:'春川星巴克真的很好（认证名不虚传）', preview:'从面试开始就很友善，周休津贴按时到账...', content:'在春川明洞店工作了6个月，时薪12,000韩元，周休津贴每月自动到账。'},
+    }, likes:189, comments:34, time:'5시간 전'
+  },
+  { id:3, cat:'info',
+    t:{
+      ko:{cat:'정보', title:'[필독] 주휴수당 계산법 정리 (2026 최신)', preview:'주 15시간 이상 근무하면 무조건 받을 수 있는 주휴수당...', content:'주 15시간 이상 일하면 주휴수당 받을 수 있습니다. 계산법: (주 소정근무시간 / 40) × 8 × 시급.'},
+      en:{cat:'Labor Info', title:'[Must Read] How to calculate weekly holiday pay (2026)', preview:'If you work 15+ hours/week you are entitled to weekly holiday pay...', content:'If you work 15+ hours/week you can receive weekly holiday pay. Formula: (weekly hours / 40) × 8 × hourly wage.'},
+      ja:{cat:'労働情報', title:'【必読】週休手当の計算方法（2026年最新版）', preview:'週15時間以上働けば必ず受け取れる週休手当...', content:'週15時間以上働けば週休手当が受け取れます。計算式：(週所定労働時間 / 40) × 8 × 時給'},
+      zh:{cat:'劳动信息', title:'【必读】周休津贴计算方法（2026最新）', preview:'每周工作15小时以上就可以领周休津贴...', content:'每周工作15小时以上即可领取周休津贴。计算公式：(每周工时 / 40) × 8 × 时薪'},
+    }, likes:512, comments:88, time:'1일 전'
+  },
+  { id:4, cat:'free',
+    t:{
+      ko:{cat:'자유', title:'야간 편의점 혼자 일하는데 무서울 때 있나요?', preview:'새벽 2~3시에 취객 들어오면 진짜 무서운데...', content:'야간 혼자 일하다 보면 이상한 취객도 오고 무서울 때 있잖아요. 이런 상황 어떻게 대처하시나요?'},
+      en:{cat:'General', title:'Anyone get scared working alone at night in a convenience store?', preview:'When drunk people come in at 2-3am it\'s really scary...', content:'When working alone at night sometimes scary things happen. How do you handle this situation?'},
+      ja:{cat:'自由', title:'深夜コンビニで一人勤務、怖いと思ったことありますか？', preview:'夜中2〜3時に酔っ払いが来ると本当に怖くて...', content:'深夜に一人でいると怖い思いをすることがあります。こういう時どう対処していますか？'},
+      zh:{cat:'自由', title:'一个人值夜班的便利店，你会害怕吗？', preview:'凌晨2~3点醉汉进来真的很害怕...', content:'一个人上夜班时有时会遇到奇怪的醉汉，感到害怕。这种情况你们怎么处理？'},
+    }, likes:97, comments:143, time:'3시간 전'
+  },
+  { id:5, cat:'wage',
+    t:{
+      ko:{cat:'임금체불', title:'퇴직 후 3주째 월급 안 들어오는데 신고 방법 알려주세요', preview:'8월에 그만뒀는데 아직도 마지막 달 월급이...', content:'8월 말에 그만뒀는데 마지막 달 월급이 아직도 안 들어왔어요. 고용노동부에 신고하면 바로 처리되나요?'},
+      en:{cat:'Wage Theft', title:'3 weeks after quitting, still no final paycheck. How do I report?', preview:'Quit in August but last month\'s pay still hasn\'t arrived...', content:'Quit at end of August and last month\'s pay still hasn\'t been deposited. Will reporting to Ministry of Labor work quickly?'},
+      ja:{cat:'未払い', title:'退職から3週間、まだ給料が入らない。通報方法を教えてください', preview:'8月に辞めたのにまだ最後の月給が...', content:'8月末に退職したのに最後の月給がまだ振り込まれていません。雇用労働部に申告したらすぐ対応してもらえますか？'},
+      zh:{cat:'欠薪', title:'离职3周了，工资还没打过来，怎么举报？', preview:'8月辞职了，最后一个月工资还没到账...', content:'8月底辞职了，最后一个月工资到现在还没打过来。向劳动部举报的话能快速处理吗？'},
+    }, likes:156, comments:92, time:'6시간 전'
+  },
+  { id:6, cat:'info',
+    t:{
+      ko:{cat:'정보', title:'외국인 알바생도 주휴수당 받을 수 있어요', preview:'비자 종류 상관없이 근로기준법은 외국인에게도...', content:'많은 분들이 외국인은 주휴수당 못 받는다고 아는데 사실이 아닙니다. 비자 종류 상관없이 근로기준법은 외국인에게도 동일하게 적용됩니다.'},
+      en:{cat:'Labor Info', title:'Foreign workers are also entitled to weekly holiday pay', preview:'Regardless of visa type, labor law applies equally...', content:'Many people think foreigners can\'t receive weekly holiday pay, but that\'s false. Korean labor law applies equally to all workers regardless of visa status.'},
+      ja:{cat:'労働情報', title:'外国人バイトも週休手当を受け取れます', preview:'ビザの種類に関わらず、労働基準法は外国人にも...', content:'外国人は週休手当が受け取れないと思っている方が多いですが、違います。ビザの種類に関わらず、労働基準法はすべての労働者に適用されます。'},
+      zh:{cat:'劳动信息', title:'外国人打工者也可以领取周休津贴', preview:'无论签证类型如何，劳动基准法同样适用于外国人...', content:'很多人认为外国人不能领周休津贴，其实不对。不论签证类型，韩国劳动基准法对所有劳动者同等适用。'},
+    }, likes:341, comments:55, time:'2일 전'
+  },
+];
+
+// ===== I18N =====
+let currentLang = 'ko';
+
+const LANGS = {
+  ko:{
+    flag:'🇰🇷', label:'한국어', near:'내 주변',
+    nav_home:'홈', nav_jobs:'알바 찾기', nav_map:'📍 지도', nav_community:'커뮤니티', nav_calc:'급여 계산기',
+    nav_login:'로그인', nav_signup:'회원가입',
+    hero_h1:'당신의 <em>노동권</em>을<br>지켜드립니다',
+    hero_p:'주휴수당·야간수당 자동 계산, 공정 업장 인증, 익명 커뮤니티까지.<br>모든 노동자를 위한 통합 플랫폼.',
+    hero_btn1:'알바 찾기', hero_btn2:'급여 계산해보기',
+    stat_members:'누적 회원', stat_jobs:'등록 공고', stat_rating:'앱스토어 평점',
+    salary_title:'이번 달 예상 급여 💰', salary_base:'기본급 (80h × 10,030원)', salary_holiday:'주휴수당',
+    salary_night:'야간수당 (10h)', salary_tax:'공제 (세금)', salary_takehome:'실수령액',
+    search_ph:'업종, 지역, 업장명으로 검색...', search_btn:'검색',
+    fc_all:'전체', fc_conv:'편의점', fc_cafe:'카페', fc_rest:'식당', fc_logi:'물류·배송', fc_cert:'공정 인증',
+    sec_popular:'🔥 지금 인기 공고', sec_community:'💬 커뮤니티 인기글', see_all:'전체보기 →',
+    jobs_count:'총 <strong>12,847</strong>개의 공고가 있습니다',
+    write_btn:'글쓰기', dist:'거리',
+    calc_p:'근무 조건을 입력하면 주휴수당·야간수당을 포함한 실수령액을 계산해드려요.',
+    calc_input_title:'근무 조건 입력', calc_wage:'시급 (원)', calc_weekly:'주 근무시간 (시간)',
+    calc_weeks:'월 근무 주수', calc_night:'야간 근무시간 (월 기준, 오후 10시 이후)',
+    calc_btn:'계산하기', calc_result:'계산 결과', calc_total:'월 예상 실수령액',
+    calc_base:'기본급', calc_holiday:'주휴수당', calc_nightlabel:'야간수당 (50% 가산)',
+    calc_taxlabel:'세금 공제 (약 3.3%)',
+    login_h2:'로그인', login_p:'알바지킴이 계정으로 로그인하세요.',
+    login_email:'이메일', login_pw:'비밀번호', login_submit:'로그인',
+    login_switch:"계정이 없으신가요? <a onclick=\"switchModal('loginModal','signupModal')\">회원가입</a>",
+    signup_h2:'회원가입', signup_p:'무료로 가입하고 모든 기능을 이용하세요.',
+    signup_name:'이름', signup_email:'이메일', signup_pw:'비밀번호 (8자 이상)', signup_submit:'가입하기',
+    signup_switch:"이미 계정이 있으신가요? <a onclick=\"switchModal('signupModal','loginModal')\">로그인</a>",
+    role_select:'역할 선택', role_worker:'알바생 / 노동자', role_employer:'업장주 / 사업자', role_foreign:'외국인 노동자',
+    write_h2:'글쓰기', write_p:'익명으로 작성됩니다.',
+    write_title_ph:'제목', write_content_ph:'내용을 작성해주세요...', write_submit:'등록하기',
+    ct_all:'전체', ct_free:'자유', ct_wage:'임금체불', ct_review:'업장후기', ct_info:'노동정보',
+    report_h2:'익명 신고', report_p:'신고 내용은 완전히 익명으로 처리됩니다.',
+    report_place:'업장명 (선택)', report_type_sel:'신고 유형',
+    rt_wage:'임금 체불', rt_holiday:'주휴수당 미지급', rt_night:'야간수당 미지급',
+    rt_abuse:'갑질 / 폭언', rt_fraud:'사기 / 착취', rt_etc:'기타',
+    report_content_ph:'구체적인 내용...', report_submit:'신고 접수',
+    apply_btn:'지원하기', like_btn:'👍 공감', close_btn:'닫기',
+    map_jobs:'주변 알바', score_trust:'업장 신뢰도', score_pay:'급여 정시 지급', score_env:'근무 환경',
+    toast_apply:'지원하려면 로그인이 필요합니다.', toast_login:'로그인됐습니다.',
+    toast_signup:'가입을 환영합니다!', toast_post:'게시글이 등록됐습니다!',
+    toast_report:'신고가 익명으로 접수됐습니다.', toast_like:'공감했습니다!',
+    toast_logout:'로그아웃됐습니다.',
+  },
+  en:{
+    flag:'🇺🇸', label:'English', near:'Near',
+    nav_home:'Home', nav_jobs:'Find Jobs', nav_map:'📍 Map', nav_community:'Community', nav_calc:'Salary Calc',
+    nav_login:'Login', nav_signup:'Sign Up',
+    hero_h1:'We protect your <em>labor rights</em>',
+    hero_p:'Auto-calculate weekly & night pay, fair employer certification, anonymous community.<br>An integrated platform for all workers.',
+    hero_btn1:'Find Jobs', hero_btn2:'Calculate Salary',
+    stat_members:'Total Members', stat_jobs:'Job Listings', stat_rating:'App Store Rating',
+    salary_title:'Estimated This Month 💰', salary_base:'Base Pay (80h × ₩10,030)', salary_holiday:'Weekly Holiday Pay',
+    salary_night:'Night Pay (10h)', salary_tax:'Tax Deduction', salary_takehome:'Take-home Pay',
+    search_ph:'Search by industry, area, workplace...', search_btn:'Search',
+    fc_all:'All', fc_conv:'Convenience', fc_cafe:'Cafe', fc_rest:'Restaurant', fc_logi:'Logistics', fc_cert:'Certified',
+    sec_popular:'🔥 Popular Jobs Now', sec_community:'💬 Community Highlights', see_all:'See All →',
+    jobs_count:'<strong>12,847</strong> jobs available',
+    write_btn:'Write Post', dist:'Distance',
+    calc_p:'Enter your work conditions to calculate take-home pay including weekly & night pay.',
+    calc_input_title:'Enter Work Conditions', calc_wage:'Hourly Wage (KRW)', calc_weekly:'Weekly Hours',
+    calc_weeks:'Weeks per Month', calc_night:'Night Hours (after 10PM, monthly)',
+    calc_btn:'Calculate', calc_result:'Result', calc_total:'Estimated Monthly Take-home',
+    calc_base:'Base Pay', calc_holiday:'Weekly Holiday Pay', calc_nightlabel:'Night Pay (50% premium)',
+    calc_taxlabel:'Tax Deduction (~3.3%)',
+    login_h2:'Login', login_p:'Log in to your AlbaGuard account.',
+    login_email:'Email', login_pw:'Password', login_submit:'Login',
+    login_switch:"No account? <a onclick=\"switchModal('loginModal','signupModal')\">Sign Up</a>",
+    signup_h2:'Sign Up', signup_p:'Join free and access all features.',
+    signup_name:'Name', signup_email:'Email', signup_pw:'Password (8+ chars)', signup_submit:'Sign Up',
+    signup_switch:"Already have an account? <a onclick=\"switchModal('signupModal','loginModal')\">Login</a>",
+    role_select:'Select Role', role_worker:'Part-timer / Worker', role_employer:'Employer', role_foreign:'Foreign Worker',
+    write_h2:'Write Post', write_p:'Posted anonymously.',
+    write_title_ph:'Title', write_content_ph:'Write your content...', write_submit:'Post',
+    ct_all:'All', ct_free:'General', ct_wage:'Wage Theft', ct_review:'Reviews', ct_info:'Labor Info',
+    report_h2:'Report Anonymously', report_p:'Your report will be completely anonymous.',
+    report_place:'Workplace name (optional)', report_type_sel:'Report Type',
+    rt_wage:'Wage Theft', rt_holiday:'No Holiday Pay', rt_night:'No Night Pay',
+    rt_abuse:'Harassment', rt_fraud:'Fraud / Exploitation', rt_etc:'Other',
+    report_content_ph:'Describe the situation...', report_submit:'Submit Report',
+    apply_btn:'Apply Now', like_btn:'👍 Like', close_btn:'Close',
+    map_jobs:'Nearby Jobs', score_trust:'Employer Trust', score_pay:'Timely Payment', score_env:'Work Environment',
+    toast_apply:'Please log in to apply.', toast_login:'Logged in successfully.',
+    toast_signup:'Welcome!', toast_post:'Post published!',
+    toast_report:'Report submitted anonymously.', toast_like:'Liked!',
+    toast_logout:'Logged out.',
+  },
+  ja:{
+    flag:'🇯🇵', label:'日本語', near:'近くの',
+    nav_home:'ホーム', nav_jobs:'バイトを探す', nav_map:'📍 地図', nav_community:'コミュニティ', nav_calc:'給与計算機',
+    nav_login:'ログイン', nav_signup:'新規登録',
+    hero_h1:'あなたの<em>労働権</em>を<br>守ります',
+    hero_p:'週休手当・深夜手当の自動計算、公正職場認証、匿名コミュニティ。<br>すべての労働者のための統合プラットフォーム。',
+    hero_btn1:'バイトを探す', hero_btn2:'給与を計算する',
+    stat_members:'累計会員', stat_jobs:'求人件数', stat_rating:'アプリ評価',
+    salary_title:'今月の予想給与 💰', salary_base:'基本給 (80h × 10,030ウォン)', salary_holiday:'週休手当',
+    salary_night:'深夜手当 (10h)', salary_tax:'控除（税金）', salary_takehome:'手取り額',
+    search_ph:'業種・地域・職場名で検索...', search_btn:'検索',
+    fc_all:'すべて', fc_conv:'コンビニ', fc_cafe:'カフェ', fc_rest:'飲食店', fc_logi:'物流', fc_cert:'認定済',
+    sec_popular:'🔥 今人気の求人', sec_community:'💬 コミュニティ人気投稿', see_all:'すべて見る →',
+    jobs_count:'合計<strong>12,847</strong>件の求人',
+    write_btn:'投稿する', dist:'距離',
+    calc_p:'勤務条件を入力して週休手当・深夜手当込みの手取り額を計算します。',
+    calc_input_title:'勤務条件を入力', calc_wage:'時給（ウォン）', calc_weekly:'週の勤務時間',
+    calc_weeks:'月の勤務週数', calc_night:'深夜勤務時間（月単位・午後10時以降）',
+    calc_btn:'計算する', calc_result:'計算結果', calc_total:'月の予想手取り額',
+    calc_base:'基本給', calc_holiday:'週休手当', calc_nightlabel:'深夜手当（50%加算）',
+    calc_taxlabel:'税金控除（約3.3%）',
+    login_h2:'ログイン', login_p:'アルバ守りアカウントでログインしてください。',
+    login_email:'メールアドレス', login_pw:'パスワード', login_submit:'ログイン',
+    login_switch:"アカウントをお持ちでない方は <a onclick=\"switchModal('loginModal','signupModal')\">新規登録</a>",
+    signup_h2:'新規登録', signup_p:'無料で登録してすべての機能をご利用ください。',
+    signup_name:'お名前', signup_email:'メールアドレス', signup_pw:'パスワード（8文字以上）', signup_submit:'登録する',
+    signup_switch:"すでにアカウントをお持ちの方は <a onclick=\"switchModal('signupModal','loginModal')\">ログイン</a>",
+    role_select:'役割を選択', role_worker:'アルバイト / 労働者', role_employer:'雇用主', role_foreign:'外国人労働者',
+    write_h2:'投稿する', write_p:'匿名で投稿されます。',
+    write_title_ph:'タイトル', write_content_ph:'内容を入力してください...', write_submit:'投稿',
+    ct_all:'すべて', ct_free:'自由', ct_wage:'未払い', ct_review:'職場レビュー', ct_info:'労働情報',
+    report_h2:'匿名通報', report_p:'通報内容は完全に匿名で処理されます。',
+    report_place:'職場名（任意）', report_type_sel:'通報の種類',
+    rt_wage:'賃金未払い', rt_holiday:'週休手当未払い', rt_night:'深夜手当未払い',
+    rt_abuse:'ハラスメント', rt_fraud:'詐欺・搾取', rt_etc:'その他',
+    report_content_ph:'具体的な内容...', report_submit:'通報する',
+    apply_btn:'応募する', like_btn:'👍 いいね', close_btn:'閉じる',
+    map_jobs:'近くのバイト', score_trust:'職場信頼度', score_pay:'給与の定時払い', score_env:'職場環境',
+    toast_apply:'応募するにはログインが必要です。', toast_login:'ログインしました。',
+    toast_signup:'ご登録ありがとうございます！', toast_post:'投稿が完了しました！',
+    toast_report:'通報を匿名で受け付けました。', toast_like:'いいねしました！',
+    toast_logout:'ログアウトしました。',
+  },
+  zh:{
+    flag:'🇨🇳', label:'中文', near:'附近',
+    nav_home:'首页', nav_jobs:'找工作', nav_map:'📍 地图', nav_community:'社区', nav_calc:'工资计算器',
+    nav_login:'登录', nav_signup:'注册',
+    hero_h1:'保护您的<em>劳动权益</em>',
+    hero_p:'自动计算周休津贴和夜班补贴，公正雇主认证，匿名社区。<br>面向所有劳动者的综合平台。',
+    hero_btn1:'找工作', hero_btn2:'计算工资',
+    stat_members:'累计会员', stat_jobs:'招聘信息', stat_rating:'应用评分',
+    salary_title:'本月预计工资 💰', salary_base:'基本工资 (80h × 10,030韩元)', salary_holiday:'周休津贴',
+    salary_night:'夜班补贴 (10h)', salary_tax:'扣除（税金）', salary_takehome:'实得工资',
+    search_ph:'按行业、地区或工作场所搜索...', search_btn:'搜索',
+    fc_all:'全部', fc_conv:'便利店', fc_cafe:'咖啡', fc_rest:'餐厅', fc_logi:'物流', fc_cert:'认证雇主',
+    sec_popular:'🔥 热门职位', sec_community:'💬 社区热帖', see_all:'查看全部 →',
+    jobs_count:'共有<strong>12,847</strong>条招聘信息',
+    write_btn:'发帖', dist:'距离',
+    calc_p:'输入工作条件，计算包含周休津贴和夜班补贴的实得工资。',
+    calc_input_title:'输入工作条件', calc_wage:'时薪（韩元）', calc_weekly:'每周工作时间',
+    calc_weeks:'每月工作周数', calc_night:'夜班时间（每月·晚上10点后）',
+    calc_btn:'计算', calc_result:'计算结果', calc_total:'预计月实得工资',
+    calc_base:'基本工资', calc_holiday:'周休津贴', calc_nightlabel:'夜班补贴（50%加算）',
+    calc_taxlabel:'税金扣除（约3.3%）',
+    login_h2:'登录', login_p:'用您的阿尔巴守护账号登录。',
+    login_email:'电子邮件', login_pw:'密码', login_submit:'登录',
+    login_switch:"没有账号？<a onclick=\"switchModal('loginModal','signupModal')\">注册</a>",
+    signup_h2:'注册', signup_p:'免费注册，使用所有功能。',
+    signup_name:'姓名', signup_email:'电子邮件', signup_pw:'密码（8位以上）', signup_submit:'注册',
+    signup_switch:"已有账号？<a onclick=\"switchModal('signupModal','loginModal')\">登录</a>",
+    role_select:'选择身份', role_worker:'打工者 / 劳动者', role_employer:'雇主 / 业主', role_foreign:'外国劳动者',
+    write_h2:'发帖', write_p:'匿名发布。',
+    write_title_ph:'标题', write_content_ph:'请输入内容...', write_submit:'发布',
+    ct_all:'全部', ct_free:'自由', ct_wage:'欠薪', ct_review:'职场评价', ct_info:'劳动信息',
+    report_h2:'匿名举报', report_p:'举报内容将完全匿名处理。',
+    report_place:'工作场所名称（选填）', report_type_sel:'举报类型',
+    rt_wage:'欠薪', rt_holiday:'未付周休津贴', rt_night:'未付夜班补贴',
+    rt_abuse:'职场骚扰', rt_fraud:'欺诈 / 剥削', rt_etc:'其他',
+    report_content_ph:'请描述具体情况...', report_submit:'提交举报',
+    apply_btn:'立即投递', like_btn:'👍 点赞', close_btn:'关闭',
+    map_jobs:'附近招聘', score_trust:'雇主信誉', score_pay:'及时支付', score_env:'工作环境',
+    toast_apply:'投递前请先登录。', toast_login:'登录成功。',
+    toast_signup:'欢迎加入！', toast_post:'帖子已发布！',
+    toast_report:'举报已匿名提交。', toast_like:'已点赞！',
+    toast_logout:'已退出登录。',
+  }
+};
+
+const UNAVAILABLE = ['vi','th','ph','id','mn','uz'];
+
+function t(key) { return LANGS[currentLang][key] || LANGS.ko[key] || key; }
+
+function setLang(code) {
+  if (UNAVAILABLE.includes(code)) { showToast('⏳ 준비 중인 언어입니다.'); return; }
+  currentLang = code;
+  const lang = LANGS[code];
+  document.getElementById('lang-btn').textContent = `${lang.flag} ${lang.label} ▾`;
+  document.querySelectorAll('.lang-option').forEach(el => {
+    el.classList.toggle('active', el.textContent.trim().startsWith(lang.flag));
+  });
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = lang[el.getAttribute('data-i18n')];
+    if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = lang[el.getAttribute('data-i18n-html')];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const v = lang[el.getAttribute('data-i18n-ph')];
+    if (v !== undefined) el.placeholder = v;
+  });
+  if (userLocation.name) setLocationDisplay(userLocation.name);
+  renderAll();
+  if (mapInstance) { updateMapMarkers(); }
+}
+
+// ===== RENDER =====
+function dist(job) {
+  const R = 6371;
+  const dLat = (job.lat - userLocation.lat) * Math.PI / 180;
+  const dLon = (job.lng - userLocation.lng) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(userLocation.lat*Math.PI/180)*Math.cos(job.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+  const d = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return d < 1 ? Math.round(d*1000)+'m' : d.toFixed(1)+'km';
+}
+
+function renderJobCard(job, onclick) {
+  const jt = job.t[currentLang] || job.t.ko;
+  return `<div class="job-card" onclick="${onclick}">
+    <div class="job-score">⭐ ${job.score}</div>
+    <div class="job-badges">
+      ${job.badges.includes('v') ? `<span class="badge v">✓ ${jt.badge_v}</span>` : ''}
+      ${job.badges.includes('u') ? `<span class="badge u">${jt.badge_u}</span>` : ''}
+      ${job.badges.includes('n') ? `<span class="badge n">${jt.badge_n}</span>` : ''}
+    </div>
+    <div class="job-dist">📍 ${dist(job)}</div>
+    <h3>${jt.title}</h3>
+    <div class="job-meta">${jt.loc} · ${jt.type}<br>${jt.time}</div>
+    <div class="job-pay">${jt.pay}</div>
+    <div class="job-tags">${jt.tags.map(tag=>`<span class="job-tag">${tag}</span>`).join('')}</div>
+  </div>`;
+}
+
+function renderCommItem(post, onclick) {
+  const pt = post.t[currentLang] || post.t.ko;
+  return `<div class="community-item" onclick="${onclick}">
+    <div class="community-left">
+      <div class="community-cat">${pt.cat}</div>
+      <div class="community-title">${pt.title}</div>
+      <div class="community-meta">${post.time}</div>
+    </div>
+    <div class="community-right"><span>👍 ${post.likes}</span><span>💬 ${post.comments}</span></div>
+  </div>`;
+}
+
+function renderAll() {
+  document.getElementById('home-jobs').innerHTML = JOBS.slice(0,4).map(j => renderJobCard(j, `openJob(${j.id})`)).join('');
+  document.getElementById('all-jobs').innerHTML = JOBS.map(j => renderJobCard(j, `openJob(${j.id})`)).join('');
+  document.getElementById('home-community').innerHTML = POSTS.slice(0,4).map(p => renderCommItem(p, `openPost(${p.id})`)).join('');
+  renderCommList(POSTS);
+}
+
+function renderCommList(posts) {
+  document.getElementById('all-community').innerHTML = posts.map(p => {
+    const pt = p.t[currentLang] || p.t.ko;
+    return `<div class="comm-item" onclick="openPost(${p.id})">
+      <div class="comm-item-cat">${pt.cat}</div>
+      <div class="comm-item-title">${pt.title}</div>
+      <div class="comm-item-preview">${pt.preview}</div>
+      <div class="comm-item-footer"><span>${p.time}</span><span>👍 ${p.likes} · 💬 ${p.comments}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ===== MAP =====
+let mapInstance = null;
+let mapMarkers = [];
+
+function initMap() {
+  if (mapInstance) return;
+  mapInstance = L.map('map').setView([userLocation.lat, userLocation.lng], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(mapInstance);
+  // User marker
+  L.circleMarker([userLocation.lat, userLocation.lng], {
+    radius: 10, fillColor: '#10B981', color: '#fff', weight: 3, fillOpacity: 1
+  }).addTo(mapInstance).bindPopup(`<b>${userLocation.name || '내 위치'}</b>`);
+  updateMapMarkers();
+}
+
+function updateMapMarkers() {
+  mapMarkers.forEach(m => mapInstance.removeLayer(m));
+  mapMarkers = [];
+  JOBS.forEach(job => {
+    const jt = job.t[currentLang] || job.t.ko;
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="background:#2563EB;color:#fff;padding:5px 9px;border-radius:10px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.2)">${jt.pay}</div>`,
+      iconAnchor: [0, 0]
+    });
+    const marker = L.marker([job.lat, job.lng], { icon }).addTo(mapInstance);
+    marker.bindPopup(`
+      <div class="map-job-popup" style="min-width:180px">
+        <h3>${jt.title}</h3>
+        <div class="pay">${jt.pay}</div>
+        <div class="meta">${jt.loc} · ${dist(job)}</div>
+        <button onclick="closeModal('jobModal');openJob(${job.id})">${t('apply_btn')}</button>
+      </div>
+    `);
+    mapMarkers.push(marker);
+  });
+}
+
+function updateMap() {
+  if (mapInstance) {
+    mapInstance.setView([userLocation.lat, userLocation.lng], 14);
+    updateMapMarkers();
+  }
+}
+
+// ===== NAV =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach((tab, i) => {
+    tab.classList.toggle('active', ['home','jobs','map','community','calc'][i] === name);
+  });
+  window.scrollTo(0, 0);
+  if (name === 'map') {
+    setTimeout(() => {
+      initMap();
+      mapInstance.invalidateSize();
+    }, 100);
+  }
+}
+
+// ===== JOB MODAL =====
+function openJob(id) {
+  const job = JOBS.find(j => j.id === id);
+  const jt = job.t[currentLang] || job.t.ko;
+  document.getElementById('job-modal-content').innerHTML = `
+    <div class="job-badges" style="margin-bottom:8px">
+      ${job.badges.includes('v') ? `<span class="badge v">✓ ${jt.badge_v}</span>` : ''}
+      ${job.badges.includes('u') ? `<span class="badge u">${jt.badge_u}</span>` : ''}
+    </div>
+    <h2 style="font-size:1.35rem;font-weight:900;margin-bottom:4px">${jt.title}</h2>
+    <div class="jm-pay">${jt.pay}</div>
+    <div class="jm-rows">
+      <div class="jm-row"><span class="jl">📍</span><span class="jv">${jt.loc} (${dist(job)})</span></div>
+      <div class="jm-row"><span class="jl">🏪</span><span class="jv">${jt.type}</span></div>
+      <div class="jm-row"><span class="jl">⏰</span><span class="jv">${jt.time}</span></div>
+      <div class="jm-row"><span class="jl">✅</span><span class="jv">${jt.tags.join(', ')}</span></div>
+    </div>
+    <div class="score-bar">
+      <h4>${t('score_trust')}</h4>
+      <div class="score-items">
+        <div class="score-item"><div class="sn">${job.score}</div><div class="sl">${t('score_trust')}</div></div>
+        <div class="score-item"><div class="sn">98%</div><div class="sl">${t('score_pay')}</div></div>
+        <div class="score-item"><div class="sn">4.7</div><div class="sl">${t('score_env')}</div></div>
+      </div>
+    </div>
+    <p style="font-size:.9rem;color:var(--g);line-height:1.7;margin-bottom:18px">${jt.desc}</p>
+  `;
+  document.querySelector('.apply-btn').textContent = t('apply_btn');
+  openModal('jobModal');
+}
+
+function applyJob() {
+  closeModal('jobModal');
+  openModal('loginModal');
+  showToast(t('toast_apply'));
+}
+
+// ===== COMMUNITY =====
+function openPost(id) {
+  const post = POSTS.find(p => p.id === id);
+  const pt = post.t[currentLang] || post.t.ko;
+  document.getElementById('post-modal-content').innerHTML = `
+    <div style="font-size:.73rem;font-weight:700;color:var(--p);margin-bottom:7px">${pt.cat}</div>
+    <h2 style="font-size:1.15rem;font-weight:800;margin-bottom:10px">${pt.title}</h2>
+    <p style="font-size:.85rem;color:var(--g);margin-bottom:14px">${post.time} · 익명</p>
+    <p style="font-size:.93rem;line-height:1.8">${pt.content}</p>
+    <div style="display:flex;gap:14px;margin-top:14px;font-size:.85rem;color:var(--g)">
+      <span>👍 ${post.likes}</span><span>💬 ${post.comments}</span>
+    </div>
+  `;
+  document.querySelectorAll('#postModal [data-i18n]').forEach(el => {
+    const v = LANGS[currentLang][el.getAttribute('data-i18n')];
+    if (v) el.textContent = v;
+  });
+  openModal('postModal');
+}
+
+function likePost() { showToast(t('toast_like')); closeModal('postModal'); }
+
+function submitPost() {
+  const title = document.getElementById('w-title').value.trim();
+  const content = document.getElementById('w-content').value.trim();
+  if (!title || !content) { showToast(t('write_title_ph')); return; }
+  closeModal('writeModal');
+  showToast('✅ ' + t('toast_post'));
+}
+
+// ===== SALARY CALC =====
+function calcSalary() {
+  const wage = parseFloat(document.getElementById('c-wage').value) || 10030;
+  const weekly = parseFloat(document.getElementById('c-weekly').value);
+  const weeks = parseFloat(document.getElementById('c-weeks').value) || 4;
+  const night = parseFloat(document.getElementById('c-night').value) || 0;
+  if (!weekly || weekly <= 0) { showToast('⚠️'); return; }
+  const base = wage * weekly * weeks;
+  const holiday = weekly >= 15 ? (weekly / 40) * 8 * wage * weeks : 0;
+  const nightPay = night * wage * 0.5;
+  const tax = Math.round((base + holiday + nightPay) * 0.033);
+  const total = base + holiday + nightPay - tax;
+  const card = document.getElementById('result-card');
+  document.getElementById('result-rows').innerHTML = `
+    <div class="result-row"><span class="rl">${t('calc_base')}</span><span class="rv">${Math.round(base).toLocaleString()}원</span></div>
+    <div class="result-row"><span class="rl">${t('calc_holiday')} ${weekly<15?'(15h 미만)':''}</span><span class="rv g">+${Math.round(holiday).toLocaleString()}원</span></div>
+    <div class="result-row"><span class="rl">${t('calc_nightlabel')}</span><span class="rv g">+${Math.round(nightPay).toLocaleString()}원</span></div>
+    <div class="result-row"><span class="rl">${t('calc_taxlabel')}</span><span class="rv" style="color:#EF4444">-${tax.toLocaleString()}원</span></div>
+  `;
+  document.getElementById('result-total-val').textContent = Math.round(total).toLocaleString() + '원';
+  card.classList.add('show');
+}
+
+// ===== AUTH =====
+function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pw = document.getElementById('l-pw').value;
+  if (!email || !email.includes('@')) { showToast('⚠️ ' + t('login_email')); return; }
+  if (!pw) { showToast('⚠️ ' + t('login_pw')); return; }
+  closeModal('loginModal');
+  showToast('✅ ' + email.split('@')[0] + ' ' + t('toast_login'));
+  document.querySelector('.btn-login').textContent = email.split('@')[0];
+  document.querySelector('.btn-signup').textContent = t('nav_logout') || 'Logout';
+  document.querySelector('.btn-signup').onclick = doLogout;
+}
+function doSignup() {
+  const name = document.getElementById('s-name').value.trim();
+  const email = document.getElementById('s-email').value.trim();
+  const pw = document.getElementById('s-pw').value;
+  const role = document.getElementById('s-role').value;
+  if (!name || !email || !email.includes('@') || pw.length < 8 || !role) { showToast('⚠️'); return; }
+  closeModal('signupModal');
+  showToast('🎉 ' + name + ' ' + t('toast_signup'));
+  document.querySelector('.btn-login').textContent = name;
+  document.querySelector('.btn-signup').textContent = 'Logout';
+  document.querySelector('.btn-signup').onclick = doLogout;
+}
+function doLogout() {
+  showToast(t('toast_logout'));
+  document.querySelector('.btn-login').textContent = t('nav_login');
+  document.querySelector('.btn-signup').textContent = t('nav_signup');
+  document.querySelector('.btn-login').onclick = () => openModal('loginModal');
+  document.querySelector('.btn-signup').onclick = () => openModal('signupModal');
+}
+
+// ===== REPORT =====
+function submitReport() {
+  const type = document.getElementById('r-type').value;
+  const content = document.getElementById('r-content').value.trim();
+  if (!type || !content) { showToast('⚠️'); return; }
+  closeModal('reportModal');
+  showToast('🚨 ' + t('toast_report'));
+}
+
+// ===== UTILS =====
+function doSearch() {
+  const q = document.getElementById('search-input').value.trim();
+  showPage('jobs');
+  if (q) showToast(`🔍 "${q}"`);
+}
+function toggleFilter(el) { el.classList.toggle('on'); }
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function switchModal(from, to) { closeModal(from); openModal(to); }
+document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== LANG PICKER CLICK TOGGLE =====
+document.getElementById('lang-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const dropdown = this.nextElementSibling;
+  const isOpen = dropdown.classList.contains('open');
+  dropdown.classList.toggle('open');
+  this.classList.toggle('active', !isOpen);
+});
+document.addEventListener('click', function() {
+  document.querySelectorAll('.lang-dropdown.open').forEach(d => {
+    d.classList.remove('open');
+    d.previousElementSibling.classList.remove('active');
+  });
+});
+
+// ===== REVIEW DATA =====
+let REVIEWS = [
+  { id:1, wp:'스타벅스 춘천명동점', overall:5, pay:5, env:5, work:4, mgmt:5, pros:'주휴수당이랑 야간수당 칼같이 들어와요. 점장님도 친절하고 분위기 좋음.', cons:'주말 오전엔 손님이 너무 많아서 바빠요.', date:'2026.03.20', anon:'익명' },
+  { id:2, wp:'GS25 강원대학교점', overall:4, pay:4, env:4, work:3, mgmt:4, pros:'캠퍼스 안이라 교통편하고 주휴수당 다 줘요.', cons:'새벽에 혼자 있을 때 좀 무서운 편이에요.', date:'2026.03.18', anon:'익명' },
+  { id:3, wp:'쿠팡 춘천물류센터', overall:3, pay:5, env:2, work:2, mgmt:3, pros:'시급이 높고 셔틀버스가 있어서 편해요. 식사도 제공됩니다.', cons:'업무강도가 세고 여름엔 너무 더워요. 허리 아픔 주의.', date:'2026.03.15', anon:'익명' },
+  { id:4, wp:'맥도날드 춘천점', overall:4, pay:4, env:4, work:3, mgmt:4, pros:'체계적으로 교육해줘서 처음 알바하기 좋아요.', cons:'피크타임에 정신없이 바쁨.', date:'2026.03.10', anon:'익명' },
+  { id:5, wp:'다이소 춘천중앙점', overall:4, pay:4, env:4, work:3, mgmt:5, pros:'사장님이 정말 친절하고 배려심이 있어요. 야간수당 꼬박꼬박 줌.', cons:'서있는 시간이 길어서 다리가 아파요.', date:'2026.03.08', anon:'익명' },
+  { id:6, wp:'본죽 춘천효자점', overall:3, pay:3, env:4, work:4, mgmt:3, pros:'점심만 하는 거라 시간이 정해져 있어서 좋아요.', cons:'주휴수당 물어봤을 때 모르는 척 하는 느낌이 있었음.', date:'2026.03.05', anon:'익명' },
+];
+let nextReviewId = REVIEWS.length + 1;
+
+function getWpList() {
+  const map = {};
+  REVIEWS.forEach(r => {
+    if (!map[r.wp]) map[r.wp] = { name:r.wp, reviews:[], sum:0 };
+    map[r.wp].reviews.push(r);
+    map[r.wp].sum += r.overall;
+  });
+  return Object.values(map).map(w => ({
+    ...w, avg: (w.sum / w.reviews.length).toFixed(1), count: w.reviews.length
+  })).sort((a,b) => b.avg - a.avg);
+}
+
+const WP_ICONS = { 'GS25':'🏪', '스타벅스':'☕', '쿠팡':'📦', '맥도날드':'🍔', '다이소':'🛍', '본죽':'🍜' };
+function wpIcon(name) {
+  for (const [k,v] of Object.entries(WP_ICONS)) if (name.includes(k)) return v;
+  return '🏢';
+}
+function starsHtml(n) {
+  return '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+}
+
+function renderWpList() {
+  const wps = getWpList();
+  document.getElementById('wp-list').innerHTML = wps.map(w => `
+    <div class="workplace-item" onclick="showWpDetail('${w.name}')">
+      <div class="wp-icon">${wpIcon(w.name)}</div>
+      <div class="wp-info">
+        <div class="wp-name">${w.name}</div>
+        <div class="wp-meta">후기 ${w.count}개 · ${w.reviews[0]?.date || ''}</div>
+      </div>
+      <div class="wp-rating">
+        <div class="wp-stars">${w.avg} ★</div>
+        <div class="wp-cnt">${w.count}개 후기</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showWpDetail(wpName) {
+  const reviews = REVIEWS.filter(r => r.wp === wpName);
+  const avg = r => (reviews.reduce((s,rv) => s + rv[r], 0) / reviews.length).toFixed(1);
+  const cats = [
+    { key:'pay', label:'💰 급여 정직성' },
+    { key:'env', label:'🏢 근무환경' },
+    { key:'work', label:'💼 업무강도' },
+    { key:'mgmt', label:'🤝 사장님 소통' },
+  ];
+  const overallAvg = avg('overall');
+  document.getElementById('review-detail-content').innerHTML = `
+    <div style="background:var(--l);border-radius:16px;padding:20px;margin-bottom:20px">
+      <div style="font-size:1.1rem;font-weight:800;margin-bottom:4px">${wpIcon(wpName)} ${wpName}</div>
+      <div style="font-size:2.2rem;font-weight:900;color:#F59E0B;margin-bottom:4px">${overallAvg} ★</div>
+      <div style="font-size:.82rem;color:var(--g);margin-bottom:16px">후기 ${reviews.length}개 기준</div>
+      ${cats.map(c => `
+        <div class="rating-bar">
+          <label>${c.label}</label>
+          <div class="rating-track"><div class="rating-fill" style="width:${avg(c.key)*20}%"></div></div>
+          <span style="font-size:.82rem;font-weight:700;color:#F59E0B;min-width:28px">${avg(c.key)}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:.97rem;font-weight:800">후기 ${reviews.length}개</div>
+      <button class="btn-p" style="padding:7px 16px;font-size:.82rem" onclick="openWpReview('${wpName}')">✏️ 후기 쓰기</button>
+    </div>
+    ${reviews.map(r => `
+      <div class="review-card">
+        <div class="review-header">
+          <div>
+            <div class="review-wp">${r.wp}</div>
+            <div class="review-stars">${starsHtml(r.overall)} ${r.overall}.0</div>
+          </div>
+          <div class="review-date">${r.date}</div>
+        </div>
+        <div class="review-cats">
+          ${cats.map(c => `<div class="review-cat">${c.label.split(' ')[1]} <strong>${starsHtml(r[c.key])}</strong></div>`).join('')}
+        </div>
+        <div class="review-pros">${r.pros}</div>
+        <div class="review-cons">${r.cons}</div>
+      </div>
+    `).join('')}
+  `;
+  document.getElementById('review-workplace-list').style.display = 'none';
+  document.getElementById('review-detail').style.display = 'block';
+}
+
+function backToWpList() {
+  document.getElementById('review-detail').style.display = 'none';
+  document.getElementById('review-workplace-list').style.display = 'block';
+  renderWpList();
+}
+
+function openWpReview(wpName) {
+  if (wpName) document.getElementById('rv-workplace').value = wpName;
+  openModal('writeReviewModal');
+}
+
+function onCommWriteBtn() {
+  const activeTab = document.querySelector('.comm-tab.active');
+  if (activeTab && activeTab.getAttribute('data-i18n') === 'ct_review') {
+    openModal('writeReviewModal');
+  } else {
+    openModal('writeModal');
+  }
+}
+
+// ===== STAR RATING =====
+const STAR_LABELS = { 1:'별로예요', 2:'그저 그래요', 3:'보통이에요', 4:'좋아요', 5:'최고예요!' };
+
+function setStar(id, val) {
+  const el = document.getElementById('star-' + id);
+  el.setAttribute('data-val', val);
+  el.querySelectorAll('span').forEach((s, i) => {
+    s.classList.toggle('on', i < val);
+  });
+  if (id === 'overall') {
+    document.getElementById('star-overall-label').textContent = STAR_LABELS[val] || '';
+  }
+}
+
+document.getElementById('rv-workplace').addEventListener('change', function() {
+  document.getElementById('rv-workplace-custom').style.display = this.value === '직접입력' ? 'block' : 'none';
+});
+
+function submitReview() {
+  const wpSel = document.getElementById('rv-workplace').value;
+  const wpCustom = document.getElementById('rv-workplace-custom').value.trim();
+  const wp = wpSel === '직접입력' ? wpCustom : wpSel;
+  const overall = parseInt(document.getElementById('star-overall').getAttribute('data-val'));
+  const pay = parseInt(document.getElementById('star-pay').getAttribute('data-val'));
+  const env = parseInt(document.getElementById('star-env').getAttribute('data-val'));
+  const work = parseInt(document.getElementById('star-work').getAttribute('data-val'));
+  const mgmt = parseInt(document.getElementById('star-mgmt').getAttribute('data-val'));
+  const pros = document.getElementById('rv-pros').value.trim();
+  const cons = document.getElementById('rv-cons').value.trim();
+
+  if (!wp) { showToast('⚠️ 업장을 선택해주세요.'); return; }
+  if (!overall) { showToast('⚠️ 별점을 선택해주세요.'); return; }
+  if (!pros) { showToast('⚠️ 좋았던 점을 작성해주세요.'); return; }
+  if (!cons) { showToast('⚠️ 아쉬웠던 점을 작성해주세요.'); return; }
+
+  REVIEWS.unshift({ id: nextReviewId++, wp, overall, pay:pay||3, env:env||3, work:work||3, mgmt:mgmt||3, pros, cons, date: new Date().toLocaleDateString('ko-KR').replace(/\. /g,'.').replace('.',''), anon:'익명' });
+
+  // reset
+  ['rv-workplace','rv-pros','rv-cons'].forEach(id => document.getElementById(id).value = '');
+  ['overall','pay','env','work','mgmt'].forEach(id => setStar(id, 0));
+  closeModal('writeReviewModal');
+  showToast('✅ 후기가 등록됐습니다!');
+  renderWpList();
+
+  // 해당 업장 상세로 이동
+  if (document.getElementById('review-detail').style.display !== 'none') {
+    showWpDetail(wp);
+  }
+}
+
+// switchCommTab 업장후기 분기
+const _origSwitchCommTab = switchCommTab;
+
+function switchCommTab(el, cat) {
+  document.querySelectorAll('.comm-tab').forEach(tb => tb.classList.remove('active'));
+  el.classList.add('active');
+
+  const board = document.getElementById('comm-board');
+  const reviewSec = document.getElementById('comm-review-section');
+  const writeBtn = document.getElementById('comm-write-btn');
+
+  if (cat === 'review') {
+    board.style.display = 'none';
+    reviewSec.style.display = 'block';
+    writeBtn.textContent = '✏️ 후기 쓰기';
+    backToWpList();
+  } else {
+    board.style.display = 'block';
+    reviewSec.style.display = 'none';
+    writeBtn.textContent = t('write_btn') || '글쓰기';
+    const filtered = cat === 'all' ? POSTS : POSTS.filter(p => p.cat === cat);
+    renderCommList(filtered.length ? filtered : []);
+    if (!filtered.length) document.getElementById('all-community').innerHTML = '<div style="padding:36px;text-align:center;color:var(--g)">게시글이 없습니다.</div>';
+  }
+}
+
+// ===== INIT =====
+initLocation();
+renderAll();
+renderWpList();
+</script>
+</body>
+</html>
