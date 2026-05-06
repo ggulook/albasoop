@@ -879,9 +879,14 @@
         <label style="font-size:.83rem;font-weight:700;color:var(--g);display:block;margin-bottom:7px" data-i18n="mp_ws_contracted">주 계약 근무시간 (연장수당 계산용)</label>
         <input class="calc-input" id="ws-contracted" type="number" min="0" max="40" data-i18n-ph="mp_contracted_ph" placeholder="미입력 시 연장수당 미계산">
       </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;cursor:pointer;padding:4px 0">
+        <input type="checkbox" id="ws-large" style="width:16px;height:16px;cursor:pointer" checked>
+        <span data-i18n="mp_ws_large">5인 이상 사업장 (야간수당·연장수당 적용)</span>
+      </label>
       <div style="font-size:.78rem;color:var(--g);background:var(--l);border-radius:10px;padding:10px 14px;line-height:1.6">
         💡 2026년 최저시급: <strong>10,030원</strong><br>
-        주휴수당·야간수당(22시~익일6시)·연장수당은 이 설정을 기준으로 자동 계산됩니다.
+        · 주휴수당: 주 15시간 이상 개근 시 모든 사업장 적용<br>
+        · 야간·연장수당: 5인 이상 사업장에서만 법적 의무
       </div>
       <button class="msubmit" onclick="saveWageSetting()" data-i18n="mp_save_btn">저장하기</button>
     </div>
@@ -1170,8 +1175,9 @@ const LANGS = {
     mp_hol_notice:'공휴일 근무 {h}시간이 포함됐어요. 통상임금의 50%가 가산됩니다. (5인 이상 사업장 적용)',
     mp_hol_inline:'{name}입니다. 공휴일 근무 시 통상임금의 50% 가산이 적용돼요.',
     mp_cal_sync:'내 업장 데이터로 불러오기',
-    mp_overtime:'연장수당', mp_ws_contracted:'주 계약 근무시간 (시간, 연장수당 계산용)',
+    mp_overtime:'연장수당', mp_ws_contracted:'주 계약 근무시간 (연장수당 계산용, 시간)',
     mp_contracted_ph:'미입력 시 연장수당 미계산', mp_overtime_detail:'h × 시급 × 50%',
+    mp_ws_large:'5인 이상 사업장 (야간수당·연장수당 적용)', mp_small_note:'※ 5인 미만 사업장: 야간·연장수당 미적용',
   },
   en:{
     flag:'🇺🇸', label:'English', near:'Near',
@@ -1236,8 +1242,9 @@ const LANGS = {
     mp_hol_notice:'{h}h of holiday work included. 50% premium applies. (5+ employee workplaces)',
     mp_hol_inline:'{name}. 50% holiday pay premium applies for work today.',
     mp_cal_sync:'Load from My Workplace',
-    mp_overtime:'Overtime Pay', mp_ws_contracted:'Contracted Weekly Hours (for overtime calc)',
+    mp_overtime:'Overtime Pay', mp_ws_contracted:'Contracted Weekly Hours (for overtime)',
     mp_contracted_ph:'Leave blank to skip overtime calc', mp_overtime_detail:'h × wage × 50%',
+    mp_ws_large:'5+ Employee Workplace (night/overtime pay applies)', mp_small_note:'※ Under 5 employees: no night/overtime pay',
   },
   ja:{
     flag:'🇯🇵', label:'日本語', near:'近くの',
@@ -1304,6 +1311,7 @@ const LANGS = {
     mp_cal_sync:'職場データを読み込む',
     mp_overtime:'残業手当', mp_ws_contracted:'週契約勤務時間（残業手当計算用）',
     mp_contracted_ph:'未入力時は残業手当未計算', mp_overtime_detail:'h × 時給 × 50%',
+    mp_ws_large:'5人以上の職場（深夜・残業手当適用）', mp_small_note:'※ 5人未満：深夜・残業手当なし',
   },
   zh:{
     flag:'🇨🇳', label:'中文', near:'附近',
@@ -1370,6 +1378,7 @@ const LANGS = {
     mp_cal_sync:'从我的职场加载',
     mp_overtime:'加班补贴', mp_ws_contracted:'每周合同工时（加班补贴计算用）',
     mp_contracted_ph:'不填则不计算加班补贴', mp_overtime_detail:'h × 时薪 × 50%',
+    mp_ws_large:'5人以上工作场所（夜班·加班补贴适用）', mp_small_note:'※ 5人未满：无夜班·加班补贴',
   }
 };
 
@@ -2006,7 +2015,8 @@ let myWorkplace = {
   type: '편의점',
   wage: 10030,
   since: '2025.04',
-  contractedHours: 0
+  contractedHours: 0,
+  isLarge: true
 };
 let workRecords = {};
 let calYear = new Date().getFullYear();
@@ -2242,26 +2252,43 @@ function calcNightHours(start, end) {
 function openWageSetting() {
   document.getElementById('ws-wage').value = myWorkplace.wage || 10030;
   document.getElementById('ws-contracted').value = myWorkplace.contractedHours || '';
+  document.getElementById('ws-large').checked = myWorkplace.isLarge !== false;
   openModal('wageSettingModal');
 }
 
 function renderWageCalc() {
   const wage = myWorkplace.wage || 10030;
   const contractedWeeklyHours = myWorkplace.contractedHours || 0;
+  const isLarge = myWorkplace.isLarge !== false; // 5인 이상 사업장
   const prefix = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
   let totalHours = 0, nightHours = 0;
-  const holDayHours = {}; // 날짜별 공휴일 근무시간
+  const holDayHours = {};  // 날짜별 공휴일 근무시간
+  const weekHours = {};    // 주별 근무시간 (1~5주차)
 
   Object.entries(workRecords).forEach(([date, recs]) => {
     if (!date.startsWith(prefix)) return;
+    const day = parseInt(date.split('-')[2]);
+    const weekKey = Math.ceil(day / 7); // 1~5주차
     const isHol = isHoliday(date);
     recs.forEach(r => {
       const h = calcShiftHours(r.start, r.end);
       totalHours += h;
-      nightHours += calcNightHours(r.start, r.end);
+      if (isLarge) nightHours += calcNightHours(r.start, r.end);
       if (isHol) holDayHours[date] = (holDayHours[date] || 0) + h;
+      weekHours[weekKey] = (weekHours[weekKey] || 0) + h;
     });
   });
+
+  // 주휴수당: 주별로 15시간 이상인 주마다 (주근로시간/40)×8×시급 지급 (모든 사업장)
+  let juHuPay = 0, juHuWeeks = 0;
+  Object.values(weekHours).forEach(wh => {
+    if (wh >= 15) {
+      juHuPay += Math.round((wh / 40) * 8 * wage);
+      juHuWeeks++;
+    }
+  });
+  const avgWeeklyHours = Object.keys(weekHours).length > 0
+    ? totalHours / Object.keys(weekHours).length : 0;
 
   // 공휴일 수당: 8h 이내 50%, 8h 초과분 100% 가산 (근로기준법 제56조)
   let publicHolPay = 0;
@@ -2271,16 +2298,15 @@ function renderWageCalc() {
   });
 
   const base = Math.round(totalHours * wage);
-  const weeksInMonth = 4;
-  const weeklyHours = totalHours / weeksInMonth;
-  // 주휴수당: 주 15시간 이상 + 개근 시, (소정근로시간/40)×8×시급
-  const juHuPay = weeklyHours >= 15 ? Math.round((weeklyHours / 40) * 8 * wage * weeksInMonth) : 0;
-  // 야간수당: 22시~익일 6시, 50% 가산
-  const nightPay = Math.round(nightHours * wage * 0.5);
+  // 야간수당: 22시~익일 6시, 50% 가산 (5인 이상 사업장)
+  const nightPay = isLarge ? Math.round(nightHours * wage * 0.5) : 0;
   // 연장수당: 계약시간 초과분 × 50% 가산 (5인 이상 사업장)
   let overtimePay = 0, overtimeHours = 0;
-  if (contractedWeeklyHours > 0 && weeklyHours > contractedWeeklyHours) {
-    overtimeHours = Math.round((weeklyHours - contractedWeeklyHours) * weeksInMonth * 10) / 10;
+  if (isLarge && contractedWeeklyHours > 0 && avgWeeklyHours > contractedWeeklyHours) {
+    const totalOvertime = Object.values(weekHours)
+      .map(wh => Math.max(0, wh - contractedWeeklyHours))
+      .reduce((a, b) => a + b, 0);
+    overtimeHours = Math.round(totalOvertime * 10) / 10;
     overtimePay = Math.round(overtimeHours * wage * 0.5);
   }
   const total = base + juHuPay + nightPay + publicHolPay + overtimePay;
@@ -2302,9 +2328,9 @@ function renderWageCalc() {
     const overtimeRow = overtimePay > 0
       ? `<div class="wage-breakdown-row"><span class="wl">${t('mp_overtime')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${overtimePay.toLocaleString()}${won}</span><div class="wage-detail">${overtimeHours}${hu} × ${wage.toLocaleString()}${won} × 50%</div></div>`
       : '';
-    const juhyuDetail = weeklyHours < 15
-      ? `${Math.round(weeklyHours * weeksInMonth * 10)/10}${hu} (${t('mp_15h_below')})`
-      : `(${Math.round(weeklyHours * weeksInMonth * 10)/10}${hu} ÷ 40) × 8 × ${wage.toLocaleString()}${won} × ${weeksInMonth}주`;
+    const juhyuDetail = juHuWeeks === 0
+      ? t('mp_15h_below')
+      : `${juHuWeeks}주 × (주근로시간/40) × 8 × ${wage.toLocaleString()}${won}`;
     const nightHoursR = Math.round(nightHours * 10) / 10;
     rowsEl.innerHTML = `
       <div class="wage-breakdown-row"><span class="wl">${t('mp_base_pay')}</span><span class="wr" onclick="toggleWageDetail(this)">${base.toLocaleString()}${won}</span><div class="wage-detail">${totalHours}${hu} × ${wage.toLocaleString()}${won}</div></div>
@@ -2379,8 +2405,10 @@ function toggleWageDetail(el) {
 function saveWageSetting() {
   const wage = parseInt(document.getElementById('ws-wage').value) || 10030;
   const contracted = parseFloat(document.getElementById('ws-contracted').value) || 0;
+  const isLarge = document.getElementById('ws-large').checked;
   myWorkplace.wage = wage;
   myWorkplace.contractedHours = contracted;
+  myWorkplace.isLarge = isLarge;
   const wageEl = document.getElementById('c-wage');
   if (wageEl) wageEl.value = wage;
   closeModal('wageSettingModal');
