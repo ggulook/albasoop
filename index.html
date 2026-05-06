@@ -913,19 +913,19 @@
 <!-- BOTTOM TAB BAR -->
 <div class="bottom-tab-bar">
   <button class="bottom-tab active" id="bt-home" onclick="showPage('home')">
-    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg></span>홈
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg></span><span data-i18n="nav_home">홈</span>
   </button>
   <button class="bottom-tab" id="bt-jobs" onclick="showPage('jobs')">
-    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="2" y1="12" x2="22" y2="12"/><rect x="10" y="10" width="4" height="4" rx="0.5"/></svg></span>알바 찾기
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="2" y1="12" x2="22" y2="12"/><rect x="10" y="10" width="4" height="4" rx="0.5"/></svg></span><span data-i18n="nav_jobs">알바 찾기</span>
   </button>
   <button class="bottom-tab" id="bt-map" onclick="showPage('map')">
-    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z"/><circle cx="12" cy="8" r="2.2"/></svg></span>지도
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z"/><circle cx="12" cy="8" r="2.2"/></svg></span><span data-i18n="nav_map_short">지도</span>
   </button>
   <button class="bottom-tab" id="bt-community" onclick="showPage('community')">
-    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="0.9" fill="currentColor" stroke="none"/><circle cx="12" cy="10" r="0.9" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.9" fill="currentColor" stroke="none"/></svg></span>커뮤니티
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="0.9" fill="currentColor" stroke="none"/><circle cx="12" cy="10" r="0.9" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.9" fill="currentColor" stroke="none"/></svg></span><span data-i18n="nav_community">커뮤니티</span>
   </button>
   <button class="bottom-tab" id="bt-myplace" onclick="showPage('myplace')">
-    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="12" rx="1"/><path d="M2 9l2.5-6h15L22 9"/><rect x="8.5" y="13" width="7" height="8"/><rect x="15" y="3" width="6" height="5" rx="1"/></svg></span>내 업장
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="12" rx="1"/><path d="M2 9l2.5-6h15L22 9"/><rect x="8.5" y="13" width="7" height="8"/><rect x="15" y="3" width="6" height="5" rx="1"/></svg></span><span data-i18n="nav_myplace">내 업장</span>
   </button>
 </div>
 
@@ -1102,7 +1102,7 @@ let currentLang = 'ko';
 const LANGS = {
   ko:{
     flag:'🇰🇷', label:'한국어', near:'내 주변',
-    nav_home:'홈', nav_jobs:'알바 찾기', nav_map:'📍 지도', nav_community:'커뮤니티', nav_calc:'급여 계산기', nav_myplace:'내 업장',
+    nav_home:'홈', nav_jobs:'알바 찾기', nav_map:'📍 지도', nav_map_short:'지도', nav_community:'커뮤니티', nav_calc:'급여 계산기', nav_myplace:'내 업장',
     nav_login:'로그인', nav_signup:'회원가입',
     hero_h1:'당신의 <em>노동권</em>을<br>지켜드립니다',
     hero_p:'주휴수당·야간수당 자동 계산, 공정 업장 인증, 익명 커뮤니티까지.<br>모든 노동자를 위한 통합 플랫폼.',
@@ -1145,7 +1145,7 @@ const LANGS = {
   },
   en:{
     flag:'🇺🇸', label:'English', near:'Near',
-    nav_home:'Home', nav_jobs:'Find Jobs', nav_map:'📍 Map', nav_community:'Community', nav_calc:'Salary Calc', nav_myplace:'My Workplace',
+    nav_home:'Home', nav_jobs:'Find Jobs', nav_map:'📍 Map', nav_map_short:'Map', nav_community:'Community', nav_calc:'Salary Calc', nav_myplace:'My Workplace',
     nav_login:'Login', nav_signup:'Sign Up',
     hero_h1:'We protect your <em>labor rights</em>',
     hero_p:'Auto-calculate weekly & night pay, fair employer certification, anonymous community.<br>An integrated platform for all workers.',
@@ -1188,7 +1188,7 @@ const LANGS = {
   },
   ja:{
     flag:'🇯🇵', label:'日本語', near:'近くの',
-    nav_home:'ホーム', nav_jobs:'バイトを探す', nav_map:'📍 地図', nav_community:'コミュニティ', nav_calc:'給与計算機', nav_myplace:'マイ職場',
+    nav_home:'ホーム', nav_jobs:'バイトを探す', nav_map:'📍 地図', nav_map_short:'地図', nav_community:'コミュニティ', nav_calc:'給与計算機', nav_myplace:'マイ職場',
     nav_login:'ログイン', nav_signup:'新規登録',
     hero_h1:'あなたの<em>労働権</em>を<br>守ります',
     hero_p:'週休手当・深夜手当の自動計算、公正職場認証、匿名コミュニティ。<br>すべての労働者のための統合プラットフォーム。',
@@ -1231,7 +1231,7 @@ const LANGS = {
   },
   zh:{
     flag:'🇨🇳', label:'中文', near:'附近',
-    nav_home:'首页', nav_jobs:'找工作', nav_map:'📍 地图', nav_community:'社区', nav_calc:'工资计算器', nav_myplace:'我的职场',
+    nav_home:'首页', nav_jobs:'找工作', nav_map:'📍 地图', nav_map_short:'地图', nav_community:'社区', nav_calc:'工资计算器', nav_myplace:'我的职场',
     nav_login:'登录', nav_signup:'注册',
     hero_h1:'保护您的<em>劳动权益</em>',
     hero_p:'自动计算周休津贴和夜班补贴，公正雇主认证，匿名社区。<br>面向所有劳动者的综合平台。',
@@ -1300,6 +1300,7 @@ function setLang(code) {
   });
   if (userLocation.name) setLocationDisplay(userLocation.name);
   renderAll();
+  renderWpList();
   if (mapInstance) { updateMapMarkers(); }
 }
 
