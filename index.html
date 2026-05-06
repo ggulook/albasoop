@@ -441,11 +441,11 @@
     </div>
     <div class="hero-visual">
       <div class="salary-ttl" data-i18n="salary_title">이번 달 예상 급여 💰</div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_base">기본급 (80h × 10,030원)</span><span class="val">802,400원</span></div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_holiday">주휴수당</span><span class="val g">+160,480원</span></div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_night">야간수당 (10h)</span><span class="val g">+50,150원</span></div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_tax">공제 (세금)</span><span class="val" style="color:#EF4444">-23,200원</span></div>
-      <div class="salary-total"><span class="lbl" data-i18n="salary_takehome">실수령액</span><span class="val">989,830원</span></div>
+      <div class="salary-row"><span class="lbl" id="hero-base-lbl" data-i18n="salary_base">기본급 (80h × 10,030원)</span><span class="val" id="hero-base-val">802,400원</span></div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_holiday">주휴수당</span><span class="val g" id="hero-holiday-val">+160,480원</span></div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_night">야간수당</span><span class="val g" id="hero-night-val">+50,150원</span></div>
+      <div class="salary-row"><span class="lbl" data-i18n="salary_tax">공제 (세금)</span><span class="val" id="hero-tax-val" style="color:#EF4444">-23,200원</span></div>
+      <div class="salary-total"><span class="lbl" data-i18n="salary_takehome">실수령액</span><span class="val" id="hero-total-val">989,830원</span></div>
     </div>
   </div>
 
@@ -2271,6 +2271,22 @@ function renderWageCalc() {
       noteEl.style.display = 'none';
     }
   }
+
+  // 홈 히어로 섹션 동기화
+  const tax = Math.round(total * 0.033);
+  const takeHome = total - tax;
+  const heroBaseLbl = document.getElementById('hero-base-lbl');
+  const heroBaseVal = document.getElementById('hero-base-val');
+  const heroHolidayVal = document.getElementById('hero-holiday-val');
+  const heroNightVal = document.getElementById('hero-night-val');
+  const heroTaxVal = document.getElementById('hero-tax-val');
+  const heroTotalVal = document.getElementById('hero-total-val');
+  if (heroBaseLbl) heroBaseLbl.textContent = `${t('mp_base_pay')} (${totalHours}h × ${wage.toLocaleString()}${won})`;
+  if (heroBaseVal) heroBaseVal.textContent = base.toLocaleString() + won;
+  if (heroHolidayVal) heroHolidayVal.textContent = '+' + juHuPay.toLocaleString() + won;
+  if (heroNightVal) heroNightVal.textContent = '+' + (nightPay + publicHolPay).toLocaleString() + won;
+  if (heroTaxVal) heroTaxVal.textContent = '-' + tax.toLocaleString() + won;
+  if (heroTotalVal) heroTotalVal.textContent = takeHome.toLocaleString() + won;
 }
 
 function updateMyPlaceHeader() {
