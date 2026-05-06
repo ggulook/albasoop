@@ -230,12 +230,118 @@
     .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dk);color:#fff;padding:11px 22px;border-radius:999px;font-size:.88rem;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap}
     .toast.show{transform:translateX(-50%) translateY(0)}
 
-    @media(max-width:700px){.nav-center{display:none}.modal{padding:28px 22px}}
+    @media(max-width:700px){
+      .nav-center{display:none}
+      .modal{padding:28px 22px}
+      .nav-right{display:none}
+      nav{justify-content:flex-start;gap:14px}
+      .logo{flex:1}
+    }
+
+    /* MOBILE HAMBURGER */
+    .hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;border-radius:8px;transition:background .2s;flex-shrink:0}
+    .hamburger:hover{background:var(--l)}
+    .hamburger span{display:block;width:22px;height:2.5px;background:var(--dk);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+    .hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    @media(max-width:700px){.hamburger{display:flex}}
+
+    /* MOBILE MENU DRAWER */
+    .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;opacity:0;transition:opacity .25s}
+    .mob-overlay.open{display:block;opacity:1}
+    .mob-drawer{position:fixed;top:0;left:0;height:100%;width:280px;max-width:85vw;background:#fff;z-index:301;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:4px 0 24px rgba(0,0,0,.12)}
+    .mob-drawer.open{transform:translateX(0)}
+    .mob-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--b)}
+    .mob-drawer-logo{font-size:1.3rem;font-weight:900;color:var(--p)}
+    .mob-drawer-logo span{color:var(--a)}
+    .mob-close{background:none;border:none;font-size:1.4rem;color:var(--g);cursor:pointer;line-height:1;padding:4px}
+    .mob-nav{display:flex;flex-direction:column;padding:10px 0;flex:1;overflow-y:auto}
+    .mob-nav-item{display:flex;align-items:center;gap:14px;padding:14px 22px;font-size:.97rem;font-weight:600;color:var(--dk);cursor:pointer;border:none;background:none;text-align:left;transition:background .15s;width:100%}
+    .mob-nav-item:hover,.mob-nav-item.active{background:#EFF6FF;color:var(--p)}
+    .mob-nav-item .mob-icon{font-size:1.2rem;width:28px;text-align:center;flex-shrink:0}
+    .mob-divider{height:1px;background:var(--b);margin:8px 18px}
+    .mob-footer{padding:16px 20px;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:8px}
+    .mob-footer .btn-login,.mob-footer .btn-signup{width:100%;text-align:center;padding:11px}
+
+    /* MY PLACE PAGE */
+    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto}
+    .myplace-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .myplace-hdr h1{font-size:1.7rem;font-weight:900}
+    .wp-reg-card{background:var(--l);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:24px;border:1.5px solid var(--b)}
+    .wp-reg-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+    .wp-reg-info{flex:1}
+    .wp-reg-name{font-size:1rem;font-weight:800;margin-bottom:3px}
+    .wp-reg-meta{font-size:.82rem;color:var(--g)}
+    .wp-reg-badge{background:#D1FAE5;color:#065F46;font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+    .cal-section{background:#fff;border-radius:20px;border:1.5px solid var(--b);padding:20px;margin-bottom:18px}
+    .cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .cal-nav-title{font-size:1rem;font-weight:800}
+    .cal-nav-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--b);background:#fff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .cal-nav-btn:hover{border-color:var(--p);color:var(--p)}
+    .cal-header-row{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:6px}
+    .cal-header-cell{font-size:.75rem;font-weight:700;color:var(--g);padding:4px 0}
+    .cal-header-cell.sun{color:#EF4444}
+    .cal-header-cell.sat{color:#3B82F6}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+    .cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;transition:all .2s;position:relative;font-size:.88rem;font-weight:600}
+    .cal-day:hover:not(.empty){background:var(--l)}
+    .cal-day.today{background:#EFF6FF;color:var(--p);font-weight:800}
+    .cal-day.selected{background:var(--p) !important;color:#fff !important}
+    .cal-day.has-work::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--a)}
+    .cal-day.selected.has-work::after{background:#fff}
+    .cal-day.empty{cursor:default}
+    .cal-day.sun{color:#EF4444}
+    .cal-day.sat{color:#3B82F6}
+    .cal-day.holiday{color:#EF4444 !important}
+    .cal-day.holiday .cal-day-num{position:relative}
+    .cal-holiday-dot{position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#EF4444;flex-shrink:0}
+    .cal-day.selected .cal-holiday-dot{background:#fff}
+    .holiday-notice{display:flex;align-items:flex-start;gap:8px;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:.85rem;color:#991B1B;line-height:1.5}
+    .holiday-notice .hi-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+    .holiday-notice strong{font-weight:800}
+    .schedule-section{background:#fff;border-radius:20px;border:1.5px solid var(--b);padding:20px;margin-bottom:18px}
+    .schedule-date-label{font-size:.9rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+    .schedule-date-label .day-badge{font-size:.72rem;font-weight:700;background:#EFF6FF;color:var(--p);padding:2px 8px;border-radius:999px}
+    .time-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .time-row label{font-size:.83rem;color:var(--g);min-width:56px;display:flex;align-items:center;gap:4px}
+    .time-select{padding:9px 12px;border:2px solid var(--b);border-radius:10px;font-size:.93rem;font-weight:600;outline:none;transition:border .2s;background:#fff;flex:1;cursor:pointer}
+    .time-select:focus{border-color:var(--p)}
+    .work-hours-badge{background:#EFF6FF;color:var(--p);border-radius:10px;padding:9px 14px;font-size:.88rem;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .add-schedule-btn{width:100%;padding:12px;border-radius:12px;border:2px dashed var(--b);background:none;font-size:.88rem;font-weight:700;color:var(--g);cursor:pointer;transition:all .2s}
+    .add-schedule-btn:hover{border-color:var(--p);color:var(--p);background:#EFF6FF}
+    .schedule-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    .schedule-item{display:flex;align-items:center;justify-content:space-between;background:var(--l);border-radius:10px;padding:10px 14px;font-size:.88rem}
+    .schedule-item-time{font-weight:700}
+    .schedule-item-hours{color:var(--p);font-weight:600;font-size:.82rem;flex:1;text-align:right;margin-right:8px}
+    .schedule-item-del{background:none;border:none;color:#CBD5E1;cursor:pointer;font-size:.95rem;padding:0 2px;transition:color .15s}
+    .schedule-item-del:hover{color:#EF4444}
+    .wage-section{background:#fff;border-radius:20px;border:1.5px solid var(--b);padding:20px;margin-bottom:18px}
+    .wage-section-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .wage-section-title{font-size:.97rem;font-weight:800}
+    .wage-auto-btn{font-size:.78rem;color:var(--p);font-weight:600;background:#EFF6FF;border:none;border-radius:8px;padding:5px 11px;cursor:pointer}
+    .wage-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b);font-size:.88rem}
+    .wage-row:last-of-type{border:none}
+    .wage-row .wl{color:var(--g)}
+    .wage-row .wr{font-weight:700}
+    .wage-row .wr.plus{color:var(--a)}
+    .wage-total-box{background:#EFF6FF;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .wage-total-box .wtl{font-weight:700;font-size:.93rem}
+    .wage-total-box .wtv{font-size:1.35rem;font-weight:900;color:var(--p)}
+    .wage-note{font-size:.78rem;color:var(--a);margin-top:10px;display:flex;align-items:flex-start;gap:5px;line-height:1.5}
+    .no-workplace{text-align:center;padding:60px 20px;color:var(--g)}
+    .no-workplace .emp-icon{font-size:3rem;margin-bottom:14px}
+    .no-workplace p{margin-bottom:20px;font-size:.93rem;line-height:1.7}
+    .wp-change-btn{background:none;border:none;color:var(--g);cursor:pointer;font-size:.78rem;padding:4px 8px;border-radius:6px;transition:all .15s}
+    .wp-change-btn:hover{color:var(--p);background:#EFF6FF}
   </style>
 </head>
 <body>
 
 <nav>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="메뉴">
+    <span></span><span></span><span></span>
+  </button>
   <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
   <div class="nav-center">
     <button class="nav-tab active" data-i18n="nav_home" onclick="showPage('home')">홈</button>
@@ -243,6 +349,7 @@
     <button class="nav-tab" data-i18n="nav_map" onclick="showPage('map')">📍 지도</button>
     <button class="nav-tab" data-i18n="nav_community" onclick="showPage('community')">커뮤니티</button>
     <button class="nav-tab" data-i18n="nav_calc" onclick="showPage('calc')">급여 계산기</button>
+    <button class="nav-tab" data-i18n="nav_myplace" onclick="showPage('myplace')">내 업장</button>
   </div>
   <div class="nav-right">
     <div class="lang-picker">
@@ -264,6 +371,27 @@
     <button class="btn-signup" data-i18n="nav_signup" onclick="openModal('signupModal')">회원가입</button>
   </div>
 </nav>
+
+<!-- MOBILE MENU DRAWER -->
+<div class="mob-overlay" id="mob-overlay" onclick="closeMobileMenu()"></div>
+<div class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-head">
+    <div class="mob-drawer-logo">알바<span>숲</span></div>
+    <button class="mob-close" onclick="closeMobileMenu()">✕</button>
+  </div>
+  <nav class="mob-nav">
+    <button class="mob-nav-item active" id="mob-home" onclick="mobNav('home')"><span class="mob-icon">🏠</span>홈</button>
+    <button class="mob-nav-item" id="mob-jobs" onclick="mobNav('jobs')"><span class="mob-icon">💼</span>알바 찾기</button>
+    <button class="mob-nav-item" id="mob-map" onclick="mobNav('map')"><span class="mob-icon">📍</span>지도</button>
+    <button class="mob-nav-item" id="mob-community" onclick="mobNav('community')"><span class="mob-icon">💬</span>커뮤니티</button>
+    <button class="mob-nav-item" id="mob-calc" onclick="mobNav('calc')"><span class="mob-icon">🧮</span>급여 계산기</button>
+    <button class="mob-nav-item" id="mob-myplace" onclick="mobNav('myplace')"><span class="mob-icon">🏪</span>내 업장</button>
+  </nav>
+  <div class="mob-footer">
+    <button class="btn-login" onclick="closeMobileMenu();openModal('loginModal')">로그인</button>
+    <button class="btn-signup" onclick="closeMobileMenu();openModal('signupModal')">회원가입</button>
+  </div>
+</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -406,6 +534,103 @@
   </div>
 </div>
 
+<!-- MY PLACE PAGE -->
+<div class="page" id="page-myplace">
+  <div class="myplace-page">
+    <div class="myplace-hdr">
+      <h1>내 업장</h1>
+      <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')">공정인증 알아보기</button>
+    </div>
+
+    <!-- 업장 미등록 상태 -->
+    <div id="myplace-empty" style="display:none">
+      <div class="no-workplace">
+        <div class="emp-icon">🏢</div>
+        <p>등록된 업장이 없어요.<br>일하는 곳을 등록하고<br>근무 기록을 관리해보세요.</p>
+        <button class="btn-p" onclick="openModal('addWpModal')">+ 업장 등록하기</button>
+      </div>
+    </div>
+
+    <!-- 업장 등록 상태 -->
+    <div id="myplace-content">
+      <!-- 업장 카드 -->
+      <div class="wp-reg-card">
+        <div class="wp-reg-icon" id="myplace-icon">🏪</div>
+        <div class="wp-reg-info">
+          <div class="wp-reg-name" id="myplace-name">GS25 강원대학교점</div>
+          <div class="wp-reg-meta" id="myplace-meta">편의점 · 근무기간 2025.04~</div>
+        </div>
+        <span class="wp-reg-badge">공정인증</span>
+        <button class="wp-change-btn" onclick="openModal('addWpModal')">변경</button>
+      </div>
+
+      <!-- 캘린더 -->
+      <div class="cal-section">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <div class="cal-nav-title" id="cal-title">2025년 5월</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span id="cal-total-hours" style="font-size:.8rem;color:var(--p);font-weight:700"></span>
+            <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+          </div>
+        </div>
+        <div class="cal-header-row">
+          <div class="cal-header-cell sun">일</div>
+          <div class="cal-header-cell">월</div>
+          <div class="cal-header-cell">화</div>
+          <div class="cal-header-cell">수</div>
+          <div class="cal-header-cell">목</div>
+          <div class="cal-header-cell">금</div>
+          <div class="cal-header-cell sat">토</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+
+      <!-- 선택 날짜 근무 스케줄 -->
+      <div class="schedule-section">
+        <div class="schedule-date-label">
+          <span id="schedule-date-text">날짜를 선택하세요</span>
+          <span class="day-badge" id="schedule-day-badge"></span>
+        </div>
+
+        <div class="schedule-list" id="schedule-list" style="display:none"></div>
+
+        <div id="add-schedule-form">
+          <div class="time-row">
+            <label>🌅 출근</label>
+            <select class="time-select" id="start-time" onchange="updateWorkHoursDisplay()"></select>
+          </div>
+          <div class="time-row">
+            <label>🌇 퇴근</label>
+            <select class="time-select" id="end-time" onchange="updateWorkHoursDisplay()"></select>
+          </div>
+          <div class="work-hours-badge">
+            <span>근무 시간</span>
+            <span id="work-hours-val" style="font-size:1rem;font-weight:900">-</span>
+          </div>
+          <button class="add-schedule-btn" onclick="addSchedule()">+ 근무기록 추가</button>
+        </div>
+      </div>
+
+      <!-- 급여 계산 -->
+      <div class="wage-section">
+        <div class="wage-section-hdr">
+          <div class="wage-section-title">이번 달 예상 급여 💰</div>
+          <button class="wage-auto-btn" onclick="openModal('wageSettingModal')">자동 계산 설정</button>
+        </div>
+        <div id="wage-rows"></div>
+        <div class="wage-total-box">
+          <span class="wtl">예상 총 지급액</span>
+          <span class="wtv" id="wage-total">0원</span>
+        </div>
+        <div class="wage-note" id="wage-note" style="display:none">
+          ℹ️ <span id="wage-note-text"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODALS -->
 <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
   <div class="modal">
@@ -544,6 +769,79 @@
       <textarea class="minput report-textarea" id="rv-pros" placeholder="👍 좋았던 점 (급여, 분위기, 근무환경 등)"></textarea>
       <textarea class="minput report-textarea" id="rv-cons" placeholder="👎 아쉬웠던 점 (개선됐으면 하는 점)"></textarea>
       <button class="msubmit" onclick="submitReview()">후기 등록하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD WORKPLACE MODAL -->
+<div class="modal-overlay" id="addWpModal" onclick="if(event.target===this)closeModal('addWpModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('addWpModal')">✕</button>
+    <h2>업장 등록</h2>
+    <p>일하는 곳을 등록하고 근무 기록을 관리해보세요.</p>
+    <div class="mform">
+      <input class="minput" id="wp-name-input" type="text" placeholder="업장명 (예: GS25 강원대학교점)">
+      <select class="minput" id="wp-type-input">
+        <option value="">업종 선택</option>
+        <option value="편의점">편의점</option>
+        <option value="카페">카페</option>
+        <option value="식당">식당</option>
+        <option value="물류">물류·배송</option>
+        <option value="유통">유통·마트</option>
+        <option value="패스트푸드">패스트푸드</option>
+        <option value="기타">기타</option>
+      </select>
+      <input class="minput" id="wp-wage-input" type="number" placeholder="시급 (원)" value="10030" min="9860">
+      <button class="msubmit" onclick="registerWorkplace()">등록하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- WAGE SETTING MODAL -->
+<div class="modal-overlay" id="wageSettingModal" onclick="if(event.target===this)closeModal('wageSettingModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('wageSettingModal')">✕</button>
+    <h2>자동 계산 설정</h2>
+    <p>급여 계산에 사용할 시급을 설정하세요.</p>
+    <div class="mform">
+      <div class="input-group">
+        <label style="font-size:.83rem;font-weight:700;color:var(--g);display:block;margin-bottom:7px">시급 (원)</label>
+        <input class="calc-input" id="ws-wage" type="number" value="10030" min="9860">
+      </div>
+      <div style="font-size:.78rem;color:var(--g);background:var(--l);border-radius:10px;padding:10px 14px;line-height:1.6">
+        💡 2026년 최저시급: <strong>10,030원</strong><br>
+        주휴수당·야간수당은 이 시급을 기준으로 자동 계산됩니다.
+      </div>
+      <button class="msubmit" onclick="saveWageSetting()">저장하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- CERT INFO MODAL -->
+<div class="modal-overlay" id="certInfoModal" onclick="if(event.target===this)closeModal('certInfoModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('certInfoModal')">✕</button>
+    <h2>공정인증 알아보기</h2>
+    <p>알바숲 공정업장 인증 제도입니다.</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:var(--l);border-radius:12px;padding:14px 16px">
+        <div style="font-weight:800;margin-bottom:6px;font-size:.93rem">✅ 인증 조건</div>
+        <div style="font-size:.85rem;color:var(--g);line-height:1.7">
+          · 주휴수당 100% 정시 지급<br>
+          · 야간수당·연장수당 법령 준수<br>
+          · 최근 6개월 임금체불 신고 0건<br>
+          · 후기 평점 4.0점 이상
+        </div>
+      </div>
+      <div style="background:#D1FAE5;border-radius:12px;padding:14px 16px">
+        <div style="font-weight:800;margin-bottom:6px;font-size:.93rem;color:#065F46">🎁 인증 혜택</div>
+        <div style="font-size:.85rem;color:#065F46;line-height:1.7">
+          · 공고 상단 노출<br>
+          · 공정인증 배지 표시<br>
+          · 신뢰도 점수 우선 반영
+        </div>
+      </div>
+      <button class="msubmit" onclick="closeModal('certInfoModal')">확인</button>
     </div>
   </div>
 </div>
@@ -702,7 +1000,7 @@ let currentLang = 'ko';
 const LANGS = {
   ko:{
     flag:'🇰🇷', label:'한국어', near:'내 주변',
-    nav_home:'홈', nav_jobs:'알바 찾기', nav_map:'📍 지도', nav_community:'커뮤니티', nav_calc:'급여 계산기',
+    nav_home:'홈', nav_jobs:'알바 찾기', nav_map:'📍 지도', nav_community:'커뮤니티', nav_calc:'급여 계산기', nav_myplace:'내 업장',
     nav_login:'로그인', nav_signup:'회원가입',
     hero_h1:'당신의 <em>노동권</em>을<br>지켜드립니다',
     hero_p:'주휴수당·야간수당 자동 계산, 공정 업장 인증, 익명 커뮤니티까지.<br>모든 노동자를 위한 통합 플랫폼.',
@@ -745,7 +1043,7 @@ const LANGS = {
   },
   en:{
     flag:'🇺🇸', label:'English', near:'Near',
-    nav_home:'Home', nav_jobs:'Find Jobs', nav_map:'📍 Map', nav_community:'Community', nav_calc:'Salary Calc',
+    nav_home:'Home', nav_jobs:'Find Jobs', nav_map:'📍 Map', nav_community:'Community', nav_calc:'Salary Calc', nav_myplace:'My Workplace',
     nav_login:'Login', nav_signup:'Sign Up',
     hero_h1:'We protect your <em>labor rights</em>',
     hero_p:'Auto-calculate weekly & night pay, fair employer certification, anonymous community.<br>An integrated platform for all workers.',
@@ -788,7 +1086,7 @@ const LANGS = {
   },
   ja:{
     flag:'🇯🇵', label:'日本語', near:'近くの',
-    nav_home:'ホーム', nav_jobs:'バイトを探す', nav_map:'📍 地図', nav_community:'コミュニティ', nav_calc:'給与計算機',
+    nav_home:'ホーム', nav_jobs:'バイトを探す', nav_map:'📍 地図', nav_community:'コミュニティ', nav_calc:'給与計算機', nav_myplace:'マイ職場',
     nav_login:'ログイン', nav_signup:'新規登録',
     hero_h1:'あなたの<em>労働権</em>を<br>守ります',
     hero_p:'週休手当・深夜手当の自動計算、公正職場認証、匿名コミュニティ。<br>すべての労働者のための統合プラットフォーム。',
@@ -831,7 +1129,7 @@ const LANGS = {
   },
   zh:{
     flag:'🇨🇳', label:'中文', near:'附近',
-    nav_home:'首页', nav_jobs:'找工作', nav_map:'📍 地图', nav_community:'社区', nav_calc:'工资计算器',
+    nav_home:'首页', nav_jobs:'找工作', nav_map:'📍 地图', nav_community:'社区', nav_calc:'工资计算器', nav_myplace:'我的职场',
     nav_login:'登录', nav_signup:'注册',
     hero_h1:'保护您的<em>劳动权益</em>',
     hero_p:'自动计算周休津贴和夜班补贴，公正雇主认证，匿名社区。<br>面向所有劳动者的综合平台。',
@@ -1013,7 +1311,7 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach((tab, i) => {
-    tab.classList.toggle('active', ['home','jobs','map','community','calc'][i] === name);
+    tab.classList.toggle('active', ['home','jobs','map','community','calc','myplace'][i] === name);
   });
   window.scrollTo(0, 0);
   if (name === 'map') {
@@ -1021,6 +1319,12 @@ function showPage(name) {
       initMap();
       mapInstance.invalidateSize();
     }, 100);
+  }
+  if (name === 'myplace') {
+    initTimeSelects();
+    renderCalendar();
+    renderScheduleSection();
+    renderWageCalc();
   }
 }
 
@@ -1171,6 +1475,47 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
+
+// ===== MOBILE MENU =====
+function toggleMobileMenu() {
+  const drawer = document.getElementById('mob-drawer');
+  const overlay = document.getElementById('mob-overlay');
+  const btn = document.getElementById('hamburger');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    closeMobileMenu();
+  } else {
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    btn.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeMobileMenu() {
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('mob-overlay').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function mobNav(page) {
+  closeMobileMenu();
+  showPage(page);
+  // 모바일 메뉴 활성 상태 업데이트
+  document.querySelectorAll('.mob-nav-item').forEach(el => {
+    el.classList.toggle('active', el.id === 'mob-' + page);
+  });
+}
+
+// showPage 호출 시 모바일 메뉴 항목도 동기화
+const _origShowPage = showPage;
+showPage = function(name) {
+  _origShowPage(name);
+  document.querySelectorAll('.mob-nav-item').forEach(el => {
+    el.classList.toggle('active', el.id === 'mob-' + name);
+  });
+};
 
 // ===== LANG PICKER CLICK TOGGLE =====
 document.getElementById('lang-btn').addEventListener('click', function(e) {
@@ -1378,6 +1723,322 @@ function switchCommTab(el, cat) {
     renderCommList(filtered.length ? filtered : []);
     if (!filtered.length) document.getElementById('all-community').innerHTML = '<div style="padding:36px;text-align:center;color:var(--g)">게시글이 없습니다.</div>';
   }
+}
+
+// ===== KOREAN PUBLIC HOLIDAYS =====
+const HOLIDAYS = {
+  // 2024
+  '2024-01-01':'신정', '2024-02-09':'설날 전날', '2024-02-10':'설날', '2024-02-11':'설날 다음날',
+  '2024-02-12':'설날 대체공휴일', '2024-03-01':'삼일절', '2024-05-05':'어린이날', '2024-05-06':'어린이날 대체공휴일',
+  '2024-05-15':'부처님오신날', '2024-06-06':'현충일', '2024-08-15':'광복절',
+  '2024-09-16':'추석 전날', '2024-09-17':'추석', '2024-09-18':'추석 다음날', '2024-10-03':'개천절',
+  '2024-10-09':'한글날', '2024-12-25':'성탄절',
+  // 2025
+  '2025-01-01':'신정', '2025-01-27':'설날 대체공휴일', '2025-01-28':'설날 전날', '2025-01-29':'설날',
+  '2025-01-30':'설날 다음날', '2025-03-01':'삼일절', '2025-05-05':'어린이날',
+  '2025-05-06':'어린이날 대체공휴일', '2025-06-06':'현충일', '2025-08-15':'광복절',
+  '2025-10-03':'개천절', '2025-10-05':'추석 전날', '2025-10-06':'추석',
+  '2025-10-07':'추석 다음날', '2025-10-08':'추석 대체공휴일', '2025-10-09':'한글날', '2025-12-25':'성탄절',
+  // 2026
+  '2026-01-01':'신정', '2026-02-16':'설날 전날', '2026-02-17':'설날', '2026-02-18':'설날 다음날',
+  '2026-03-01':'삼일절', '2026-03-02':'삼일절 대체공휴일', '2026-05-05':'어린이날',
+  '2026-05-24':'부처님오신날', '2026-06-06':'현충일', '2026-08-15':'광복절',
+  '2026-09-24':'추석 전날', '2026-09-25':'추석', '2026-09-26':'추석 다음날',
+  '2026-10-03':'개천절', '2026-10-09':'한글날', '2026-12-25':'성탄절',
+};
+
+function isHoliday(dateStr) {
+  return !!HOLIDAYS[dateStr];
+}
+
+function getHolidayName(dateStr) {
+  return HOLIDAYS[dateStr] || null;
+}
+
+// ===== MY PLACE =====
+let myWorkplace = {
+  name: 'GS25 강원대학교점',
+  type: '편의점',
+  wage: 10030,
+  since: '2025.04'
+};
+let workRecords = {};
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let selectedDate = null;
+let myplaceInited = false;
+
+function initTimeSelects() {
+  const startSel = document.getElementById('start-time');
+  const endSel = document.getElementById('end-time');
+  if (!startSel || startSel.options.length > 0) return;
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+      startSel.add(new Option(time, time));
+      endSel.add(new Option(time, time));
+    }
+  }
+  startSel.value = '09:00';
+  endSel.value = '18:00';
+  updateWorkHoursDisplay();
+}
+
+function updateWorkHoursDisplay() {
+  const start = document.getElementById('start-time').value;
+  const end = document.getElementById('end-time').value;
+  const hours = calcShiftHours(start, end);
+  const el = document.getElementById('work-hours-val');
+  if (!el) return;
+  if (hours > 0) {
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    el.textContent = m > 0 ? `${h}시간 ${m}분` : `${h}시간`;
+  } else {
+    el.textContent = '-';
+  }
+}
+
+function calcShiftHours(start, end) {
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  const diff = (eh * 60 + em) - (sh * 60 + sm);
+  return diff > 0 ? diff / 60 : 0;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+  renderWageCalc();
+}
+
+function renderCalendar() {
+  const title = document.getElementById('cal-title');
+  if (title) title.textContent = `${calYear}년 ${calMonth + 1}월`;
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const lastDate = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+
+  if (!myplaceInited) {
+    myplaceInited = true;
+    selectedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    // 샘플 근무 데이터
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    [[1,'09:00','18:00'],[3,'09:00','18:00'],[5,'14:00','22:00'],[8,'09:00','18:00'],[10,'09:00','18:00'],[12,'09:00','18:00']].forEach(([d,s,e]) => {
+      const ds = String(d).padStart(2,'0');
+      if (d <= today.getDate()) workRecords[`${y}-${m}-${ds}`] = [{start:s, end:e}];
+    });
+  }
+
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= lastDate; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dow = new Date(calYear, calMonth, d).getDay();
+    const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
+    const isSelected = dateStr === selectedDate;
+    const hasWork = workRecords[dateStr] && workRecords[dateStr].length > 0;
+    const isHol = isHoliday(dateStr);
+    let cls = 'cal-day';
+    if (dow === 0 || isHol) cls += ' sun';
+    else if (dow === 6) cls += ' sat';
+    if (isHol) cls += ' holiday';
+    if (isToday && !isSelected) cls += ' today';
+    if (isSelected) cls += ' selected';
+    if (hasWork) cls += ' has-work';
+    const holDot = isHol ? `<span class="cal-holiday-dot"></span>` : '';
+    html += `<div class="${cls}" onclick="selectDate('${dateStr}')" title="${isHol ? getHolidayName(dateStr) : ''}">${holDot}${d}</div>`;
+  }
+  grid.innerHTML = html;
+
+  const totalH = getMonthTotalHours(calYear, calMonth);
+  const totalEl = document.getElementById('cal-total-hours');
+  if (totalEl) totalEl.textContent = totalH > 0 ? `총 ${totalH}h` : '';
+}
+
+function getMonthTotalHours(y, m) {
+  const prefix = `${y}-${String(m+1).padStart(2,'0')}`;
+  let total = 0;
+  Object.entries(workRecords).forEach(([date, recs]) => {
+    if (date.startsWith(prefix)) recs.forEach(r => { total += calcShiftHours(r.start, r.end); });
+  });
+  return Math.round(total * 10) / 10;
+}
+
+function selectDate(dateStr) {
+  selectedDate = dateStr;
+  renderCalendar();
+  renderScheduleSection();
+}
+
+const DAY_NAMES = ['일','월','화','수','목','금','토'];
+
+function renderScheduleSection() {
+  if (!selectedDate) return;
+  const [y, m, d] = selectedDate.split('-').map(Number);
+  const dow = new Date(y, m-1, d).getDay();
+  const textEl = document.getElementById('schedule-date-text');
+  const badgeEl = document.getElementById('schedule-day-badge');
+  if (textEl) textEl.textContent = `${m}월 ${d}일`;
+  if (badgeEl) {
+    badgeEl.textContent = DAY_NAMES[dow];
+    badgeEl.style.background = dow === 0 ? '#FEE2E2' : dow === 6 ? '#DBEAFE' : '#EFF6FF';
+    badgeEl.style.color = dow === 0 ? '#991B1B' : dow === 6 ? '#1E40AF' : 'var(--p)';
+  }
+
+  // 공휴일 안내
+  const holName = getHolidayName(selectedDate);
+  const existingNotice = document.getElementById('holiday-notice');
+  if (existingNotice) existingNotice.remove();
+  if (holName) {
+    const notice = document.createElement('div');
+    notice.id = 'holiday-notice';
+    notice.className = 'holiday-notice';
+    notice.innerHTML = `<span class="hi-icon">🎌</span><div><strong>${holName}</strong>입니다.<br>공휴일 근무 시 <strong>통상임금의 50% 가산</strong>이 적용돼요. (근로기준법 제56조)</div>`;
+    document.getElementById('add-schedule-form').before(notice);
+  }
+
+  const recs = workRecords[selectedDate] || [];
+  const listEl = document.getElementById('schedule-list');
+  if (listEl) {
+    if (recs.length > 0) {
+      listEl.style.display = 'flex';
+      listEl.innerHTML = recs.map((r, i) => {
+        const h = calcShiftHours(r.start, r.end);
+        const holTag = holName ? `<span style="font-size:.7rem;background:#FEE2E2;color:#991B1B;border-radius:4px;padding:1px 5px;margin-left:4px">공휴일</span>` : '';
+        return `<div class="schedule-item">
+          <span class="schedule-item-time">${r.start} ~ ${r.end}${holTag}</span>
+          <span class="schedule-item-hours">${h >= 1 ? Math.floor(h)+'시간'+(h%1?` ${Math.round((h%1)*60)}분`:'') : Math.round(h*60)+'분'}</span>
+          <button class="schedule-item-del" onclick="deleteSchedule('${selectedDate}',${i})" title="삭제">✕</button>
+        </div>`;
+      }).join('');
+    } else {
+      listEl.style.display = 'none';
+      listEl.innerHTML = '';
+    }
+  }
+  updateWorkHoursDisplay();
+}
+
+function addSchedule() {
+  const start = document.getElementById('start-time').value;
+  const end = document.getElementById('end-time').value;
+  if (calcShiftHours(start, end) <= 0) { showToast('⚠️ 퇴근 시간이 출근 시간보다 늦어야 해요.'); return; }
+  if (!selectedDate) { showToast('⚠️ 날짜를 먼저 선택해주세요.'); return; }
+  if (!workRecords[selectedDate]) workRecords[selectedDate] = [];
+  workRecords[selectedDate].push({ start, end });
+  renderCalendar();
+  renderScheduleSection();
+  renderWageCalc();
+  showToast('✅ 근무기록이 추가됐습니다.');
+}
+
+function deleteSchedule(dateStr, idx) {
+  if (workRecords[dateStr]) {
+    workRecords[dateStr].splice(idx, 1);
+    if (!workRecords[dateStr].length) delete workRecords[dateStr];
+  }
+  renderCalendar();
+  renderScheduleSection();
+  renderWageCalc();
+}
+
+function renderWageCalc() {
+  const wage = myWorkplace.wage || 10030;
+  const prefix = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  let totalHours = 0, nightHours = 0, publicHolHours = 0;
+
+  Object.entries(workRecords).forEach(([date, recs]) => {
+    if (!date.startsWith(prefix)) return;
+    const isHol = isHoliday(date);
+    recs.forEach(r => {
+      const h = calcShiftHours(r.start, r.end);
+      totalHours += h;
+      // 야간수당: 22시 이후 근무
+      const [sh] = r.start.split(':').map(Number);
+      const [eh] = r.end.split(':').map(Number);
+      if (eh > 22) nightHours += eh - Math.max(sh, 22);
+      else if (r.end === '00:00') nightHours += 2;
+      // 공휴일 수당: 공휴일에 근무한 시간
+      if (isHol) publicHolHours += h;
+    });
+  });
+
+  const base = Math.round(totalHours * wage);
+  const weeksInMonth = 4;
+  const weeklyHours = totalHours / weeksInMonth;
+  // 주휴수당: 주 15시간 이상 근무 시
+  const juHuPay = weeklyHours >= 15 ? Math.round((weeklyHours / 40) * 8 * wage * weeksInMonth) : 0;
+  // 야간수당: 22시 이후 시급의 50% 가산
+  const nightPay = Math.round(nightHours * wage * 0.5);
+  // 공휴일 수당: 공휴일 근무 시간 × 시급 × 50% (근로기준법 제56조)
+  const publicHolPay = Math.round(publicHolHours * wage * 0.5);
+  const total = base + juHuPay + nightPay + publicHolPay;
+
+  const rowsEl = document.getElementById('wage-rows');
+  if (rowsEl) {
+    const holRow = publicHolHours > 0
+      ? `<div class="wage-row"><span class="wl">🎌 공휴일 수당 (${publicHolHours}h × 50%)</span><span class="wr plus">+${publicHolPay.toLocaleString()}원</span></div>`
+      : '';
+    rowsEl.innerHTML = `
+      <div class="wage-row"><span class="wl">기본급 (${totalHours}h × ${wage.toLocaleString()}원)</span><span class="wr">${base.toLocaleString()}원</span></div>
+      <div class="wage-row"><span class="wl">주휴수당 (${Math.round(weeklyHours * weeksInMonth)}시간)${weeklyHours < 15 ? ' <span style="color:#EF4444;font-size:.75rem">15h 미만</span>' : ''}</span><span class="wr plus">+${juHuPay.toLocaleString()}원</span></div>
+      <div class="wage-row"><span class="wl">야간수당 (${nightHours}시간, 22시 이후)</span><span class="wr plus">+${nightPay.toLocaleString()}원</span></div>
+      ${holRow}
+    `;
+  }
+  const totalEl = document.getElementById('wage-total');
+  if (totalEl) totalEl.textContent = total.toLocaleString() + '원';
+
+  const noteEl = document.getElementById('wage-note');
+  const noteTextEl = document.getElementById('wage-note-text');
+  if (noteEl && noteTextEl) {
+    if (publicHolHours > 0) {
+      noteEl.style.display = 'flex';
+      noteTextEl.textContent = `이번 달 공휴일 근무 ${publicHolHours}시간이 포함됐어요. 통상임금의 50%가 가산됩니다. (5인 이상 사업장 적용)`;
+    } else {
+      noteEl.style.display = 'none';
+    }
+  }
+}
+
+function updateMyPlaceHeader() {
+  const nameEl = document.getElementById('myplace-name');
+  const metaEl = document.getElementById('myplace-meta');
+  const iconEl = document.getElementById('myplace-icon');
+  if (nameEl) nameEl.textContent = myWorkplace.name;
+  if (metaEl) metaEl.textContent = `${myWorkplace.type} · 근무기간 ${myWorkplace.since}~`;
+  if (iconEl) iconEl.textContent = wpIcon(myWorkplace.name);
+}
+
+function registerWorkplace() {
+  const name = document.getElementById('wp-name-input').value.trim();
+  const type = document.getElementById('wp-type-input').value;
+  const wage = parseInt(document.getElementById('wp-wage-input').value) || 10030;
+  if (!name) { showToast('⚠️ 업장명을 입력해주세요.'); return; }
+  if (!type) { showToast('⚠️ 업종을 선택해주세요.'); return; }
+  const now = new Date();
+  myWorkplace = { name, type, wage, since: `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}` };
+  document.getElementById('myplace-empty').style.display = 'none';
+  document.getElementById('myplace-content').style.display = 'block';
+  closeModal('addWpModal');
+  updateMyPlaceHeader();
+  renderWageCalc();
+  showToast('✅ 업장이 등록됐습니다.');
+}
+
+function saveWageSetting() {
+  const wage = parseInt(document.getElementById('ws-wage').value) || 10030;
+  myWorkplace.wage = wage;
+  closeModal('wageSettingModal');
+  renderWageCalc();
+  showToast('✅ 시급이 저장됐습니다.');
 }
 
 // ===== INIT =====
