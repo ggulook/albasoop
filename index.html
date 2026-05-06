@@ -319,7 +319,8 @@
     .schedule-item-del:hover{color:#EF4444}
     .wage-section{background:#fff;border-radius:20px;border:1.5px solid var(--b);padding:20px;margin-bottom:18px}
     .wage-section-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .wage-section-title{font-size:.97rem;font-weight:800}
+    .wage-section-title{font-size:.97rem;font-weight:800;display:flex;align-items:center;gap:6px}
+    .wage-tap-hint{font-size:.68rem;font-weight:400;color:#9CA3AF}
     .wage-auto-btn{font-size:.78rem;color:var(--p);font-weight:600;background:#EFF6FF;border:none;border-radius:8px;padding:5px 11px;cursor:pointer}
     .wage-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b);font-size:.88rem}
     .wage-row:last-of-type{border:none}
@@ -662,7 +663,7 @@
       <!-- 급여 계산 -->
       <div class="wage-section">
         <div class="wage-section-hdr">
-          <div class="wage-section-title" data-i18n="mp_wage_title">이번 달 예상 급여 ℹ️</div>
+          <div class="wage-section-title"><span data-i18n="mp_wage_title">이번 달 예상 급여 ℹ️</span><span class="wage-tap-hint">눌러서 상세보기</span></div>
           <button class="wage-auto-btn" onclick="openModal('wageSettingModal')" data-i18n="mp_auto_btn">자동 계산 완료 ✓</button>
         </div>
         <div class="wage-grid">
