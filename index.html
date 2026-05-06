@@ -2242,12 +2242,17 @@ function calcNightHours(start, end) {
   let [eh, em] = end.split(':').map(Number);
   let s = sh + sm / 60;
   let e = eh + em / 60;
-  if (e <= s) e += 24; // 자정 넘김
-  // 22:00~24:00 구간
-  const n1 = Math.max(0, Math.min(e, 24) - Math.max(s, 22));
-  // 24:00~30:00 구간 (= 익일 00:00~06:00)
-  const n2 = Math.max(0, Math.min(e, 30) - Math.max(s, 24));
-  return Math.max(0, n1 + n2);
+  const overnight = e < s; // 자정 넘기는 근무
+  // 저녁 야간 구간: 22:00~24:00
+  const ev = Math.max(0, Math.min(overnight ? 24 : e, 24) - Math.max(s, 22));
+  // 새벽 야간 구간: 00:00~06:00
+  let am = 0;
+  if (overnight) {
+    am = Math.max(0, Math.min(e, 6)); // 자정 넘긴 경우: [0, e] ∩ [0, 6]
+  } else if (s < 6) {
+    am = Math.max(0, Math.min(e, 6) - s); // 새벽 시작 근무: [s, e] ∩ [0, 6]
+  }
+  return ev + am;
 }
 
 function openWageSetting() {
