@@ -664,7 +664,7 @@
       <div class="wage-section">
         <div class="wage-section-hdr">
           <div class="wage-section-title"><span data-i18n="mp_wage_title">이번 달 예상 급여 ℹ️</span><span class="wage-tap-hint">눌러서 상세보기</span></div>
-          <button class="wage-auto-btn" onclick="openModal('wageSettingModal')" data-i18n="mp_auto_btn">자동 계산 완료 ✓</button>
+          <button class="wage-auto-btn" onclick="openWageSetting()" data-i18n="mp_auto_btn">자동 계산 완료 ✓</button>
         </div>
         <div class="wage-grid">
           <div class="wage-left" id="wage-rows"></div>
@@ -875,9 +875,13 @@
         <label style="font-size:.83rem;font-weight:700;color:var(--g);display:block;margin-bottom:7px" data-i18n="calc_wage">시급 (원)</label>
         <input class="calc-input" id="ws-wage" type="number" value="10030" min="9860">
       </div>
+      <div class="input-group">
+        <label style="font-size:.83rem;font-weight:700;color:var(--g);display:block;margin-bottom:7px" data-i18n="mp_ws_contracted">주 계약 근무시간 (연장수당 계산용)</label>
+        <input class="calc-input" id="ws-contracted" type="number" min="0" max="40" data-i18n-ph="mp_contracted_ph" placeholder="미입력 시 연장수당 미계산">
+      </div>
       <div style="font-size:.78rem;color:var(--g);background:var(--l);border-radius:10px;padding:10px 14px;line-height:1.6">
         💡 2026년 최저시급: <strong>10,030원</strong><br>
-        주휴수당·야간수당은 이 시급을 기준으로 자동 계산됩니다.
+        주휴수당·야간수당(22시~익일6시)·연장수당은 이 설정을 기준으로 자동 계산됩니다.
       </div>
       <button class="msubmit" onclick="saveWageSetting()" data-i18n="mp_save_btn">저장하기</button>
     </div>
@@ -1166,6 +1170,8 @@ const LANGS = {
     mp_hol_notice:'공휴일 근무 {h}시간이 포함됐어요. 통상임금의 50%가 가산됩니다. (5인 이상 사업장 적용)',
     mp_hol_inline:'{name}입니다. 공휴일 근무 시 통상임금의 50% 가산이 적용돼요.',
     mp_cal_sync:'내 업장 데이터로 불러오기',
+    mp_overtime:'연장수당', mp_ws_contracted:'주 계약 근무시간 (시간, 연장수당 계산용)',
+    mp_contracted_ph:'미입력 시 연장수당 미계산', mp_overtime_detail:'h × 시급 × 50%',
   },
   en:{
     flag:'🇺🇸', label:'English', near:'Near',
@@ -1230,6 +1236,8 @@ const LANGS = {
     mp_hol_notice:'{h}h of holiday work included. 50% premium applies. (5+ employee workplaces)',
     mp_hol_inline:'{name}. 50% holiday pay premium applies for work today.',
     mp_cal_sync:'Load from My Workplace',
+    mp_overtime:'Overtime Pay', mp_ws_contracted:'Contracted Weekly Hours (for overtime calc)',
+    mp_contracted_ph:'Leave blank to skip overtime calc', mp_overtime_detail:'h × wage × 50%',
   },
   ja:{
     flag:'🇯🇵', label:'日本語', near:'近くの',
@@ -1294,6 +1302,8 @@ const LANGS = {
     mp_hol_notice:'祝日勤務{h}時間が含まれます。通常賃金の50%が加算されます。（5人以上職場適用）',
     mp_hol_inline:'{name}です。祝日勤務は通常賃金の50%が加算されます。',
     mp_cal_sync:'職場データを読み込む',
+    mp_overtime:'残業手当', mp_ws_contracted:'週契約勤務時間（残業手当計算用）',
+    mp_contracted_ph:'未入力時は残業手当未計算', mp_overtime_detail:'h × 時給 × 50%',
   },
   zh:{
     flag:'🇨🇳', label:'中文', near:'附近',
@@ -1358,6 +1368,8 @@ const LANGS = {
     mp_hol_notice:'包含节假日上班{h}小时。适用通常工资50%加成。（5人以上工作场所适用）',
     mp_hol_inline:'{name}。节假日上班时，适用通常工资50%加成。',
     mp_cal_sync:'从我的职场加载',
+    mp_overtime:'加班补贴', mp_ws_contracted:'每周合同工时（加班补贴计算用）',
+    mp_contracted_ph:'不填则不计算加班补贴', mp_overtime_detail:'h × 时薪 × 50%',
   }
 };
 
@@ -1608,10 +1620,7 @@ function syncCalcFromMyplace() {
     if (!date.startsWith(prefix)) return;
     recs.forEach(r => {
       totalHours += calcShiftHours(r.start, r.end);
-      const [eh] = r.end.split(':').map(Number);
-      const [sh] = r.start.split(':').map(Number);
-      if (eh > 22) nightH += eh - Math.max(sh, 22);
-      else if (r.end === '00:00') nightH += 2;
+      nightH += calcNightHours(r.start, r.end);
     });
   });
   const weeksInMonth = 4;
@@ -1996,7 +2005,8 @@ let myWorkplace = {
   name: 'GS25 강원대학교점',
   type: '편의점',
   wage: 10030,
-  since: '2025.04'
+  since: '2025.04',
+  contractedHours: 0
 };
 let workRecords = {};
 let calYear = new Date().getFullYear();
@@ -2215,10 +2225,32 @@ function deleteSchedule(dateStr, idx) {
   renderWageCalc();
 }
 
+function calcNightHours(start, end) {
+  // 야간근로: 22:00 ~ 익일 06:00
+  let [sh, sm] = start.split(':').map(Number);
+  let [eh, em] = end.split(':').map(Number);
+  let s = sh + sm / 60;
+  let e = eh + em / 60;
+  if (e <= s) e += 24; // 자정 넘김
+  // 22:00~24:00 구간
+  const n1 = Math.max(0, Math.min(e, 24) - Math.max(s, 22));
+  // 24:00~30:00 구간 (= 익일 00:00~06:00)
+  const n2 = Math.max(0, Math.min(e, 30) - Math.max(s, 24));
+  return Math.max(0, n1 + n2);
+}
+
+function openWageSetting() {
+  document.getElementById('ws-wage').value = myWorkplace.wage || 10030;
+  document.getElementById('ws-contracted').value = myWorkplace.contractedHours || '';
+  openModal('wageSettingModal');
+}
+
 function renderWageCalc() {
   const wage = myWorkplace.wage || 10030;
+  const contractedWeeklyHours = myWorkplace.contractedHours || 0;
   const prefix = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
-  let totalHours = 0, nightHours = 0, publicHolHours = 0;
+  let totalHours = 0, nightHours = 0;
+  const holDayHours = {}; // 날짜별 공휴일 근무시간
 
   Object.entries(workRecords).forEach(([date, recs]) => {
     if (!date.startsWith(prefix)) return;
@@ -2226,42 +2258,59 @@ function renderWageCalc() {
     recs.forEach(r => {
       const h = calcShiftHours(r.start, r.end);
       totalHours += h;
-      // 야간수당: 22시 이후 근무
-      const [sh] = r.start.split(':').map(Number);
-      const [eh] = r.end.split(':').map(Number);
-      if (eh > 22) nightHours += eh - Math.max(sh, 22);
-      else if (r.end === '00:00') nightHours += 2;
-      // 공휴일 수당: 공휴일에 근무한 시간
-      if (isHol) publicHolHours += h;
+      nightHours += calcNightHours(r.start, r.end);
+      if (isHol) holDayHours[date] = (holDayHours[date] || 0) + h;
     });
+  });
+
+  // 공휴일 수당: 8h 이내 50%, 8h 초과분 100% 가산 (근로기준법 제56조)
+  let publicHolPay = 0;
+  const publicHolHours = Object.values(holDayHours).reduce((a, b) => a + b, 0);
+  Object.values(holDayHours).forEach(dayH => {
+    publicHolPay += Math.round(Math.min(dayH, 8) * wage * 0.5 + Math.max(dayH - 8, 0) * wage * 1.0);
   });
 
   const base = Math.round(totalHours * wage);
   const weeksInMonth = 4;
   const weeklyHours = totalHours / weeksInMonth;
-  // 주휴수당: 주 15시간 이상 근무 시
+  // 주휴수당: 주 15시간 이상 + 개근 시, (소정근로시간/40)×8×시급
   const juHuPay = weeklyHours >= 15 ? Math.round((weeklyHours / 40) * 8 * wage * weeksInMonth) : 0;
-  // 야간수당: 22시 이후 시급의 50% 가산
+  // 야간수당: 22시~익일 6시, 50% 가산
   const nightPay = Math.round(nightHours * wage * 0.5);
-  // 공휴일 수당: 공휴일 근무 시간 × 시급 × 50% (근로기준법 제56조)
-  const publicHolPay = Math.round(publicHolHours * wage * 0.5);
-  const total = base + juHuPay + nightPay + publicHolPay;
+  // 연장수당: 계약시간 초과분 × 50% 가산 (5인 이상 사업장)
+  let overtimePay = 0, overtimeHours = 0;
+  if (contractedWeeklyHours > 0 && weeklyHours > contractedWeeklyHours) {
+    overtimeHours = Math.round((weeklyHours - contractedWeeklyHours) * weeksInMonth * 10) / 10;
+    overtimePay = Math.round(overtimeHours * wage * 0.5);
+  }
+  const total = base + juHuPay + nightPay + publicHolPay + overtimePay;
 
   const won = currentLang === 'ko' ? '원' : currentLang === 'ja' ? 'ウォン' : currentLang === 'zh' ? '韩元' : '₩';
   const rowsEl = document.getElementById('wage-rows');
   if (rowsEl) {
-    const holRow = publicHolHours > 0
-      ? `<div class="wage-breakdown-row"><span class="wl">${t('mp_hol_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${publicHolPay.toLocaleString()}${won}</span><div class="wage-detail">${publicHolHours}h × ${wage.toLocaleString()}${won} × 50%</div></div>`
-      : '';
     const hu = t('mp_hour_unit');
+    const holHoursR = Math.round(publicHolHours * 10) / 10;
+    const holDetail = (() => {
+      const entries = Object.values(holDayHours);
+      if (entries.every(h => h <= 8)) return `${holHoursR}h × ${wage.toLocaleString()}${won} × 50%`;
+      const over8Days = entries.filter(h => h > 8);
+      return `8${hu} 이내: ×50% / 8${hu} 초과: ×100%`;
+    })();
+    const holRow = publicHolHours > 0
+      ? `<div class="wage-breakdown-row"><span class="wl">${t('mp_hol_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${publicHolPay.toLocaleString()}${won}</span><div class="wage-detail">${holDetail}</div></div>`
+      : '';
+    const overtimeRow = overtimePay > 0
+      ? `<div class="wage-breakdown-row"><span class="wl">${t('mp_overtime')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${overtimePay.toLocaleString()}${won}</span><div class="wage-detail">${overtimeHours}${hu} × ${wage.toLocaleString()}${won} × 50%</div></div>`
+      : '';
     const juhyuDetail = weeklyHours < 15
-      ? `${Math.round(weeklyHours * weeksInMonth)}${hu} (${t('mp_15h_below')})`
-      : `(${Math.round(weeklyHours * weeksInMonth)}${hu} ÷ 40) × 8 × ${wage.toLocaleString()}${won} × ${weeksInMonth}주`;
+      ? `${Math.round(weeklyHours * weeksInMonth * 10)/10}${hu} (${t('mp_15h_below')})`
+      : `(${Math.round(weeklyHours * weeksInMonth * 10)/10}${hu} ÷ 40) × 8 × ${wage.toLocaleString()}${won} × ${weeksInMonth}주`;
+    const nightHoursR = Math.round(nightHours * 10) / 10;
     rowsEl.innerHTML = `
-      <div class="wage-breakdown-row"><span class="wl">${t('mp_base_pay')}</span><span class="wr" onclick="toggleWageDetail(this)">${base.toLocaleString()}${won}</span><div class="wage-detail">${totalHours}h × ${wage.toLocaleString()}${won}</div></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_base_pay')}</span><span class="wr" onclick="toggleWageDetail(this)">${base.toLocaleString()}${won}</span><div class="wage-detail">${totalHours}${hu} × ${wage.toLocaleString()}${won}</div></div>
       <div class="wage-breakdown-row"><span class="wl">${t('mp_juhyu')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${juHuPay.toLocaleString()}${won}</span><div class="wage-detail">${juhyuDetail}</div></div>
-      <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${nightPay.toLocaleString()}${won}</span><div class="wage-detail">${nightHours}${hu} × ${wage.toLocaleString()}${won} × 50%</div></div>
-      ${holRow}
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${nightPay.toLocaleString()}${won}</span><div class="wage-detail">${nightHoursR}${hu} × ${wage.toLocaleString()}${won} × 50% (22시~익일6시)</div></div>
+      ${holRow}${overtimeRow}
     `;
   }
   const totalEl = document.getElementById('wage-total');
@@ -2329,7 +2378,9 @@ function toggleWageDetail(el) {
 
 function saveWageSetting() {
   const wage = parseInt(document.getElementById('ws-wage').value) || 10030;
+  const contracted = parseFloat(document.getElementById('ws-contracted').value) || 0;
   myWorkplace.wage = wage;
+  myWorkplace.contractedHours = contracted;
   const wageEl = document.getElementById('c-wage');
   if (wageEl) wageEl.value = wage;
   closeModal('wageSettingModal');
