@@ -2308,7 +2308,7 @@ function renderWageCalc() {
   const nightPay = isLarge ? Math.round(nightHours * wage * 0.5) : 0;
   // 연장수당: 계약시간 초과분 × 50% 가산 (5인 이상 사업장)
   let overtimePay = 0, overtimeHours = 0;
-  if (isLarge && contractedWeeklyHours > 0 && avgWeeklyHours > contractedWeeklyHours) {
+  if (isLarge && contractedWeeklyHours > 0) {
     const totalOvertime = Object.values(weekHours)
       .map(wh => Math.max(0, wh - contractedWeeklyHours))
       .reduce((a, b) => a + b, 0);
