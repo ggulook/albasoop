@@ -567,16 +567,16 @@
 <div class="page" id="page-myplace">
   <div class="myplace-page">
     <div class="myplace-hdr">
-      <h1>내 업장</h1>
-      <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')">공정인증 알아보기</button>
+      <h1 data-i18n="nav_myplace">내 업장</h1>
+      <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
     </div>
 
     <!-- 업장 미등록 상태 -->
     <div id="myplace-empty" style="display:none">
       <div class="no-workplace">
         <div class="emp-icon">🏢</div>
-        <p>등록된 업장이 없어요.<br>일하는 곳을 등록하고<br>근무 기록을 관리해보세요.</p>
-        <button class="btn-p" onclick="openModal('addWpModal')">+ 업장 등록하기</button>
+        <p data-i18n-html="mp_empty_p">등록된 업장이 없어요.<br>일하는 곳을 등록하고<br>근무 기록을 관리해보세요.</p>
+        <button class="btn-p" onclick="openModal('addWpModal')" data-i18n="mp_reg_btn">+ 업장 등록하기</button>
       </div>
     </div>
 
@@ -589,8 +589,8 @@
           <div class="wp-reg-name" id="myplace-name">GS25 강원대학교점</div>
           <div class="wp-reg-meta" id="myplace-meta">편의점 · 근무기간 2025.04~</div>
         </div>
-        <span class="wp-reg-badge">공정인증</span>
-        <button class="wp-change-btn" onclick="openModal('addWpModal')">변경</button>
+        <span class="wp-reg-badge" data-i18n="mp_cert_badge">공정인증</span>
+        <button class="wp-change-btn" onclick="openModal('addWpModal')" data-i18n="mp_change_btn">변경</button>
       </div>
 
       <!-- 캘린더 -->
@@ -604,13 +604,13 @@
           </div>
         </div>
         <div class="cal-header-row">
-          <div class="cal-header-cell sun">일</div>
-          <div class="cal-header-cell">월</div>
-          <div class="cal-header-cell">화</div>
-          <div class="cal-header-cell">수</div>
-          <div class="cal-header-cell">목</div>
-          <div class="cal-header-cell">금</div>
-          <div class="cal-header-cell sat">토</div>
+          <div class="cal-header-cell sun" data-i18n="cal_sun">일</div>
+          <div class="cal-header-cell" data-i18n="cal_mon">월</div>
+          <div class="cal-header-cell" data-i18n="cal_tue">화</div>
+          <div class="cal-header-cell" data-i18n="cal_wed">수</div>
+          <div class="cal-header-cell" data-i18n="cal_thu">목</div>
+          <div class="cal-header-cell" data-i18n="cal_fri">금</div>
+          <div class="cal-header-cell sat" data-i18n="cal_sat">토</div>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
       </div>
@@ -619,11 +619,11 @@
       <div class="schedule-section">
         <div class="schedule-date-hdr">
           <div class="schedule-date-left">
-            <span id="schedule-date-text">날짜를 선택하세요</span>
+            <span id="schedule-date-text" data-i18n="mp_select_date">날짜를 선택하세요</span>
             <span class="day-badge" id="schedule-day-badge"></span>
-            <span class="selected-badge">선택일</span>
+            <span class="selected-badge" data-i18n="mp_selected_badge">선택일</span>
           </div>
-          <button class="del-record-btn" onclick="deleteAllSchedules()">🗑 근무기록 삭제</button>
+          <button class="del-record-btn" onclick="deleteAllSchedules()" data-i18n="mp_del_record">🗑 근무기록 삭제</button>
         </div>
 
         <div id="holiday-notice-wrap"></div>
@@ -631,7 +631,7 @@
 
         <div class="time-cols">
           <div>
-            <div class="time-col-label">출근 시간</div>
+            <div class="time-col-label" data-i18n="mp_checkin">출근 시간</div>
             <div class="time-col-input">
               <span class="time-icon">☀️</span>
               <select class="time-select-new" id="start-time" onchange="updateWorkHoursDisplay()"></select>
@@ -639,52 +639,52 @@
           </div>
           <div class="time-sep-col">~</div>
           <div>
-            <div class="time-col-label">퇴근 시간</div>
+            <div class="time-col-label" data-i18n="mp_checkout">퇴근 시간</div>
             <div class="time-col-input">
               <span class="time-icon">🌙</span>
               <select class="time-select-new" id="end-time" onchange="updateWorkHoursDisplay()"></select>
             </div>
           </div>
           <div>
-            <div class="time-col-label">근무시간</div>
+            <div class="time-col-label" data-i18n="mp_workhours">근무시간</div>
             <div class="workhours-box">
               <div class="wh-val" id="work-hours-val">-</div>
-              <div class="wh-break" id="break-time-label">휴게시간 -</div>
+              <div class="wh-break" id="break-time-label">-</div>
             </div>
           </div>
         </div>
 
-        <button class="add-schedule-btn" onclick="addSchedule()">+ 근무기록 추가</button>
+        <button class="add-schedule-btn" onclick="addSchedule()" data-i18n="mp_add_record">+ 근무기록 추가</button>
       </div>
 
       <!-- 급여 계산 -->
       <div class="wage-section">
         <div class="wage-section-hdr">
-          <div class="wage-section-title">이번 달 예상 급여 ℹ️</div>
-          <button class="wage-auto-btn" onclick="openModal('wageSettingModal')">자동 계산 완료 ✓</button>
+          <div class="wage-section-title" data-i18n="mp_wage_title">이번 달 예상 급여 ℹ️</div>
+          <button class="wage-auto-btn" onclick="openModal('wageSettingModal')" data-i18n="mp_auto_btn">자동 계산 완료 ✓</button>
         </div>
         <div class="wage-grid">
           <div class="wage-left" id="wage-rows"></div>
           <div class="wage-right">
             <div class="pay-status-box">
-              <div class="pay-status-title">지급 상태</div>
-              <div class="pay-status-badge"><span class="pay-status-dot"></span>지급 대기 중</div>
-              <div class="pay-status-desc">사장님 승인 후<br>지급됩니다.</div>
+              <div class="pay-status-title" data-i18n="mp_pay_status">지급 상태</div>
+              <div class="pay-status-badge"><span class="pay-status-dot"></span><span data-i18n="mp_pay_waiting">지급 대기 중</span></div>
+              <div class="pay-status-desc" data-i18n-html="mp_pay_desc">사장님 승인 후<br>지급됩니다.</div>
             </div>
             <div class="account-box">
-              <div class="account-title">✅ 자동 이금</div>
+              <div class="account-title" data-i18n="mp_account_title">✅ 자동 이금</div>
               <div id="account-display">
                 <div class="account-row" onclick="openModal('accountModal')">
-                  <span class="account-empty">계좌를 등록해주세요</span>
+                  <span class="account-empty" data-i18n="mp_account_empty">계좌를 등록해주세요</span>
                   <span class="account-arrow">›</span>
                 </div>
               </div>
-              <div style="font-size:.7rem;color:var(--g);margin-top:5px;line-height:1.5">등록 계좌로 자동 이금합니다.</div>
+              <div style="font-size:.7rem;color:var(--g);margin-top:5px;line-height:1.5" data-i18n="mp_account_desc">등록 계좌로 자동 이금합니다.</div>
             </div>
           </div>
         </div>
         <div class="wage-total-row">
-          <span class="wtl">예상 총 지급액</span>
+          <span class="wtl" data-i18n="mp_wage_total">예상 총 지급액</span>
           <span class="wtv" id="wage-total">0원</span>
         </div>
         <div class="wage-note" id="wage-note" style="display:none">
@@ -841,10 +841,10 @@
 <div class="modal-overlay" id="addWpModal" onclick="if(event.target===this)closeModal('addWpModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('addWpModal')">✕</button>
-    <h2>업장 등록</h2>
-    <p>일하는 곳을 등록하고 근무 기록을 관리해보세요.</p>
+    <h2 data-i18n="mp_add_h2">업장 등록</h2>
+    <p data-i18n="mp_add_p">일하는 곳을 등록하고 근무 기록을 관리해보세요.</p>
     <div class="mform">
-      <input class="minput" id="wp-name-input" type="text" placeholder="업장명 (예: GS25 강원대학교점)">
+      <input class="minput" id="wp-name-input" type="text" data-i18n-ph="mp_wp_name_ph" placeholder="업장명 (예: GS25 강원대학교점)">
       <select class="minput" id="wp-type-input">
         <option value="">업종 선택</option>
         <option value="편의점">편의점</option>
@@ -855,8 +855,8 @@
         <option value="패스트푸드">패스트푸드</option>
         <option value="기타">기타</option>
       </select>
-      <input class="minput" id="wp-wage-input" type="number" placeholder="시급 (원)" value="10030" min="9860">
-      <button class="msubmit" onclick="registerWorkplace()">등록하기</button>
+      <input class="minput" id="wp-wage-input" type="number" data-i18n-ph="calc_wage" placeholder="시급 (원)" value="10030" min="9860">
+      <button class="msubmit" onclick="registerWorkplace()" data-i18n="mp_add_submit">등록하기</button>
     </div>
   </div>
 </div>
@@ -865,18 +865,18 @@
 <div class="modal-overlay" id="wageSettingModal" onclick="if(event.target===this)closeModal('wageSettingModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('wageSettingModal')">✕</button>
-    <h2>자동 계산 설정</h2>
-    <p>급여 계산에 사용할 시급을 설정하세요.</p>
+    <h2 data-i18n="mp_ws_h2">자동 계산 설정</h2>
+    <p data-i18n="mp_ws_p">급여 계산에 사용할 시급을 설정하세요.</p>
     <div class="mform">
       <div class="input-group">
-        <label style="font-size:.83rem;font-weight:700;color:var(--g);display:block;margin-bottom:7px">시급 (원)</label>
+        <label style="font-size:.83rem;font-weight:700;color:var(--g);display:block;margin-bottom:7px" data-i18n="calc_wage">시급 (원)</label>
         <input class="calc-input" id="ws-wage" type="number" value="10030" min="9860">
       </div>
       <div style="font-size:.78rem;color:var(--g);background:var(--l);border-radius:10px;padding:10px 14px;line-height:1.6">
         💡 2026년 최저시급: <strong>10,030원</strong><br>
         주휴수당·야간수당은 이 시급을 기준으로 자동 계산됩니다.
       </div>
-      <button class="msubmit" onclick="saveWageSetting()">저장하기</button>
+      <button class="msubmit" onclick="saveWageSetting()" data-i18n="mp_save_btn">저장하기</button>
     </div>
   </div>
 </div>
@@ -933,8 +933,8 @@
 <div class="modal-overlay" id="accountModal" onclick="if(event.target===this)closeModal('accountModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('accountModal')">✕</button>
-    <h2>계좌 등록</h2>
-    <p>급여를 받을 계좌를 등록하세요.</p>
+    <h2 data-i18n="mp_acc_h2">계좌 등록</h2>
+    <p data-i18n="mp_acc_p">급여를 받을 계좌를 등록하세요.</p>
     <div class="mform">
       <select class="minput" id="acc-bank">
         <option value="">은행 선택</option>
@@ -1142,6 +1142,27 @@ const LANGS = {
     toast_signup:'가입을 환영합니다!', toast_post:'게시글이 등록됐습니다!',
     toast_report:'신고가 익명으로 접수됐습니다.', toast_like:'공감했습니다!',
     toast_logout:'로그아웃됐습니다.',
+    mp_cert_btn:'공정인증 알아보기', mp_empty_p:'등록된 업장이 없어요.<br>일하는 곳을 등록하고<br>근무 기록을 관리해보세요.',
+    mp_reg_btn:'+ 업장 등록하기', mp_cert_badge:'공정인증', mp_change_btn:'변경',
+    cal_sun:'일', cal_mon:'월', cal_tue:'화', cal_wed:'수', cal_thu:'목', cal_fri:'금', cal_sat:'토',
+    day_names:['일','월','화','수','목','금','토'],
+    mp_select_date:'날짜를 선택하세요', mp_selected_badge:'선택일', mp_del_record:'🗑 근무기록 삭제',
+    mp_checkin:'출근 시간', mp_checkout:'퇴근 시간', mp_workhours:'근무시간', mp_add_record:'+ 근무기록 추가',
+    mp_wage_title:'이번 달 예상 급여 ℹ️', mp_auto_btn:'자동 계산 완료 ✓',
+    mp_pay_status:'지급 상태', mp_pay_waiting:'지급 대기 중', mp_pay_desc:'사장님 승인 후<br>지급됩니다.',
+    mp_account_title:'✅ 자동 이금', mp_account_empty:'계좌를 등록해주세요',
+    mp_account_desc:'등록 계좌로 자동 이금합니다.', mp_wage_total:'예상 총 지급액',
+    mp_ws_h2:'자동 계산 설정', mp_ws_p:'급여 계산에 사용할 시급을 설정하세요.',
+    mp_save_btn:'저장하기', mp_add_h2:'업장 등록', mp_add_p:'일하는 곳을 등록하고 근무 기록을 관리해보세요.',
+    mp_wp_name_ph:'업장명 (예: GS25 강원대학교점)', mp_add_submit:'등록하기',
+    mp_acc_h2:'계좌 등록', mp_acc_p:'급여를 받을 계좌를 등록하세요.',
+    mp_base_pay:'기본급', mp_juhyu:'주휴수당', mp_night_pay:'야간수당', mp_hol_pay:'공휴일 수당',
+    mp_break_none:'휴게시간 없음', mp_break_label:'휴게시간',
+    mp_hour_unit:'시간', mp_min_unit:'분', mp_since:'근무기간',
+    mp_hol_tag:'공휴일', mp_15h_below:'15h 미만',
+    mp_hol_notice:'공휴일 근무 {h}시간이 포함됐어요. 통상임금의 50%가 가산됩니다. (5인 이상 사업장 적용)',
+    mp_hol_inline:'{name}입니다. 공휴일 근무 시 통상임금의 50% 가산이 적용돼요.',
+    mp_cal_sync:'내 업장 데이터로 불러오기',
   },
   en:{
     flag:'🇺🇸', label:'English', near:'Near',
@@ -1185,6 +1206,27 @@ const LANGS = {
     toast_signup:'Welcome!', toast_post:'Post published!',
     toast_report:'Report submitted anonymously.', toast_like:'Liked!',
     toast_logout:'Logged out.',
+    mp_cert_btn:'Fair Certification', mp_empty_p:'No workplace registered.<br>Register your workplace<br>to manage work records.',
+    mp_reg_btn:'+ Register Workplace', mp_cert_badge:'Certified', mp_change_btn:'Change',
+    cal_sun:'Sun', cal_mon:'Mon', cal_tue:'Tue', cal_wed:'Wed', cal_thu:'Thu', cal_fri:'Fri', cal_sat:'Sat',
+    day_names:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    mp_select_date:'Select a date', mp_selected_badge:'Selected', mp_del_record:'🗑 Delete Record',
+    mp_checkin:'Check-in', mp_checkout:'Check-out', mp_workhours:'Work Hours', mp_add_record:'+ Add Record',
+    mp_wage_title:'Expected Pay This Month ℹ️', mp_auto_btn:'Auto-Calc Done ✓',
+    mp_pay_status:'Payment Status', mp_pay_waiting:'Awaiting Payment', mp_pay_desc:'Paid after<br>employer approval.',
+    mp_account_title:'✅ Auto Transfer', mp_account_empty:'Register your account',
+    mp_account_desc:'Auto-transferred to registered account.', mp_wage_total:'Total Expected Pay',
+    mp_ws_h2:'Auto-Calc Settings', mp_ws_p:'Set the hourly wage for salary calculation.',
+    mp_save_btn:'Save', mp_add_h2:'Register Workplace', mp_add_p:'Register your workplace and manage work records.',
+    mp_wp_name_ph:'Workplace name (e.g. GS25 Store)', mp_add_submit:'Register',
+    mp_acc_h2:'Register Account', mp_acc_p:'Register the account to receive your pay.',
+    mp_base_pay:'Base Pay', mp_juhyu:'Weekly Holiday Pay', mp_night_pay:'Night Pay', mp_hol_pay:'Holiday Pay',
+    mp_break_none:'No Break', mp_break_label:'Break',
+    mp_hour_unit:'h', mp_min_unit:'m', mp_since:'Since',
+    mp_hol_tag:'Holiday', mp_15h_below:'Under 15h',
+    mp_hol_notice:'{h}h of holiday work included. 50% premium applies. (5+ employee workplaces)',
+    mp_hol_inline:'{name}. 50% holiday pay premium applies for work today.',
+    mp_cal_sync:'Load from My Workplace',
   },
   ja:{
     flag:'🇯🇵', label:'日本語', near:'近くの',
@@ -1228,6 +1270,27 @@ const LANGS = {
     toast_signup:'ご登録ありがとうございます！', toast_post:'投稿が完了しました！',
     toast_report:'通報を匿名で受け付けました。', toast_like:'いいねしました！',
     toast_logout:'ログアウトしました。',
+    mp_cert_btn:'公正認証について', mp_empty_p:'登録された職場がありません。<br>働く場所を登録して<br>勤務記録を管理しましょう。',
+    mp_reg_btn:'+ 職場を登録', mp_cert_badge:'認定済', mp_change_btn:'変更',
+    cal_sun:'日', cal_mon:'月', cal_tue:'火', cal_wed:'水', cal_thu:'木', cal_fri:'金', cal_sat:'土',
+    day_names:['日','月','火','水','木','金','土'],
+    mp_select_date:'日付を選択してください', mp_selected_badge:'選択日', mp_del_record:'🗑 記録削除',
+    mp_checkin:'出勤時間', mp_checkout:'退勤時間', mp_workhours:'勤務時間', mp_add_record:'+ 記録追加',
+    mp_wage_title:'今月の予想給与 ℹ️', mp_auto_btn:'自動計算完了 ✓',
+    mp_pay_status:'支払状況', mp_pay_waiting:'支払待ち', mp_pay_desc:'雇用者承認後<br>支払われます。',
+    mp_account_title:'✅ 自動振込', mp_account_empty:'口座を登録してください',
+    mp_account_desc:'登録口座に自動振り込みします。', mp_wage_total:'予想合計支払額',
+    mp_ws_h2:'自動計算設定', mp_ws_p:'給与計算に使う時給を設定してください。',
+    mp_save_btn:'保存する', mp_add_h2:'職場登録', mp_add_p:'働く場所を登録して勤務記録を管理しましょう。',
+    mp_wp_name_ph:'職場名（例：コンビニ店）', mp_add_submit:'登録する',
+    mp_acc_h2:'口座登録', mp_acc_p:'給与を受け取る口座を登録してください。',
+    mp_base_pay:'基本給', mp_juhyu:'週休手当', mp_night_pay:'深夜手当', mp_hol_pay:'休日手当',
+    mp_break_none:'休憩なし', mp_break_label:'休憩',
+    mp_hour_unit:'時間', mp_min_unit:'分', mp_since:'勤務期間',
+    mp_hol_tag:'祝日', mp_15h_below:'15h未満',
+    mp_hol_notice:'祝日勤務{h}時間が含まれます。通常賃金の50%が加算されます。（5人以上職場適用）',
+    mp_hol_inline:'{name}です。祝日勤務は通常賃金の50%が加算されます。',
+    mp_cal_sync:'職場データを読み込む',
   },
   zh:{
     flag:'🇨🇳', label:'中文', near:'附近',
@@ -1271,6 +1334,27 @@ const LANGS = {
     toast_signup:'欢迎加入！', toast_post:'帖子已发布！',
     toast_report:'举报已匿名提交。', toast_like:'已点赞！',
     toast_logout:'已退出登录。',
+    mp_cert_btn:'了解公平认证', mp_empty_p:'没有注册的工作场所。<br>注册您的工作场所<br>以管理工作记录。',
+    mp_reg_btn:'+ 注册工作场所', mp_cert_badge:'认证', mp_change_btn:'更改',
+    cal_sun:'日', cal_mon:'一', cal_tue:'二', cal_wed:'三', cal_thu:'四', cal_fri:'五', cal_sat:'六',
+    day_names:['日','一','二','三','四','五','六'],
+    mp_select_date:'请选择日期', mp_selected_badge:'已选', mp_del_record:'🗑 删除记录',
+    mp_checkin:'上班时间', mp_checkout:'下班时间', mp_workhours:'工作时间', mp_add_record:'+ 添加记录',
+    mp_wage_title:'本月预计工资 ℹ️', mp_auto_btn:'自动计算完成 ✓',
+    mp_pay_status:'支付状态', mp_pay_waiting:'等待支付', mp_pay_desc:'雇主批准后<br>支付。',
+    mp_account_title:'✅ 自动转账', mp_account_empty:'请注册账户',
+    mp_account_desc:'自动转入注册账户。', mp_wage_total:'预计总支付额',
+    mp_ws_h2:'自动计算设置', mp_ws_p:'设置用于工资计算的时薪。',
+    mp_save_btn:'保存', mp_add_h2:'注册工作场所', mp_add_p:'注册您的工作场所并管理工作记录。',
+    mp_wp_name_ph:'工作场所名称（例：便利店）', mp_add_submit:'注册',
+    mp_acc_h2:'注册账户', mp_acc_p:'注册接收工资的账户。',
+    mp_base_pay:'基本工资', mp_juhyu:'周休津贴', mp_night_pay:'夜班补贴', mp_hol_pay:'节假日补贴',
+    mp_break_none:'无休息', mp_break_label:'休息',
+    mp_hour_unit:'小时', mp_min_unit:'分', mp_since:'工作期间',
+    mp_hol_tag:'节假日', mp_15h_below:'低于15h',
+    mp_hol_notice:'包含节假日上班{h}小时。适用通常工资50%加成。（5人以上工作场所适用）',
+    mp_hol_inline:'{name}。节假日上班时，适用通常工资50%加成。',
+    mp_cal_sync:'从我的职场加载',
   }
 };
 
@@ -1301,6 +1385,11 @@ function setLang(code) {
   if (userLocation.name) setLocationDisplay(userLocation.name);
   renderAll();
   renderWpList();
+  renderCalendar();
+  renderScheduleSection();
+  renderWageCalc();
+  updateMyPlaceHeader();
+  updateWorkHoursDisplay();
   if (mapInstance) { updateMapMarkers(); }
 }
 
@@ -1435,6 +1524,9 @@ function showPage(name) {
     renderScheduleSection();
     renderWageCalc();
   }
+  if (name === 'calc') {
+    syncCalcFromMyplace();
+  }
 }
 
 // ===== JOB MODAL =====
@@ -1505,6 +1597,31 @@ function submitPost() {
 }
 
 // ===== SALARY CALC =====
+function syncCalcFromMyplace() {
+  // 내 업장의 이번달 근무 데이터를 급여계산기 입력칸에 자동 채움
+  const prefix = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  let totalHours = 0, nightH = 0;
+  Object.entries(workRecords).forEach(([date, recs]) => {
+    if (!date.startsWith(prefix)) return;
+    recs.forEach(r => {
+      totalHours += calcShiftHours(r.start, r.end);
+      const [eh] = r.end.split(':').map(Number);
+      const [sh] = r.start.split(':').map(Number);
+      if (eh > 22) nightH += eh - Math.max(sh, 22);
+      else if (r.end === '00:00') nightH += 2;
+    });
+  });
+  const weeksInMonth = 4;
+  const weeklyH = Math.round((totalHours / weeksInMonth) * 10) / 10;
+  const wageEl = document.getElementById('c-wage');
+  const weeklyEl = document.getElementById('c-weekly');
+  const nightEl = document.getElementById('c-night');
+  if (wageEl) wageEl.value = myWorkplace.wage || 10030;
+  if (weeklyEl && weeklyH > 0) weeklyEl.value = weeklyH;
+  if (nightEl) nightEl.value = nightH || 0;
+  if (weeklyH > 0) calcSalary();
+}
+
 function calcSalary() {
   const wage = parseFloat(document.getElementById('c-wage').value) || 10030;
   const weekly = parseFloat(document.getElementById('c-weekly').value);
@@ -1517,14 +1634,20 @@ function calcSalary() {
   const tax = Math.round((base + holiday + nightPay) * 0.033);
   const total = base + holiday + nightPay - tax;
   const card = document.getElementById('result-card');
+  const won = currentLang==='ko'?'원':currentLang==='ja'?'ウォン':currentLang==='zh'?'韩元':'₩';
   document.getElementById('result-rows').innerHTML = `
-    <div class="result-row"><span class="rl">${t('calc_base')}</span><span class="rv">${Math.round(base).toLocaleString()}원</span></div>
-    <div class="result-row"><span class="rl">${t('calc_holiday')} ${weekly<15?'(15h 미만)':''}</span><span class="rv g">+${Math.round(holiday).toLocaleString()}원</span></div>
-    <div class="result-row"><span class="rl">${t('calc_nightlabel')}</span><span class="rv g">+${Math.round(nightPay).toLocaleString()}원</span></div>
-    <div class="result-row"><span class="rl">${t('calc_taxlabel')}</span><span class="rv" style="color:#EF4444">-${tax.toLocaleString()}원</span></div>
+    <div class="result-row"><span class="rl">${t('calc_base')}</span><span class="rv">${Math.round(base).toLocaleString()}${won}</span></div>
+    <div class="result-row"><span class="rl">${t('calc_holiday')} ${weekly<15?`(${t('mp_15h_below')})`:''}</span><span class="rv g">+${Math.round(holiday).toLocaleString()}${won}</span></div>
+    <div class="result-row"><span class="rl">${t('calc_nightlabel')}</span><span class="rv g">+${Math.round(nightPay).toLocaleString()}${won}</span></div>
+    <div class="result-row"><span class="rl">${t('calc_taxlabel')}</span><span class="rv" style="color:#EF4444">-${tax.toLocaleString()}${won}</span></div>
   `;
-  document.getElementById('result-total-val').textContent = Math.round(total).toLocaleString() + '원';
+  document.getElementById('result-total-val').textContent = Math.round(total).toLocaleString() + won;
   card.classList.add('show');
+  // 내 업장 시급 동기화
+  if (myWorkplace.wage !== wage) {
+    myWorkplace.wage = wage;
+    renderWageCalc();
+  }
 }
 
 // ===== AUTH =====
@@ -1902,15 +2025,14 @@ function updateWorkHoursDisplay() {
   const breakEl = document.getElementById('break-time-label');
   if (!el) return;
   if (hours > 0) {
-    const h = Math.floor(hours);
-    const m = Math.round((hours - h) * 60);
-    el.textContent = m > 0 ? `${h}시간 ${m}분` : `${h}시간 00분`;
+    el.textContent = fmtHours(hours);
     // 휴게시간: 4h 이상 30분, 8h 이상 1시간
     const breakMin = hours >= 8 ? 60 : hours >= 4 ? 30 : 0;
-    if (breakEl) breakEl.textContent = breakMin > 0 ? `휴게시간 ${breakMin === 60 ? '1시간' : '30분'}` : '휴게시간 없음';
+    const hu = t('mp_hour_unit'), mu = t('mp_min_unit'), bl = t('mp_break_label');
+    if (breakEl) breakEl.textContent = breakMin > 0 ? `${bl} ${breakMin === 60 ? `1${hu}` : `30${mu}`}` : t('mp_break_none');
   } else {
     el.textContent = '-';
-    if (breakEl) breakEl.textContent = '휴게시간 -';
+    if (breakEl) breakEl.textContent = '-';
   }
 }
 
@@ -1931,7 +2053,7 @@ function changeMonth(dir) {
 
 function renderCalendar() {
   const title = document.getElementById('cal-title');
-  if (title) title.textContent = `${calYear}년 ${calMonth + 1}월`;
+  if (title) title.textContent = formatCalTitle(calYear, calMonth);
   const grid = document.getElementById('cal-grid');
   if (!grid) return;
 
@@ -1992,7 +2114,25 @@ function selectDate(dateStr) {
   renderScheduleSection();
 }
 
-const DAY_NAMES = ['일','월','화','수','목','금','토'];
+function getDayNames() { return (LANGS[currentLang] && LANGS[currentLang].day_names) || ['일','월','화','수','목','금','토']; }
+function formatCalTitle(y, m) {
+  if (currentLang === 'en') return ['January','February','March','April','May','June','July','August','September','October','November','December'][m] + ' ' + y;
+  if (currentLang === 'ja') return `${y}年${m+1}月`;
+  if (currentLang === 'zh') return `${y}年${m+1}月`;
+  return `${y}년 ${m+1}월`;
+}
+function formatScheduleDate(y, m, d) {
+  if (currentLang === 'en') return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1] + ' ' + d;
+  if (currentLang === 'ja') return `${m}月${d}日`;
+  if (currentLang === 'zh') return `${m}月${d}日`;
+  return `${m}월 ${d}일`;
+}
+function fmtHours(hours) {
+  if (hours <= 0) return '-';
+  const h = Math.floor(hours), m = Math.round((hours - h) * 60);
+  const hu = t('mp_hour_unit'), mu = t('mp_min_unit');
+  return m > 0 ? `${h}${hu} ${m}${mu}` : `${h}${hu} 00${mu}`;
+}
 
 function renderScheduleSection() {
   if (!selectedDate) return;
@@ -2000,9 +2140,9 @@ function renderScheduleSection() {
   const dow = new Date(y, m-1, d).getDay();
   const textEl = document.getElementById('schedule-date-text');
   const badgeEl = document.getElementById('schedule-day-badge');
-  if (textEl) textEl.textContent = `${m}월 ${d}일`;
+  if (textEl) textEl.textContent = formatScheduleDate(y, m, d);
   if (badgeEl) {
-    badgeEl.textContent = DAY_NAMES[dow];
+    badgeEl.textContent = getDayNames()[dow];
     badgeEl.style.background = dow === 0 ? '#FEE2E2' : dow === 6 ? '#DBEAFE' : '#EFF6FF';
     badgeEl.style.color = dow === 0 ? '#991B1B' : dow === 6 ? '#1E40AF' : 'var(--p)';
   }
@@ -2012,7 +2152,7 @@ function renderScheduleSection() {
   const wrapEl = document.getElementById('holiday-notice-wrap');
   if (wrapEl) {
     if (holName) {
-      wrapEl.innerHTML = `<div class="holiday-notice"><span class="hi-icon">🎌</span><div><strong>${holName}</strong>입니다. 공휴일 근무 시 <strong>통상임금의 50% 가산</strong>이 적용돼요.</div></div>`;
+      wrapEl.innerHTML = `<div class="holiday-notice"><span class="hi-icon">🎌</span><div>${t('mp_hol_inline').replace('{name}','<strong>'+holName+'</strong>')}</div></div>`;
     } else {
       wrapEl.innerHTML = '';
     }
@@ -2025,10 +2165,10 @@ function renderScheduleSection() {
       listEl.style.display = 'flex';
       listEl.innerHTML = recs.map((r, i) => {
         const h = calcShiftHours(r.start, r.end);
-        const holTag = holName ? `<span style="font-size:.7rem;background:#FEE2E2;color:#991B1B;border-radius:4px;padding:1px 5px;margin-left:4px">공휴일</span>` : '';
+        const holTag = holName ? `<span style="font-size:.7rem;background:#FEE2E2;color:#991B1B;border-radius:4px;padding:1px 5px;margin-left:4px">${t('mp_hol_tag')}</span>` : '';
         return `<div class="schedule-item">
           <span class="schedule-item-time">☀️ ${r.start} ~ 🌙 ${r.end}${holTag}</span>
-          <span class="schedule-item-hours">${h >= 1 ? Math.floor(h)+'시간'+(h%1?` ${Math.round((h%1)*60)}분`:'') : Math.round(h*60)+'분'}</span>
+          <span class="schedule-item-hours">${fmtHours(h)}</span>
           <button class="schedule-item-del" onclick="deleteSchedule('${selectedDate}',${i})" title="삭제">✕</button>
         </div>`;
       }).join('');
@@ -2106,25 +2246,27 @@ function renderWageCalc() {
 
   const rowsEl = document.getElementById('wage-rows');
   if (rowsEl) {
+    const won = currentLang === 'ko' ? '원' : currentLang === 'ja' ? 'ウォン' : currentLang === 'zh' ? '韩元' : '₩';
     const holRow = publicHolHours > 0
-      ? `<div class="wage-breakdown-row"><span class="wl">🎌 공휴일 수당 (${publicHolHours}h)</span><span class="wr plus">+${publicHolPay.toLocaleString()}원</span></div>`
+      ? `<div class="wage-breakdown-row"><span class="wl">🎌 ${t('mp_hol_pay')} (${publicHolHours}h)</span><span class="wr plus">+${publicHolPay.toLocaleString()}${won}</span></div>`
       : '';
+    const hu = t('mp_hour_unit');
     rowsEl.innerHTML = `
-      <div class="wage-breakdown-row"><span class="wl">기본급 (${totalHours}h × ${wage.toLocaleString()}원)</span><span class="wr">${base.toLocaleString()}원</span></div>
-      <div class="wage-breakdown-row"><span class="wl">주휴수당 (${Math.round(weeklyHours * weeksInMonth)}시간)${weeklyHours < 15 ? ' <span style="color:#EF4444;font-size:.7rem">15h↓</span>' : ''}</span><span class="wr plus">+${juHuPay.toLocaleString()}원</span></div>
-      <div class="wage-breakdown-row"><span class="wl">야간수당 (${nightHours}시간)</span><span class="wr plus">+${nightPay.toLocaleString()}원</span></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_base_pay')} (${totalHours}h × ${wage.toLocaleString()}${won})</span><span class="wr">${base.toLocaleString()}${won}</span></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_juhyu')} (${Math.round(weeklyHours * weeksInMonth)}${hu})${weeklyHours < 15 ? ` <span style="color:#EF4444;font-size:.7rem">${t('mp_15h_below')}</span>` : ''}</span><span class="wr plus">+${juHuPay.toLocaleString()}${won}</span></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')} (${nightHours}${hu})</span><span class="wr plus">+${nightPay.toLocaleString()}${won}</span></div>
       ${holRow}
     `;
   }
   const totalEl = document.getElementById('wage-total');
-  if (totalEl) totalEl.textContent = total.toLocaleString() + '원';
+  if (totalEl) totalEl.textContent = total.toLocaleString() + (currentLang==='ko'?'원':currentLang==='ja'?'ウォン':currentLang==='zh'?'韩元':'₩');
 
   const noteEl = document.getElementById('wage-note');
   const noteTextEl = document.getElementById('wage-note-text');
   if (noteEl && noteTextEl) {
     if (publicHolHours > 0) {
       noteEl.style.display = 'flex';
-      noteTextEl.textContent = `이번 달 공휴일 근무 ${publicHolHours}시간이 포함됐어요. 통상임금의 50%가 가산됩니다. (5인 이상 사업장 적용)`;
+      noteTextEl.textContent = t('mp_hol_notice').replace('{h}', publicHolHours);
     } else {
       noteEl.style.display = 'none';
     }
@@ -2136,7 +2278,7 @@ function updateMyPlaceHeader() {
   const metaEl = document.getElementById('myplace-meta');
   const iconEl = document.getElementById('myplace-icon');
   if (nameEl) nameEl.textContent = myWorkplace.name;
-  if (metaEl) metaEl.textContent = `${myWorkplace.type} · 근무기간 ${myWorkplace.since}~`;
+  if (metaEl) metaEl.textContent = `${myWorkplace.type} · ${t('mp_since')} ${myWorkplace.since}~`;
   if (iconEl) iconEl.textContent = wpIcon(myWorkplace.name);
 }
 
@@ -2159,6 +2301,8 @@ function registerWorkplace() {
 function saveWageSetting() {
   const wage = parseInt(document.getElementById('ws-wage').value) || 10030;
   myWorkplace.wage = wage;
+  const wageEl = document.getElementById('c-wage');
+  if (wageEl) wageEl.value = wage;
   closeModal('wageSettingModal');
   renderWageCalc();
   showToast('✅ 시급이 저장됐습니다.');
