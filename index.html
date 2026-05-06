@@ -356,11 +356,12 @@
     .wage-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
     .wage-left{}
     .wage-right{}
-    .wage-breakdown-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);font-size:.83rem}
+    .wage-breakdown-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--b);font-size:.83rem}
     .wage-breakdown-row:last-of-type{border:none}
     .wage-breakdown-row .wl{color:var(--g)}
-    .wage-breakdown-row .wr{font-weight:700}
+    .wage-breakdown-row .wr{font-weight:700;cursor:pointer;user-select:none}
     .wage-breakdown-row .wr.plus{color:var(--a)}
+    .wage-detail{display:none;width:100%;font-size:.72rem;color:var(--p);background:#EFF6FF;border-radius:6px;padding:4px 8px;margin-top:3px;line-height:1.5}
     .pay-status-box{background:var(--l);border-radius:12px;padding:12px 14px;margin-bottom:10px}
     .pay-status-title{font-size:.75rem;font-weight:700;color:var(--g);margin-bottom:6px}
     .pay-status-badge{display:flex;align-items:center;gap:5px;font-size:.82rem;font-weight:700;color:#D97706;margin-bottom:4px}
@@ -2248,13 +2249,16 @@ function renderWageCalc() {
   const rowsEl = document.getElementById('wage-rows');
   if (rowsEl) {
     const holRow = publicHolHours > 0
-      ? `<div class="wage-breakdown-row"><span class="wl">🎌 ${t('mp_hol_pay')} (${publicHolHours}h)</span><span class="wr plus">+${publicHolPay.toLocaleString()}${won}</span></div>`
+      ? `<div class="wage-breakdown-row"><span class="wl">🎌 ${t('mp_hol_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${publicHolPay.toLocaleString()}${won}</span><div class="wage-detail">${publicHolHours}h × ${wage.toLocaleString()}${won} × 50%</div></div>`
       : '';
     const hu = t('mp_hour_unit');
+    const juhyuDetail = weeklyHours < 15
+      ? `${Math.round(weeklyHours * weeksInMonth)}${hu} (${t('mp_15h_below')})`
+      : `(${Math.round(weeklyHours * weeksInMonth)}${hu} ÷ 40) × 8 × ${wage.toLocaleString()}${won} × ${weeksInMonth}주`;
     rowsEl.innerHTML = `
-      <div class="wage-breakdown-row"><span class="wl">${t('mp_base_pay')} (${totalHours}h × ${wage.toLocaleString()}${won})</span><span class="wr">${base.toLocaleString()}${won}</span></div>
-      <div class="wage-breakdown-row"><span class="wl">${t('mp_juhyu')} (${Math.round(weeklyHours * weeksInMonth)}${hu})${weeklyHours < 15 ? ` <span style="color:#EF4444;font-size:.7rem">${t('mp_15h_below')}</span>` : ''}</span><span class="wr plus">+${juHuPay.toLocaleString()}${won}</span></div>
-      <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')} (${nightHours}${hu})</span><span class="wr plus">+${nightPay.toLocaleString()}${won}</span></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_base_pay')}</span><span class="wr" onclick="toggleWageDetail(this)">${base.toLocaleString()}${won}</span><div class="wage-detail">${totalHours}h × ${wage.toLocaleString()}${won}</div></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_juhyu')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${juHuPay.toLocaleString()}${won}</span><div class="wage-detail">${juhyuDetail}</div></div>
+      <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${nightPay.toLocaleString()}${won}</span><div class="wage-detail">${nightHours}${hu} × ${wage.toLocaleString()}${won} × 50%</div></div>
       ${holRow}
     `;
   }
@@ -2312,6 +2316,13 @@ function registerWorkplace() {
   updateMyPlaceHeader();
   renderWageCalc();
   showToast('✅ 업장이 등록됐습니다.');
+}
+
+function toggleWageDetail(el) {
+  const detail = el.parentElement.querySelector('.wage-detail');
+  if (!detail) return;
+  const showing = detail.style.display === 'block';
+  detail.style.display = showing ? 'none' : 'block';
 }
 
 function saveWageSetting() {
