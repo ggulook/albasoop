@@ -380,9 +380,10 @@
     .bottom-tab-bar{display:none}
     @media(max-width:700px){
       .bottom-tab-bar{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--b);z-index:1000;height:60px}
-      .bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--g);font-size:.65rem;font-weight:600;transition:color .15s;padding:6px 0}
-      .bottom-tab.active{color:var(--p)}
-      .bottom-tab .bt-icon{font-size:1.3rem;line-height:1}
+      .bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:rgba(37,99,235,0.35);font-size:.65rem;font-weight:600;transition:color .15s;padding:6px 0}
+      .bottom-tab.active{color:rgba(37,99,235,1)}
+      .bottom-tab .bt-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+      .bottom-tab .bt-icon svg{width:26px;height:26px;stroke:currentColor;transition:stroke .15s}
       .myplace-page{padding-bottom:72px}
       .page{padding-bottom:60px}
     }
@@ -912,19 +913,19 @@
 <!-- BOTTOM TAB BAR -->
 <div class="bottom-tab-bar">
   <button class="bottom-tab active" id="bt-home" onclick="showPage('home')">
-    <span class="bt-icon">🏠</span>홈
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg></span>홈
   </button>
   <button class="bottom-tab" id="bt-jobs" onclick="showPage('jobs')">
-    <span class="bt-icon">💼</span>알바 찾기
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="2" y1="12" x2="22" y2="12"/><rect x="10" y="10" width="4" height="4" rx="0.5"/></svg></span>알바 찾기
   </button>
   <button class="bottom-tab" id="bt-map" onclick="showPage('map')">
-    <span class="bt-icon">📍</span>지도
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z"/><circle cx="12" cy="8" r="2.2"/></svg></span>지도
   </button>
   <button class="bottom-tab" id="bt-community" onclick="showPage('community')">
-    <span class="bt-icon">💬</span>커뮤니티
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="0.9" fill="currentColor" stroke="none"/><circle cx="12" cy="10" r="0.9" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.9" fill="currentColor" stroke="none"/></svg></span>커뮤니티
   </button>
   <button class="bottom-tab" id="bt-myplace" onclick="showPage('myplace')">
-    <span class="bt-icon">🏪</span>내 업장
+    <span class="bt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="12" rx="1"/><path d="M2 9l2.5-6h15L22 9"/><rect x="8.5" y="13" width="7" height="8"/><rect x="15" y="3" width="6" height="5" rx="1"/><text x="18" y="6.2" text-anchor="middle" font-size="3.2" font-weight="700" fill="currentColor" stroke="none" font-family="sans-serif">24</text></svg></span>내 업장
   </button>
 </div>
 
