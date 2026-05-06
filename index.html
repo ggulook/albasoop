@@ -2244,9 +2244,9 @@ function renderWageCalc() {
   const publicHolPay = Math.round(publicHolHours * wage * 0.5);
   const total = base + juHuPay + nightPay + publicHolPay;
 
+  const won = currentLang === 'ko' ? '원' : currentLang === 'ja' ? 'ウォン' : currentLang === 'zh' ? '韩元' : '₩';
   const rowsEl = document.getElementById('wage-rows');
   if (rowsEl) {
-    const won = currentLang === 'ko' ? '원' : currentLang === 'ja' ? 'ウォン' : currentLang === 'zh' ? '韩元' : '₩';
     const holRow = publicHolHours > 0
       ? `<div class="wage-breakdown-row"><span class="wl">🎌 ${t('mp_hol_pay')} (${publicHolHours}h)</span><span class="wr plus">+${publicHolPay.toLocaleString()}${won}</span></div>`
       : '';
@@ -2349,6 +2349,7 @@ function syncBottomTab(name) {
 initLocation();
 renderAll();
 renderWpList();
+renderWageCalc();
 </script>
 </body>
 </html>
