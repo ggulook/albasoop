@@ -337,6 +337,57 @@
     .no-workplace p{margin-bottom:20px;font-size:.93rem;line-height:1.7}
     .wp-change-btn{background:none;border:none;color:var(--g);cursor:pointer;font-size:.78rem;padding:4px 8px;border-radius:6px;transition:all .15s}
     .wp-change-btn:hover{color:var(--p);background:#EFF6FF}
+
+    /* SCHEDULE REDESIGN */
+    .schedule-date-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .schedule-date-left{display:flex;align-items:center;gap:7px;font-size:.93rem;font-weight:800}
+    .selected-badge{font-size:.7rem;font-weight:700;background:#EFF6FF;color:var(--p);padding:2px 8px;border-radius:999px}
+    .del-record-btn{display:flex;align-items:center;gap:4px;background:none;border:none;font-size:.78rem;color:#EF4444;cursor:pointer;padding:4px 8px;border-radius:6px;transition:background .15s}
+    .del-record-btn:hover{background:#FEE2E2}
+    .time-cols{display:grid;grid-template-columns:1fr auto 1fr 1fr;gap:8px;align-items:center;background:var(--l);border-radius:14px;padding:14px;margin-bottom:12px}
+    .time-col-label{font-size:.72rem;color:var(--g);font-weight:600;margin-bottom:6px;text-align:center}
+    .time-col-input{display:flex;align-items:center;justify-content:center;gap:5px}
+    .time-icon{font-size:1.1rem}
+    .time-select-new{border:none;background:none;font-size:.95rem;font-weight:700;color:var(--dk);cursor:pointer;outline:none;text-align:center;max-width:70px}
+    .time-sep-col{font-size:1.2rem;color:var(--g);font-weight:300;text-align:center;padding-top:22px}
+    .workhours-box{background:#fff;border-radius:10px;padding:8px 10px;text-align:center;border:1.5px solid var(--b)}
+    .workhours-box .wh-val{font-size:.97rem;font-weight:900;color:var(--p)}
+    .workhours-box .wh-break{font-size:.7rem;color:var(--g);margin-top:2px}
+
+    /* WAGE REDESIGN */
+    .wage-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .wage-left{}
+    .wage-right{}
+    .wage-breakdown-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b);font-size:.83rem}
+    .wage-breakdown-row:last-of-type{border:none}
+    .wage-breakdown-row .wl{color:var(--g)}
+    .wage-breakdown-row .wr{font-weight:700}
+    .wage-breakdown-row .wr.plus{color:var(--a)}
+    .pay-status-box{background:var(--l);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+    .pay-status-title{font-size:.75rem;font-weight:700;color:var(--g);margin-bottom:6px}
+    .pay-status-badge{display:flex;align-items:center;gap:5px;font-size:.82rem;font-weight:700;color:#D97706;margin-bottom:4px}
+    .pay-status-dot{width:7px;height:7px;border-radius:50%;background:#F59E0B;flex-shrink:0}
+    .pay-status-desc{font-size:.72rem;color:var(--g);line-height:1.5}
+    .account-box{background:var(--l);border-radius:12px;padding:12px 14px}
+    .account-title{font-size:.75rem;font-weight:700;color:var(--a);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+    .account-row{display:flex;align-items:center;justify-content:space-between;font-size:.82rem;font-weight:600;cursor:pointer}
+    .account-row:hover{opacity:.7}
+    .account-arrow{color:var(--g);font-size:.8rem}
+    .account-empty{font-size:.78rem;color:var(--g)}
+    .wage-total-row{display:flex;justify-content:space-between;align-items:center;background:#EFF6FF;border-radius:12px;padding:14px 16px}
+    .wage-total-row .wtl{font-weight:700;font-size:.93rem}
+    .wage-total-row .wtv{font-size:1.35rem;font-weight:900;color:var(--p)}
+
+    /* BOTTOM TAB BAR (mobile only) */
+    .bottom-tab-bar{display:none}
+    @media(max-width:700px){
+      .bottom-tab-bar{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--b);z-index:1000;height:60px}
+      .bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--g);font-size:.65rem;font-weight:600;transition:color .15s;padding:6px 0}
+      .bottom-tab.active{color:var(--p)}
+      .bottom-tab .bt-icon{font-size:1.3rem;line-height:1}
+      .myplace-page{padding-bottom:72px}
+      .page{padding-bottom:60px}
+    }
   </style>
 </head>
 <body>
@@ -591,38 +642,73 @@
 
       <!-- 선택 날짜 근무 스케줄 -->
       <div class="schedule-section">
-        <div class="schedule-date-label">
-          <span id="schedule-date-text">날짜를 선택하세요</span>
-          <span class="day-badge" id="schedule-day-badge"></span>
+        <div class="schedule-date-hdr">
+          <div class="schedule-date-left">
+            <span id="schedule-date-text">날짜를 선택하세요</span>
+            <span class="day-badge" id="schedule-day-badge"></span>
+            <span class="selected-badge">선택일</span>
+          </div>
+          <button class="del-record-btn" onclick="deleteAllSchedules()">🗑 근무기록 삭제</button>
         </div>
 
+        <div id="holiday-notice-wrap"></div>
         <div class="schedule-list" id="schedule-list" style="display:none"></div>
 
-        <div id="add-schedule-form">
-          <div class="time-row">
-            <label>🌅 출근</label>
-            <select class="time-select" id="start-time" onchange="updateWorkHoursDisplay()"></select>
+        <div class="time-cols">
+          <div>
+            <div class="time-col-label">출근 시간</div>
+            <div class="time-col-input">
+              <span class="time-icon">☀️</span>
+              <select class="time-select-new" id="start-time" onchange="updateWorkHoursDisplay()"></select>
+            </div>
           </div>
-          <div class="time-row">
-            <label>🌇 퇴근</label>
-            <select class="time-select" id="end-time" onchange="updateWorkHoursDisplay()"></select>
+          <div class="time-sep-col">~</div>
+          <div>
+            <div class="time-col-label">퇴근 시간</div>
+            <div class="time-col-input">
+              <span class="time-icon">🌙</span>
+              <select class="time-select-new" id="end-time" onchange="updateWorkHoursDisplay()"></select>
+            </div>
           </div>
-          <div class="work-hours-badge">
-            <span>근무 시간</span>
-            <span id="work-hours-val" style="font-size:1rem;font-weight:900">-</span>
+          <div>
+            <div class="time-col-label">근무시간</div>
+            <div class="workhours-box">
+              <div class="wh-val" id="work-hours-val">-</div>
+              <div class="wh-break" id="break-time-label">휴게시간 -</div>
+            </div>
           </div>
-          <button class="add-schedule-btn" onclick="addSchedule()">+ 근무기록 추가</button>
         </div>
+
+        <button class="add-schedule-btn" onclick="addSchedule()">+ 근무기록 추가</button>
       </div>
 
       <!-- 급여 계산 -->
       <div class="wage-section">
         <div class="wage-section-hdr">
-          <div class="wage-section-title">이번 달 예상 급여 💰</div>
-          <button class="wage-auto-btn" onclick="openModal('wageSettingModal')">자동 계산 설정</button>
+          <div class="wage-section-title">이번 달 예상 급여 ℹ️</div>
+          <button class="wage-auto-btn" onclick="openModal('wageSettingModal')">자동 계산 완료 ✓</button>
         </div>
-        <div id="wage-rows"></div>
-        <div class="wage-total-box">
+        <div class="wage-grid">
+          <div class="wage-left" id="wage-rows"></div>
+          <div class="wage-right">
+            <div class="pay-status-box">
+              <div class="pay-status-title">지급 상태</div>
+              <div class="pay-status-badge"><span class="pay-status-dot"></span>지급 대기 중</div>
+              <div class="pay-status-desc">사장님 승인 후<br>지급됩니다.</div>
+            </div>
+            <div class="account-box">
+              <div class="account-title">✅ 자동 이금</div>
+              <div id="account-display">
+                <div class="account-row" onclick="openModal('accountModal')">
+                  <span class="account-empty">계좌를 등록해주세요</span>
+                  <span class="account-arrow">›</span>
+                </div>
+              </div>
+              <div style="font-size:.7rem;color:var(--g);margin-top:5px;line-height:1.5">등록 계좌로 자동 이금합니다.</div>
+            </div>
+          </div>
+        </div>
+        <div class="wage-total-row">
           <span class="wtl">예상 총 지급액</span>
           <span class="wtv" id="wage-total">0원</span>
         </div>
@@ -845,6 +931,41 @@
         </div>
       </div>
       <button class="msubmit" onclick="closeModal('certInfoModal')">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM TAB BAR -->
+<div class="bottom-tab-bar">
+  <button class="bottom-tab active" id="bt-home" onclick="showPage('home')">
+    <span class="bt-icon">🏠</span>홈
+  </button>
+  <button class="bottom-tab" id="bt-jobs" onclick="showPage('jobs')">
+    <span class="bt-icon">💼</span>알바 찾기
+  </button>
+  <button class="bottom-tab" id="bt-community" onclick="showPage('community')">
+    <span class="bt-icon">💬</span>커뮤니티
+  </button>
+  <button class="bottom-tab" id="bt-myplace" onclick="showPage('myplace')">
+    <span class="bt-icon">🏪</span>내 업장
+  </button>
+</div>
+
+<!-- ACCOUNT MODAL -->
+<div class="modal-overlay" id="accountModal" onclick="if(event.target===this)closeModal('accountModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('accountModal')">✕</button>
+    <h2>계좌 등록</h2>
+    <p>급여를 받을 계좌를 등록하세요.</p>
+    <div class="mform">
+      <select class="minput" id="acc-bank">
+        <option value="">은행 선택</option>
+        <option>신한은행</option><option>국민은행</option><option>우리은행</option>
+        <option>하나은행</option><option>농협은행</option><option>카카오뱅크</option>
+        <option>토스뱅크</option><option>기업은행</option>
+      </select>
+      <input class="minput" id="acc-number" type="text" placeholder="계좌번호 (- 없이 입력)">
+      <button class="msubmit" onclick="saveAccount()">등록하기</button>
     </div>
   </div>
 </div>
@@ -1524,6 +1645,7 @@ showPage = function(name) {
   document.querySelectorAll('.mob-nav-item').forEach(el => {
     el.classList.toggle('active', el.id === 'mob-' + name);
   });
+  syncBottomTab(name);
 };
 
 // ===== LANG PICKER CLICK TOGGLE =====
@@ -1798,13 +1920,18 @@ function updateWorkHoursDisplay() {
   const end = document.getElementById('end-time').value;
   const hours = calcShiftHours(start, end);
   const el = document.getElementById('work-hours-val');
+  const breakEl = document.getElementById('break-time-label');
   if (!el) return;
   if (hours > 0) {
     const h = Math.floor(hours);
     const m = Math.round((hours - h) * 60);
-    el.textContent = m > 0 ? `${h}시간 ${m}분` : `${h}시간`;
+    el.textContent = m > 0 ? `${h}시간 ${m}분` : `${h}시간 00분`;
+    // 휴게시간: 4h 이상 30분, 8h 이상 1시간
+    const breakMin = hours >= 8 ? 60 : hours >= 4 ? 30 : 0;
+    if (breakEl) breakEl.textContent = breakMin > 0 ? `휴게시간 ${breakMin === 60 ? '1시간' : '30분'}` : '휴게시간 없음';
   } else {
     el.textContent = '-';
+    if (breakEl) breakEl.textContent = '휴게시간 -';
   }
 }
 
@@ -1903,14 +2030,13 @@ function renderScheduleSection() {
 
   // 공휴일 안내
   const holName = getHolidayName(selectedDate);
-  const existingNotice = document.getElementById('holiday-notice');
-  if (existingNotice) existingNotice.remove();
-  if (holName) {
-    const notice = document.createElement('div');
-    notice.id = 'holiday-notice';
-    notice.className = 'holiday-notice';
-    notice.innerHTML = `<span class="hi-icon">🎌</span><div><strong>${holName}</strong>입니다.<br>공휴일 근무 시 <strong>통상임금의 50% 가산</strong>이 적용돼요. (근로기준법 제56조)</div>`;
-    document.getElementById('add-schedule-form').before(notice);
+  const wrapEl = document.getElementById('holiday-notice-wrap');
+  if (wrapEl) {
+    if (holName) {
+      wrapEl.innerHTML = `<div class="holiday-notice"><span class="hi-icon">🎌</span><div><strong>${holName}</strong>입니다. 공휴일 근무 시 <strong>통상임금의 50% 가산</strong>이 적용돼요.</div></div>`;
+    } else {
+      wrapEl.innerHTML = '';
+    }
   }
 
   const recs = workRecords[selectedDate] || [];
@@ -1922,7 +2048,7 @@ function renderScheduleSection() {
         const h = calcShiftHours(r.start, r.end);
         const holTag = holName ? `<span style="font-size:.7rem;background:#FEE2E2;color:#991B1B;border-radius:4px;padding:1px 5px;margin-left:4px">공휴일</span>` : '';
         return `<div class="schedule-item">
-          <span class="schedule-item-time">${r.start} ~ ${r.end}${holTag}</span>
+          <span class="schedule-item-time">☀️ ${r.start} ~ 🌙 ${r.end}${holTag}</span>
           <span class="schedule-item-hours">${h >= 1 ? Math.floor(h)+'시간'+(h%1?` ${Math.round((h%1)*60)}분`:'') : Math.round(h*60)+'분'}</span>
           <button class="schedule-item-del" onclick="deleteSchedule('${selectedDate}',${i})" title="삭제">✕</button>
         </div>`;
@@ -1933,6 +2059,15 @@ function renderScheduleSection() {
     }
   }
   updateWorkHoursDisplay();
+}
+
+function deleteAllSchedules() {
+  if (!selectedDate || !workRecords[selectedDate]) return;
+  delete workRecords[selectedDate];
+  renderCalendar();
+  renderScheduleSection();
+  renderWageCalc();
+  showToast('🗑 근무기록이 삭제됐습니다.');
 }
 
 function addSchedule() {
@@ -1993,12 +2128,12 @@ function renderWageCalc() {
   const rowsEl = document.getElementById('wage-rows');
   if (rowsEl) {
     const holRow = publicHolHours > 0
-      ? `<div class="wage-row"><span class="wl">🎌 공휴일 수당 (${publicHolHours}h × 50%)</span><span class="wr plus">+${publicHolPay.toLocaleString()}원</span></div>`
+      ? `<div class="wage-breakdown-row"><span class="wl">🎌 공휴일 수당 (${publicHolHours}h)</span><span class="wr plus">+${publicHolPay.toLocaleString()}원</span></div>`
       : '';
     rowsEl.innerHTML = `
-      <div class="wage-row"><span class="wl">기본급 (${totalHours}h × ${wage.toLocaleString()}원)</span><span class="wr">${base.toLocaleString()}원</span></div>
-      <div class="wage-row"><span class="wl">주휴수당 (${Math.round(weeklyHours * weeksInMonth)}시간)${weeklyHours < 15 ? ' <span style="color:#EF4444;font-size:.75rem">15h 미만</span>' : ''}</span><span class="wr plus">+${juHuPay.toLocaleString()}원</span></div>
-      <div class="wage-row"><span class="wl">야간수당 (${nightHours}시간, 22시 이후)</span><span class="wr plus">+${nightPay.toLocaleString()}원</span></div>
+      <div class="wage-breakdown-row"><span class="wl">기본급 (${totalHours}h × ${wage.toLocaleString()}원)</span><span class="wr">${base.toLocaleString()}원</span></div>
+      <div class="wage-breakdown-row"><span class="wl">주휴수당 (${Math.round(weeklyHours * weeksInMonth)}시간)${weeklyHours < 15 ? ' <span style="color:#EF4444;font-size:.7rem">15h↓</span>' : ''}</span><span class="wr plus">+${juHuPay.toLocaleString()}원</span></div>
+      <div class="wage-breakdown-row"><span class="wl">야간수당 (${nightHours}시간)</span><span class="wr plus">+${nightPay.toLocaleString()}원</span></div>
       ${holRow}
     `;
   }
@@ -2048,6 +2183,27 @@ function saveWageSetting() {
   closeModal('wageSettingModal');
   renderWageCalc();
   showToast('✅ 시급이 저장됐습니다.');
+}
+
+let savedAccount = null;
+function saveAccount() {
+  const bank = document.getElementById('acc-bank').value;
+  const number = document.getElementById('acc-number').value.trim();
+  if (!bank) { showToast('⚠️ 은행을 선택해주세요.'); return; }
+  if (!number || number.length < 10) { showToast('⚠️ 계좌번호를 확인해주세요.'); return; }
+  savedAccount = { bank, number };
+  const masked = number.slice(0,3) + '-****-' + number.slice(-6);
+  const el = document.getElementById('account-display');
+  if (el) el.innerHTML = `<div class="account-row" onclick="openModal('accountModal')"><span style="font-size:.82rem;font-weight:600">${bank} ${masked}</span><span class="account-arrow">›</span></div>`;
+  closeModal('accountModal');
+  showToast('✅ 계좌가 등록됐습니다.');
+}
+
+// 하단 탭바 동기화
+function syncBottomTab(name) {
+  document.querySelectorAll('.bottom-tab').forEach(el => {
+    el.classList.toggle('active', el.id === 'bt-' + name);
+  });
 }
 
 // ===== INIT =====
