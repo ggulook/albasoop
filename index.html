@@ -2062,8 +2062,9 @@ function updateWorkHoursDisplay() {
 function calcShiftHours(start, end) {
   const [sh, sm] = start.split(':').map(Number);
   const [eh, em] = end.split(':').map(Number);
-  const diff = (eh * 60 + em) - (sh * 60 + sm);
-  return diff > 0 ? diff / 60 : 0;
+  let diff = (eh * 60 + em) - (sh * 60 + sm);
+  if (diff < 0) diff += 24 * 60; // 자정 넘기는 야간 근무 처리
+  return diff / 60;
 }
 
 function changeMonth(dir) {
