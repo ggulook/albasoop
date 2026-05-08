@@ -320,7 +320,7 @@
     .wage-section{background:#fff;border-radius:20px;border:1.5px solid var(--b);padding:20px;margin-bottom:18px}
     .wage-section-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .wage-section-title{font-size:.97rem;font-weight:800;display:flex;align-items:center;gap:6px}
-    .wage-tap-hint{font-size:.68rem;font-weight:400;color:#9CA3AF}
+    .wage-tap-hint{font-size:.68rem;font-weight:400;color:#9CA3AF;cursor:pointer;user-select:none}
     .wage-auto-btn{font-size:.78rem;color:var(--p);font-weight:600;background:#EFF6FF;border:none;border-radius:8px;padding:5px 11px;cursor:pointer}
     .wage-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b);font-size:.88rem}
     .wage-row:last-of-type{border:none}
@@ -663,7 +663,7 @@
       <!-- 급여 계산 -->
       <div class="wage-section">
         <div class="wage-section-hdr">
-          <div class="wage-section-title"><span data-i18n="mp_wage_title">이번 달 예상 급여 ℹ️</span><span class="wage-tap-hint"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.2" stroke-linecap="round" style="display:inline-block;vertical-align:middle;margin-right:3px;margin-top:-1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.5" fill="#9CA3AF" stroke="none"/></svg>눌러서 상세보기</span></div>
+          <div class="wage-section-title"><span data-i18n="mp_wage_title">이번 달 예상 급여 ℹ️</span><span class="wage-tap-hint" onclick="toggleAllWageDetails()"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.2" stroke-linecap="round" style="display:inline-block;vertical-align:middle;margin-right:3px;margin-top:-1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.5" fill="#9CA3AF" stroke="none"/></svg>눌러서 상세보기</span></div>
           <button class="wage-auto-btn" onclick="openWageSetting()" data-i18n="mp_auto_btn">자동 계산 완료 ✓</button>
         </div>
         <div class="wage-grid">
@@ -675,14 +675,14 @@
               <div class="pay-status-desc" data-i18n-html="mp_pay_desc">사장님 승인 후<br>지급됩니다.</div>
             </div>
             <div class="account-box">
-              <div class="account-title" data-i18n="mp_account_title">✅ 자동 이금</div>
+              <div class="account-title" data-i18n="mp_account_title">✅ 자동 입금</div>
               <div id="account-display">
                 <div class="account-row" onclick="openModal('accountModal')">
                   <span class="account-empty" data-i18n="mp_account_empty">계좌를 등록해주세요</span>
                   <span class="account-arrow">›</span>
                 </div>
               </div>
-              <div style="font-size:.7rem;color:var(--g);margin-top:5px;line-height:1.5" data-i18n="mp_account_desc">등록 계좌로 자동 이금합니다.</div>
+              <div style="font-size:.7rem;color:var(--g);margin-top:5px;line-height:1.5" data-i18n="mp_account_desc">등록 계좌로 자동 입금합니다.</div>
             </div>
           </div>
         </div>
@@ -1162,8 +1162,8 @@ const LANGS = {
     mp_checkin:'출근 시간', mp_checkout:'퇴근 시간', mp_workhours:'근무시간', mp_add_record:'+ 근무기록 추가',
     mp_wage_title:'이번 달 예상 급여 ℹ️', mp_auto_btn:'자동 계산 완료 ✓',
     mp_pay_status:'지급 상태', mp_pay_waiting:'지급 대기 중', mp_pay_desc:'사장님 승인 후<br>지급됩니다.',
-    mp_account_title:'✅ 자동 이금', mp_account_empty:'계좌를 등록해주세요',
-    mp_account_desc:'등록 계좌로 자동 이금합니다.', mp_wage_total:'예상 총 지급액',
+    mp_account_title:'✅ 자동 입금', mp_account_empty:'계좌를 등록해주세요',
+    mp_account_desc:'등록 계좌로 자동 입금합니다.', mp_wage_total:'예상 총 지급액',
     mp_ws_h2:'자동 계산 설정', mp_ws_p:'급여 계산에 사용할 시급을 설정하세요.',
     mp_save_btn:'저장하기', mp_add_h2:'업장 등록', mp_add_p:'일하는 곳을 등록하고 근무 기록을 관리해보세요.',
     mp_wp_name_ph:'업장명 (예: GS25 강원대학교점)', mp_add_submit:'등록하기',
@@ -2406,6 +2406,12 @@ function toggleWageDetail(el) {
   if (!detail) return;
   const showing = detail.style.display === 'block';
   detail.style.display = showing ? 'none' : 'block';
+}
+
+function toggleAllWageDetails() {
+  const details = document.querySelectorAll('#wage-rows .wage-detail');
+  const anyHidden = Array.from(details).some(d => d.style.display !== 'block');
+  details.forEach(d => d.style.display = anyHidden ? 'block' : 'none');
 }
 
 function saveWageSetting() {
