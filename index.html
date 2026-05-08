@@ -996,12 +996,11 @@ function reverseGeocode(lat, lng) {
       renderJobs();
       if (mapInstance) updateMap();
     })
-    .catch(() => setLocationDisplay('내 주변'));
+    .catch(() => setLocationDisplay(FALLBACK.name));
 }
 
 function setLocationDisplay(name) {
-  const t = LANGS[currentLang];
-  document.getElementById('loc-badge').textContent = (t.near || '내 주변') + ' ' + name;
+  document.getElementById('loc-badge').textContent = name;
   document.getElementById('loc-label').textContent = name;
 }
 
