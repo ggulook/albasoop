@@ -990,7 +990,7 @@ function reverseGeocode(lat, lng) {
     .then(r => r.json())
     .then(d => {
       const addr = d.address;
-      const name = addr.quarter || addr.suburb || addr.neighbourhood || addr.city_district || addr.city || addr.town || '내 주변';
+      const name = addr.city || addr.town || addr.county || addr.suburb || addr.neighbourhood || '내 주변';
       userLocation.name = name;
       setLocationDisplay(name);
       renderJobs();
