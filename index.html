@@ -1815,7 +1815,9 @@ function wpIcon(name) {
   return '🏢';
 }
 function starsHtml(n) {
-  return '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+  const filled = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1" style="vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  const empty = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" style="vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  return filled.repeat(Math.round(n)) + empty.repeat(5 - Math.round(n));
 }
 
 function renderWpList() {
@@ -1828,7 +1830,7 @@ function renderWpList() {
         <div class="wp-meta">후기 ${w.count}개 · ${w.reviews[0]?.date || ''}</div>
       </div>
       <div class="wp-rating">
-        <div class="wp-stars">${w.avg}</div>
+        <div class="wp-stars"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1" style="vertical-align:middle;margin-bottom:1px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${w.avg}</div>
         <div class="wp-cnt">${w.count}개 후기</div>
       </div>
     </div>
@@ -1867,6 +1869,7 @@ function showWpDetail(wpName) {
         <div class="review-header">
           <div>
             <div class="review-wp">${r.wp}</div>
+            <div class="review-stars">${starsHtml(r.overall)} ${r.overall}.0</div>
             </div>
           <div class="review-date">${r.date}</div>
         </div>
