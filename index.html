@@ -229,6 +229,8 @@
 
     .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dk);color:#fff;padding:11px 22px;border-radius:999px;font-size:.88rem;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap}
     .toast.show{transform:translateX(-50%) translateY(0)}
+    @keyframes shake{0%,100%{margin-left:0}15%,55%{margin-left:-6px}35%,75%{margin-left:6px}}
+    .toast.shake{animation:shake .45s ease}
 
     @media(max-width:700px){
       .nav-center{display:none}
@@ -1723,10 +1725,14 @@ function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function switchModal(from, to) { closeModal(from); openModal(to); }
 document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
-function showToast(msg) {
+function showToast(msg, shake) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.textContent = msg;
+  t.classList.remove('shake');
+  void t.offsetWidth;
+  t.classList.add('show');
+  if (shake) t.classList.add('shake');
+  setTimeout(() => t.classList.remove('show', 'shake'), 3000);
 }
 
 // ===== MOBILE MENU =====
@@ -2230,11 +2236,36 @@ function deleteAllSchedules() {
   showToast('🗑 근무기록이 삭제됐습니다.');
 }
 
+function calcBreakHours(h) {
+  return h >= 8 ? 1 : h >= 4 ? 0.5 : 0;
+}
+
+function getWeekTotalHours(dateStr) {
+  const d = new Date(dateStr);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  const weekStart = new Date(d);
+  weekStart.setDate(d.getDate() + diff);
+  let total = 0;
+  for (let i = 0; i < 7; i++) {
+    const cur = new Date(weekStart);
+    cur.setDate(weekStart.getDate() + i);
+    const key = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`;
+    (workRecords[key] || []).forEach(r => { total += calcShiftHours(r.start, r.end); });
+  }
+  return total;
+}
+
 function addSchedule() {
   const start = document.getElementById('start-time').value;
   const end = document.getElementById('end-time').value;
   if (calcShiftHours(start, end) <= 0) { showToast('⚠️ 퇴근 시간이 출근 시간보다 늦어야 해요.'); return; }
   if (!selectedDate) { showToast('⚠️ 날짜를 먼저 선택해주세요.'); return; }
+  const newH = calcShiftHours(start, end);
+  if (getWeekTotalHours(selectedDate) + newH > 52) {
+    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true);
+    return;
+  }
   if (!workRecords[selectedDate]) workRecords[selectedDate] = [];
   workRecords[selectedDate].push({ start, end });
   renderCalendar();
@@ -2294,7 +2325,8 @@ function renderWageCalc() {
     const weekKey = Math.ceil(day / 7); // 1~5주차
     const isHol = isHoliday(date);
     recs.forEach(r => {
-      const h = calcShiftHours(r.start, r.end);
+      const raw = calcShiftHours(r.start, r.end);
+      const h = Math.max(raw - calcBreakHours(raw), 0);
       totalHours += h;
       if (isLarge) nightHours += calcNightHours(r.start, r.end);
       if (isHol) holDayHours[date] = (holDayHours[date] || 0) + h;
