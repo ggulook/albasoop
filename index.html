@@ -217,9 +217,9 @@
     .review-cat{font-size:.75rem;background:var(--l);border-radius:6px;padding:3px 8px;color:var(--g)}
     .review-cat strong{color:var(--dk)}
     .review-pros{font-size:.88rem;line-height:1.6;margin-bottom:6px}
-    .review-pros::before{content:'👍 ';font-size:.8rem}
+    .review-pros::before{content:'+ ';font-size:.8rem;color:var(--a);font-weight:700}
     .review-cons{font-size:.88rem;line-height:1.6;color:var(--g)}
-    .review-cons::before{content:'👎 ';font-size:.8rem}
+    .review-cons::before{content:'- ';font-size:.8rem;color:var(--g);font-weight:700}
     .rating-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
     .rating-bar label{font-size:.8rem;color:var(--g);width:80px;flex-shrink:0}
     .rating-track{flex:1;height:6px;background:var(--b);border-radius:3px;overflow:hidden}
@@ -523,7 +523,7 @@
       <button class="comm-tab active" data-i18n="ct_all" onclick="switchCommTab(this,'all')">전체</button>
       <button class="comm-tab" data-i18n="ct_free" onclick="switchCommTab(this,'free')">자유</button>
       <button class="comm-tab" data-i18n="ct_wage" onclick="switchCommTab(this,'wage')">임금체불</button>
-      <button class="comm-tab" data-i18n="ct_review" onclick="switchCommTab(this,'review')">업장후기 ⭐</button>
+      <button class="comm-tab" data-i18n="ct_review" onclick="switchCommTab(this,'review')">업장후기</button>
       <button class="comm-tab" data-i18n="ct_info" onclick="switchCommTab(this,'info')">노동정보</button>
     </div>
     <!-- 일반 게시판 -->
@@ -789,7 +789,7 @@
     <button class="modal-close" onclick="closeModal('postModal')">✕</button>
     <div id="post-modal-content"></div>
     <div style="display:flex;gap:10px;margin-top:18px">
-      <button class="msubmit" style="flex:1" data-i18n="like_btn" onclick="likePost()">👍 공감</button>
+      <button class="msubmit" style="flex:1" data-i18n="like_btn" onclick="likePost()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>공감</button>
       <button class="msubmit" style="flex:1;background:#EFF6FF;color:var(--p)" data-i18n="close_btn" onclick="closeModal('postModal')">닫기</button>
     </div>
   </div>
@@ -1148,7 +1148,7 @@ const LANGS = {
     rt_wage:'임금 체불', rt_holiday:'주휴수당 미지급', rt_night:'야간수당 미지급',
     rt_abuse:'갑질 / 폭언', rt_fraud:'사기 / 착취', rt_etc:'기타',
     report_content_ph:'구체적인 내용...', report_submit:'신고 접수',
-    apply_btn:'지원하기', like_btn:'👍 공감', close_btn:'닫기',
+    apply_btn:'지원하기', like_btn:'공감', close_btn:'닫기',
     map_jobs:'주변 알바', score_trust:'업장 신뢰도', score_pay:'급여 정시 지급', score_env:'근무 환경',
     toast_apply:'지원하려면 로그인이 필요합니다.', toast_login:'로그인됐습니다.',
     toast_signup:'가입을 환영합니다!', toast_post:'게시글이 등록됐습니다!',
@@ -1215,7 +1215,7 @@ const LANGS = {
     rt_wage:'Wage Theft', rt_holiday:'No Holiday Pay', rt_night:'No Night Pay',
     rt_abuse:'Harassment', rt_fraud:'Fraud / Exploitation', rt_etc:'Other',
     report_content_ph:'Describe the situation...', report_submit:'Submit Report',
-    apply_btn:'Apply Now', like_btn:'👍 Like', close_btn:'Close',
+    apply_btn:'Apply Now', like_btn:'Like', close_btn:'Close',
     map_jobs:'Nearby Jobs', score_trust:'Employer Trust', score_pay:'Timely Payment', score_env:'Work Environment',
     toast_apply:'Please log in to apply.', toast_login:'Logged in successfully.',
     toast_signup:'Welcome!', toast_post:'Post published!',
@@ -1282,7 +1282,7 @@ const LANGS = {
     rt_wage:'賃金未払い', rt_holiday:'週休手当未払い', rt_night:'深夜手当未払い',
     rt_abuse:'ハラスメント', rt_fraud:'詐欺・搾取', rt_etc:'その他',
     report_content_ph:'具体的な内容...', report_submit:'通報する',
-    apply_btn:'応募する', like_btn:'👍 いいね', close_btn:'閉じる',
+    apply_btn:'応募する', like_btn:'いいね', close_btn:'閉じる',
     map_jobs:'近くのバイト', score_trust:'職場信頼度', score_pay:'給与の定時払い', score_env:'職場環境',
     toast_apply:'応募するにはログインが必要です。', toast_login:'ログインしました。',
     toast_signup:'ご登録ありがとうございます！', toast_post:'投稿が完了しました！',
@@ -1349,7 +1349,7 @@ const LANGS = {
     rt_wage:'欠薪', rt_holiday:'未付周休津贴', rt_night:'未付夜班补贴',
     rt_abuse:'职场骚扰', rt_fraud:'欺诈 / 剥削', rt_etc:'其他',
     report_content_ph:'请描述具体情况...', report_submit:'提交举报',
-    apply_btn:'立即投递', like_btn:'👍 点赞', close_btn:'关闭',
+    apply_btn:'立即投递', like_btn:'点赞', close_btn:'关闭',
     map_jobs:'附近招聘', score_trust:'雇主信誉', score_pay:'及时支付', score_env:'工作环境',
     toast_apply:'投递前请先登录。', toast_login:'登录成功。',
     toast_signup:'欢迎加入！', toast_post:'帖子已发布！',
@@ -1430,7 +1430,7 @@ function dist(job) {
 function renderJobCard(job, onclick) {
   const jt = job.t[currentLang] || job.t.ko;
   return `<div class="job-card" onclick="${onclick}">
-    <div class="job-score">⭐ ${job.score}</div>
+    <div class="job-score"><svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='#F59E0B' stroke='#F59E0B' stroke-width='1' style='vertical-align:middle;margin-bottom:1px'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg> ${job.score}</div>
     <div class="job-badges">
       ${job.badges.includes('v') ? `<span class="badge v">✓ ${jt.badge_v}</span>` : ''}
       ${job.badges.includes('u') ? `<span class="badge u">${jt.badge_u}</span>` : ''}
@@ -1452,7 +1452,7 @@ function renderCommItem(post, onclick) {
       <div class="community-title">${pt.title}</div>
       <div class="community-meta">${post.time}</div>
     </div>
-    <div class="community-right"><span>👍 ${post.likes}</span><span>💬 ${post.comments}</span></div>
+    <div class="community-right"><span><svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:middle'><path d='M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z'/><path d='M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3'/></svg> ${post.likes}</span><span><svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:middle'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg> ${post.comments}</span></div>
   </div>`;
 }
 
@@ -1470,7 +1470,7 @@ function renderCommList(posts) {
       <div class="comm-item-cat">${pt.cat}</div>
       <div class="comm-item-title">${pt.title}</div>
       <div class="comm-item-preview">${pt.preview}</div>
-      <div class="comm-item-footer"><span>${p.time}</span><span>👍 ${p.likes} · 💬 ${p.comments}</span></div>
+      <div class="comm-item-footer"><span>${p.time}</span><span><svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:middle'><path d='M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z'/><path d='M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3'/></svg> ${p.likes} · <svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:middle'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg> ${p.comments}</span></div>
     </div>`;
   }).join('');
 }
@@ -1600,7 +1600,7 @@ function openPost(id) {
     <p style="font-size:.85rem;color:var(--g);margin-bottom:14px">${post.time} · 익명</p>
     <p style="font-size:.93rem;line-height:1.8">${pt.content}</p>
     <div style="display:flex;gap:14px;margin-top:14px;font-size:.85rem;color:var(--g)">
-      <span>👍 ${post.likes}</span><span>💬 ${post.comments}</span>
+      <span><svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:middle'><path d='M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z'/><path d='M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3'/></svg> ${post.likes}</span><span><svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:middle'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg> ${post.comments}</span>
     </div>
   `;
   document.querySelectorAll('#postModal [data-i18n]').forEach(el => {
@@ -1828,7 +1828,7 @@ function renderWpList() {
         <div class="wp-meta">후기 ${w.count}개 · ${w.reviews[0]?.date || ''}</div>
       </div>
       <div class="wp-rating">
-        <div class="wp-stars">${w.avg} ★</div>
+        <div class="wp-stars">${w.avg}</div>
         <div class="wp-cnt">${w.count}개 후기</div>
       </div>
     </div>
@@ -1867,12 +1867,11 @@ function showWpDetail(wpName) {
         <div class="review-header">
           <div>
             <div class="review-wp">${r.wp}</div>
-            <div class="review-stars">${starsHtml(r.overall)} ${r.overall}.0</div>
-          </div>
+            </div>
           <div class="review-date">${r.date}</div>
         </div>
         <div class="review-cats">
-          ${cats.map(c => `<div class="review-cat">${c.label.split(' ')[1]} <strong>${starsHtml(r[c.key])}</strong></div>`).join('')}
+          ${cats.map(c => `<div class="review-cat">${c.label.split(' ')[1]} <strong>${r[c.key]}.0</strong></div>`).join('')}
         </div>
         <div class="review-pros">${r.pros}</div>
         <div class="review-cons">${r.cons}</div>
