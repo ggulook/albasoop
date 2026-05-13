@@ -34,6 +34,14 @@
     .lang-option:hover{background:var(--l)}
     .lang-option.active{background:#EFF6FF;color:var(--p);font-weight:700}
     .coming{font-size:.7rem;color:var(--g);margin-left:auto;background:var(--l);padding:2px 7px;border-radius:999px}
+    .role-picker{position:relative}
+    .role-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;border:1.5px solid var(--b);border-radius:8px;background:#fff;font-size:.83rem;font-weight:600;cursor:pointer;color:var(--dk);transition:all .2s;white-space:nowrap}
+    .role-btn:hover,.role-btn.active{border-color:var(--p);color:var(--p)}
+    .role-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1.5px solid var(--b);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.12);min-width:130px;overflow:hidden;z-index:1100}
+    .role-dropdown.open{display:block}
+    .role-option{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:.87rem;font-weight:500;cursor:pointer;transition:background .15s;color:var(--dk)}
+    .role-option:hover{background:var(--l)}
+    .role-option.active{background:#EFF6FF;color:var(--p);font-weight:700}
 
     .page{display:none;padding-top:64px;min-height:100vh}
     .page.active{display:block}
@@ -428,7 +436,13 @@
 <nav>
   <div style="display:flex;align-items:center;gap:8px">
     <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
-    <button id="role-switch-btn" class="role-chip worker" onclick="openRoleOverlay()"></button>
+    <div class="role-picker">
+      <button class="role-btn" id="role-btn">👷 알바생 ▾</button>
+      <div class="role-dropdown" id="role-dropdown">
+        <div class="role-option active" onclick="setRole('worker')">👷 알바생</div>
+        <div class="role-option" onclick="setRole('boss')">👔 사장님</div>
+      </div>
+    </div>
   </div>
   <div class="nav-center">
     <button class="nav-tab active" data-i18n="nav_home" onclick="showPage('home')">홈</button>
@@ -1862,10 +1876,17 @@ document.getElementById('lang-btn').addEventListener('click', function(e) {
   this.classList.toggle('active', !isOpen);
 });
 document.addEventListener('click', function() {
-  document.querySelectorAll('.lang-dropdown.open').forEach(d => {
+  document.querySelectorAll('.lang-dropdown.open, .role-dropdown.open').forEach(d => {
     d.classList.remove('open');
     d.previousElementSibling.classList.remove('active');
   });
+});
+document.getElementById('role-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const dropdown = this.nextElementSibling;
+  const isOpen = dropdown.classList.contains('open');
+  dropdown.classList.toggle('open');
+  this.classList.toggle('active', !isOpen);
 });
 
 // ===== REVIEW DATA =====
@@ -2581,6 +2602,8 @@ function setRole(role) {
   userRole = role;
   localStorage.setItem('userRole', role);
   document.getElementById('role-overlay').style.display = 'none';
+  document.getElementById('role-dropdown')?.classList.remove('open');
+  document.getElementById('role-btn')?.classList.remove('active');
   applyRole();
 }
 
@@ -2590,12 +2613,12 @@ function openRoleOverlay() {
 
 function applyRole() {
   const isBoss = userRole === 'boss';
-  // 헤더 역할 칩
-  const btn = document.getElementById('role-switch-btn');
-  if (btn) {
-    btn.textContent = isBoss ? '👔 사장님' : '👷 알바생';
-    btn.className = 'role-chip ' + (isBoss ? 'boss' : 'worker');
-  }
+  // 헤더 역할 버튼
+  const btn = document.getElementById('role-btn');
+  if (btn) btn.textContent = (isBoss ? '👔 사장님' : '👷 알바생') + ' ▾';
+  document.querySelectorAll('.role-option').forEach(el => {
+    el.classList.toggle('active', el.textContent.includes(isBoss ? '사장님' : '알바생'));
+  });
   // 홈 히어로
   document.getElementById('hero-worker-view').style.display = isBoss ? 'none' : '';
   document.getElementById('hero-boss-view').style.display = isBoss ? '' : 'none';
