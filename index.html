@@ -426,7 +426,10 @@
 <body>
 
 <nav>
-  <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
+    <button id="role-switch-btn" class="role-chip worker" onclick="openRoleOverlay()"></button>
+  </div>
   <div class="nav-center">
     <button class="nav-tab active" data-i18n="nav_home" onclick="showPage('home')">홈</button>
     <button class="nav-tab" data-i18n="nav_jobs" onclick="showPage('jobs')">알바 찾기</button>
@@ -611,10 +614,7 @@
   <div class="myplace-page">
     <div class="myplace-hdr">
       <h1 data-i18n="nav_myplace">내 업장</h1>
-      <div style="display:flex;align-items:center;gap:8px">
-        <button id="role-switch-btn" class="role-chip worker" onclick="openRoleOverlay()"></button>
-        <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
-      </div>
+      <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
     </div>
 
     <!-- 업장 미등록 상태 -->
