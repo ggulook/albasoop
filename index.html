@@ -394,6 +394,34 @@
       .page{padding-bottom:60px}
     }
   </style>
+  <style>
+    /* ===== ROLE OVERLAY ===== */
+    #role-overlay{position:fixed;inset:0;background:#fff;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px}
+    .role-card{flex:1;max-width:180px;padding:28px 16px;border-radius:20px;border:2px solid var(--b);background:#fff;cursor:pointer;font-size:1rem;font-weight:700;color:var(--dk);transition:all .2s;text-align:center}
+    .role-card:hover{border-color:var(--p);background:#EFF6FF;transform:translateY(-2px)}
+    .role-card .rc-emoji{font-size:2.4rem;margin-bottom:10px}
+    .role-card .rc-sub{font-size:.75rem;color:var(--g);font-weight:400;margin-top:6px}
+    /* ===== BOSS MODE ===== */
+    .boss-salary-card{background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px}
+    .boss-salary-ttl{font-size:.85rem;color:var(--g);font-weight:600;margin-bottom:14px}
+    .boss-worker-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b);font-size:.88rem}
+    .boss-worker-row:last-of-type{border:none}
+    .boss-worker-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:7px}
+    .boss-worker-name{font-weight:700;display:flex;align-items:center}
+    .boss-worker-pay{font-weight:700;color:var(--p)}
+    .boss-total-row{background:#EFF6FF;border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .boss-cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:0 1px}
+    .boss-schedule-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);font-size:.86rem}
+    .boss-schedule-item:last-of-type{border:none}
+    .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
+    .boss-pay-row:last-of-type{border:none}
+    .boss-pay-info{display:flex;align-items:center;gap:8px}
+    .boss-pay-approve{padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:700;border:none;cursor:pointer;background:var(--p);color:#fff;transition:all .2s}
+    .boss-pay-approve.paid{background:#E2E8F0;color:var(--g);cursor:default}
+    .role-chip{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;cursor:pointer;border:none;margin-left:8px}
+    .role-chip.worker{background:#EFF6FF;color:var(--p)}
+    .role-chip.boss{background:#F0FDF4;color:#059669}
+  </style>
 </head>
 <body>
 
@@ -446,12 +474,21 @@
       </div>
     </div>
     <div class="hero-visual">
-      <div class="salary-ttl" data-i18n="salary_title">이번 달 예상 급여 💰</div>
-      <div class="salary-row"><span class="lbl" id="hero-base-lbl" data-i18n="salary_base">기본급 (80h × 10,030원)</span><span class="val" id="hero-base-val">802,400원</span></div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_holiday">주휴수당</span><span class="val g" id="hero-holiday-val">+160,480원</span></div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_night">야간수당</span><span class="val g" id="hero-night-val">+50,150원</span></div>
-      <div class="salary-row"><span class="lbl" data-i18n="salary_tax">공제 (세금)</span><span class="val" id="hero-tax-val" style="color:#EF4444">-23,200원</span></div>
-      <div class="salary-total"><span class="lbl" data-i18n="salary_takehome">실수령액</span><span class="val" id="hero-total-val">989,830원</span></div>
+      <!-- 알바생 모드 -->
+      <div id="hero-worker-view">
+        <div class="salary-ttl" data-i18n="salary_title">이번 달 예상 급여 💰</div>
+        <div class="salary-row"><span class="lbl" id="hero-base-lbl" data-i18n="salary_base">기본급 (80h × 10,030원)</span><span class="val" id="hero-base-val">802,400원</span></div>
+        <div class="salary-row"><span class="lbl" data-i18n="salary_holiday">주휴수당</span><span class="val g" id="hero-holiday-val">+160,480원</span></div>
+        <div class="salary-row"><span class="lbl" data-i18n="salary_night">야간수당</span><span class="val g" id="hero-night-val">+50,150원</span></div>
+        <div class="salary-row"><span class="lbl" data-i18n="salary_tax">공제 (세금)</span><span class="val" id="hero-tax-val" style="color:#EF4444">-23,200원</span></div>
+        <div class="salary-total"><span class="lbl" data-i18n="salary_takehome">실수령액</span><span class="val" id="hero-total-val">989,830원</span></div>
+      </div>
+      <!-- 사장님 모드 -->
+      <div id="hero-boss-view" style="display:none">
+        <div class="boss-salary-ttl">이번 달 지출 예상 급여 💼</div>
+        <div id="hero-boss-list"></div>
+        <div class="boss-total-row"><span style="font-weight:700;font-size:.93rem">총 지급 예정</span><span style="font-size:1.25rem;font-weight:900;color:var(--p)" id="hero-boss-total">0원</span></div>
+      </div>
     </div>
   </div>
 
@@ -574,10 +611,40 @@
   <div class="myplace-page">
     <div class="myplace-hdr">
       <h1 data-i18n="nav_myplace">내 업장</h1>
-      <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="role-switch-btn" class="role-chip worker" onclick="openRoleOverlay()"></button>
+        <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
+      </div>
     </div>
 
     <!-- 업장 미등록 상태 -->
+    <!-- 사장님 모드 내 업장 -->
+    <div id="boss-myplace-content" style="display:none">
+      <!-- 캘린더 -->
+      <div class="cal-section">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="changeBossMonth(-1)">‹</button>
+          <div class="cal-nav-title" id="boss-cal-title"></div>
+          <button class="cal-nav-btn" onclick="changeBossMonth(1)">›</button>
+        </div>
+        <div class="cal-header-row">
+          <div class="cal-header-cell sun">일</div><div class="cal-header-cell">월</div><div class="cal-header-cell">화</div><div class="cal-header-cell">수</div><div class="cal-header-cell">목</div><div class="cal-header-cell">금</div><div class="cal-header-cell sat">토</div>
+        </div>
+        <div class="cal-grid" id="boss-cal-grid"></div>
+      </div>
+      <!-- 선택 날짜 직원 스케줄 -->
+      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:16px;margin-bottom:14px">
+        <div style="font-size:.9rem;font-weight:800;margin-bottom:12px" id="boss-schedule-date-title"></div>
+        <div id="boss-schedule-list"></div>
+      </div>
+      <!-- 이번달 급여 지급 -->
+      <div style="background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:14px">
+        <div style="font-size:.97rem;font-weight:800;margin-bottom:14px" id="boss-payroll-title"></div>
+        <div id="boss-payroll-list"></div>
+        <div class="boss-total-row" style="margin-top:12px"><span style="font-weight:700">총 지급 예정</span><span style="font-size:1.2rem;font-weight:900;color:var(--p)" id="boss-payroll-total"></span></div>
+      </div>
+    </div>
+
     <div id="myplace-empty" style="display:none">
       <div class="no-workplace">
         <div class="emp-icon">🏢</div>
@@ -1545,10 +1612,19 @@ function showPage(name) {
     }, 100);
   }
   if (name === 'myplace') {
-    initTimeSelects();
-    renderCalendar();
-    renderScheduleSection();
-    renderWageCalc();
+    if (userRole === 'boss') {
+      document.getElementById('myplace-content').style.display = 'none';
+      document.getElementById('myplace-empty').style.display = 'none';
+      document.getElementById('boss-myplace-content').style.display = '';
+      renderBossCalendar();
+      renderBossPayroll();
+    } else {
+      document.getElementById('boss-myplace-content').style.display = 'none';
+      initTimeSelects();
+      renderCalendar();
+      renderScheduleSection();
+      renderWageCalc();
+    }
   }
   if (name === 'calc') {
     syncCalcFromMyplace();
@@ -2498,11 +2574,255 @@ function syncBottomTab(name) {
   });
 }
 
+// ===== ROLE =====
+let userRole = localStorage.getItem('userRole') || null;
+
+function setRole(role) {
+  userRole = role;
+  localStorage.setItem('userRole', role);
+  document.getElementById('role-overlay').style.display = 'none';
+  applyRole();
+}
+
+function openRoleOverlay() {
+  document.getElementById('role-overlay').style.display = 'flex';
+}
+
+function applyRole() {
+  const isBoss = userRole === 'boss';
+  // 헤더 역할 칩
+  const btn = document.getElementById('role-switch-btn');
+  if (btn) {
+    btn.textContent = isBoss ? '👔 사장님' : '👷 알바생';
+    btn.className = 'role-chip ' + (isBoss ? 'boss' : 'worker');
+  }
+  // 홈 히어로
+  document.getElementById('hero-worker-view').style.display = isBoss ? 'none' : '';
+  document.getElementById('hero-boss-view').style.display = isBoss ? '' : 'none';
+  if (isBoss) renderBossHero();
+  // 내 업장 모드 전환 (myplace 페이지가 활성화돼 있을 때)
+  const mp = document.getElementById('myplace-content');
+  const bossMP = document.getElementById('boss-myplace-content');
+  if (mp && bossMP) {
+    if (isBoss) {
+      mp.style.display = 'none';
+      document.getElementById('myplace-empty').style.display = 'none';
+      bossMP.style.display = '';
+      renderBossCalendar();
+      renderBossPayroll();
+    } else {
+      mp.style.display = '';
+      bossMP.style.display = 'none';
+    }
+  }
+}
+
+// ===== BOSS DATA =====
+const bossWorkers = [
+  { id: 1, name: '김민준', wage: 10030, color: '#3B82F6' },
+  { id: 2, name: '이서연', wage: 10500, color: '#10B981' },
+  { id: 3, name: '박지훈', wage: 10030, color: '#F59E0B' },
+];
+let bossSchedules = {}; // { 'YYYY-MM-DD': [{workerId, start, end}] }
+let bossPaid = {};      // { workerId: true/false }
+let bossCalYear = new Date().getFullYear();
+let bossCalMonth = new Date().getMonth();
+let bossSelectedDate = null;
+
+// 샘플 데이터 생성
+(function initBossData() {
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  const sample = [
+    { id:1, start:'09:00', end:'18:00' },
+    { id:2, start:'14:00', end:'22:00' },
+    { id:3, start:'09:00', end:'13:00' },
+  ];
+  for (let d = 1; d <= now.getDate(); d++) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayOfWeek = new Date(y, m, d).getDay();
+    if (dayOfWeek === 0) continue;
+    bossSchedules[ds] = [];
+    sample.forEach(s => {
+      if (Math.random() > 0.4) bossSchedules[ds].push({ workerId: s.id, start: s.start, end: s.end });
+    });
+    if (!bossSchedules[ds].length) delete bossSchedules[ds];
+  }
+})();
+
+function changeBossMonth(dir) {
+  bossCalMonth += dir;
+  if (bossCalMonth < 0) { bossCalMonth = 11; bossCalYear--; }
+  if (bossCalMonth > 11) { bossCalMonth = 0; bossCalYear++; }
+  bossSelectedDate = null;
+  document.getElementById('boss-schedule-section').style.display = 'none';
+  renderBossCalendar();
+  renderBossPayroll();
+}
+
+function renderBossCalendar() {
+  const title = document.getElementById('boss-cal-title');
+  const grid = document.getElementById('boss-cal-grid');
+  if (!title || !grid) return;
+  title.textContent = `${bossCalYear}년 ${bossCalMonth + 1}월`;
+  const firstDay = new Date(bossCalYear, bossCalMonth, 1).getDay();
+  const daysInMonth = new Date(bossCalYear, bossCalMonth + 1, 0).getDate();
+  const today = new Date();
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${bossCalYear}-${String(bossCalMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear()===bossCalYear && today.getMonth()===bossCalMonth && today.getDate()===d;
+    const isSel = ds === bossSelectedDate;
+    const dayOfWeek = new Date(bossCalYear, bossCalMonth, d).getDay();
+    const cls = ['cal-day', isToday?'today':'', isSel?'selected':'', dayOfWeek===0?'sun':dayOfWeek===6?'sat':''].filter(Boolean).join(' ');
+    const recs = bossSchedules[ds] || [];
+    const dots = recs.map(r => {
+      const w = bossWorkers.find(bw => bw.id === r.workerId);
+      return w ? `<span class="boss-cal-dot" style="background:${w.color}"></span>` : '';
+    }).join('');
+    html += `<div class="${cls}" onclick="selectBossDate('${ds}')">
+      <span>${d}</span>
+      ${dots ? `<div style="display:flex;justify-content:center;gap:2px;margin-top:2px">${dots}</div>` : ''}
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectBossDate(ds) {
+  bossSelectedDate = ds;
+  renderBossCalendar();
+  const recs = bossSchedules[ds] || [];
+  const sec = document.getElementById('boss-schedule-section');
+  const dateTitle = document.getElementById('boss-schedule-date-title');
+  const list = document.getElementById('boss-schedule-list');
+  const d = new Date(ds);
+  const days = ['일','월','화','수','목','금','토'];
+  dateTitle.textContent = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
+  if (!recs.length) {
+    list.innerHTML = '<div style="color:var(--g);font-size:.86rem;padding:8px 0">등록된 근무 없음</div>';
+  } else {
+    list.innerHTML = recs.map(r => {
+      const w = bossWorkers.find(bw => bw.id === r.workerId);
+      if (!w) return '';
+      const h = calcShiftHours(r.start, r.end);
+      const brk = calcBreakHours(h);
+      const net = Math.max(h - brk, 0);
+      return `<div class="boss-schedule-item">
+        <span class="boss-cal-dot" style="background:${w.color};width:10px;height:10px"></span>
+        <span style="font-weight:700;min-width:56px">${w.name}</span>
+        <span style="color:var(--g)">${r.start} ~ ${r.end}</span>
+        <span style="margin-left:auto;color:var(--p);font-weight:700">${fmtHours(net)}</span>
+      </div>`;
+    }).join('');
+  }
+  sec.style.display = '';
+}
+
+function renderBossPayroll() {
+  const prefix = `${bossCalYear}-${String(bossCalMonth+1).padStart(2,'0')}`;
+  const title = document.getElementById('boss-payroll-title');
+  const list = document.getElementById('boss-payroll-list');
+  const totalEl = document.getElementById('boss-payroll-total');
+  if (!title || !list) return;
+  title.textContent = `${bossCalMonth+1}월 급여 지급`;
+  const won = '원';
+  let grandTotal = 0;
+  const rows = bossWorkers.map(w => {
+    let totalNet = 0;
+    Object.entries(bossSchedules).forEach(([ds, recs]) => {
+      if (!ds.startsWith(prefix)) return;
+      recs.filter(r => r.workerId === w.id).forEach(r => {
+        const h = calcShiftHours(r.start, r.end);
+        totalNet += Math.max(h - calcBreakHours(h), 0);
+      });
+    });
+    const pay = Math.round(totalNet * w.wage);
+    grandTotal += pay;
+    const paid = !!bossPaid[w.id];
+    return `<div class="boss-pay-row">
+      <div class="boss-pay-info">
+        <span class="boss-cal-dot" style="background:${w.color};width:10px;height:10px"></span>
+        <span style="font-weight:700">${w.name}</span>
+        <span style="color:var(--g);font-size:.8rem">${fmtHours(totalNet)}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-weight:700;color:var(--p)">${pay.toLocaleString()}${won}</span>
+        <button class="boss-pay-approve${paid?' paid':''}" onclick="approvePay(${w.id},this)" ${paid?'disabled':''}>${paid?'지급 완료':'지급 수락'}</button>
+      </div>
+    </div>`;
+  });
+  list.innerHTML = rows.join('');
+  if (totalEl) totalEl.textContent = grandTotal.toLocaleString() + won;
+}
+
+function approvePay(workerId, btn) {
+  bossPaid[workerId] = true;
+  btn.textContent = '지급 완료';
+  btn.classList.add('paid');
+  btn.disabled = true;
+  showToast('✅ 지급 수락 완료');
+}
+
+function renderBossHero() {
+  const list = document.getElementById('hero-boss-list');
+  const totalEl = document.getElementById('hero-boss-total');
+  if (!list) return;
+  const now = new Date();
+  const prefix = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const won = '원';
+  let grand = 0;
+  const rows = bossWorkers.map(w => {
+    let net = 0;
+    Object.entries(bossSchedules).forEach(([ds, recs]) => {
+      if (!ds.startsWith(prefix)) return;
+      recs.filter(r => r.workerId === w.id).forEach(r => {
+        const h = calcShiftHours(r.start, r.end);
+        net += Math.max(h - calcBreakHours(h), 0);
+      });
+    });
+    const pay = Math.round(net * w.wage);
+    grand += pay;
+    return `<div class="boss-worker-row">
+      <span class="boss-worker-name"><span class="boss-worker-dot" style="background:${w.color}"></span>${w.name}</span>
+      <span class="boss-worker-pay">${pay.toLocaleString()}${won}</span>
+    </div>`;
+  });
+  list.innerHTML = rows.join('');
+  if (totalEl) totalEl.textContent = grand.toLocaleString() + won;
+}
+
 // ===== INIT =====
 initLocation();
 renderAll();
 renderWpList();
 renderWageCalc();
+if (!userRole) {
+  document.getElementById('role-overlay').style.display = 'flex';
+} else {
+  applyRole();
+}
 </script>
+
+<!-- 역할 선택 오버레이 -->
+<div id="role-overlay" style="display:none">
+  <div style="text-align:center">
+    <div style="font-size:2rem;font-weight:900;color:var(--p)">알바<span style="color:var(--a)">숲</span></div>
+    <div style="font-size:1.15rem;font-weight:800;color:var(--dk);margin-top:14px">어떤 분이신가요?</div>
+    <div style="font-size:.88rem;color:var(--g);margin-top:6px">맞춤 서비스를 제공해드릴게요</div>
+  </div>
+  <div style="display:flex;gap:16px;width:100%;max-width:420px">
+    <button class="role-card" onclick="setRole('worker')">
+      <div class="rc-emoji">👷</div>
+      <div>알바생이에요</div>
+      <div class="rc-sub">근무 기록, 급여 계산</div>
+    </button>
+    <button class="role-card" onclick="setRole('boss')">
+      <div class="rc-emoji">👔</div>
+      <div>사장님이에요</div>
+      <div class="rc-sub">직원 관리, 급여 지급</div>
+    </button>
+  </div>
+</div>
 </body>
 </html>
