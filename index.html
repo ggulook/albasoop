@@ -1872,7 +1872,7 @@ function showToast(msg, shake, duration) {
   void t.offsetWidth;
   t.classList.add('show');
   if (shake) t.classList.add('shake');
-  setTimeout(() => t.classList.remove('show', 'shake'), duration || 400);
+  setTimeout(() => t.classList.remove('show', 'shake'), duration || 1500);
 }
 
 // ===== MOBILE MENU =====
@@ -2444,7 +2444,7 @@ function addSchedule() {
   if (!selectedDate) { showToast('⚠️ 날짜를 먼저 선택해주세요.'); return; }
   const newH = calcShiftHours(start, end);
   if (getWeekTotalHours(selectedDate) + newH > 52) {
-    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true, 800);
+    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true, 1500);
     return;
   }
   if (!workRecords[selectedDate]) workRecords[selectedDate] = [];
