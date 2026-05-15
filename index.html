@@ -463,8 +463,8 @@
     .boss-tl-scroll{overflow-x:auto;scrollbar-width:none}
     .boss-tl-scroll::-webkit-scrollbar{display:none}
     .boss-tl-inner{display:inline-block;min-width:100%}
-    .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #EEF2F7;padding-bottom:4px}
-    .boss-tl-rc{width:20px;flex-shrink:0;font-size:.52rem;color:#94A3B8;font-weight:600;white-space:nowrap}
+    .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #94A3B8;padding-bottom:4px}
+    .boss-tl-rc{width:20px;flex-shrink:0;font-size:8px;color:#94A3B8;font-weight:600;white-space:nowrap}
     .boss-tl-row{display:flex;align-items:center;height:34px;border-bottom:1px solid #F8FAFC}
     .boss-tl-row:last-of-type{border:none}
     .boss-tl-name{width:64px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk)}
@@ -2907,10 +2907,10 @@ function selectBossDate(ds) {
   // ruler: label every 6h (20px too narrow for every-hour labels)
   let rulerCells = '';
   for (let h = 0; h < 24; h++) {
-    rulerCells += `<div class="boss-tl-rc">${h % 6 === 0 ? String(h).padStart(2,'0') : ''}</div>`;
+    rulerCells += `<div class="boss-tl-rc">${String(h).padStart(2,'0')}</div>`;
   }
   // grid bg: 1px line every 20px
-  const gridBg = `repeating-linear-gradient(to right,transparent,transparent 19px,#EEF2F7 19px,#EEF2F7 20px)`;
+  const gridBg = `repeating-linear-gradient(to right,transparent,transparent 19px,#94A3B8 19px,#94A3B8 20px)`;
   // current time
   const now = new Date();
   const nowH = now.getHours() + now.getMinutes()/60;
