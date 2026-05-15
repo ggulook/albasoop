@@ -456,20 +456,20 @@
     .boss-schedule-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);font-size:.86rem}
     .boss-schedule-item:last-of-type{border:none}
     /* Boss timeline scheduler */
-    .boss-tl-wrap{background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:14px 16px;margin-bottom:14px}
-    .boss-tl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .boss-tl-date{font-size:1.05rem;font-weight:900}
+    .boss-tl-wrap{background:transparent}
+    .boss-tl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .boss-tl-date{font-size:1.25rem;font-weight:900}
     .boss-tl-empty{color:var(--g);font-size:.86rem;padding:10px 0}
     .boss-tl-scroll{overflow-x:auto;scrollbar-width:none}
     .boss-tl-scroll::-webkit-scrollbar{display:none}
     .boss-tl-inner{display:inline-block;min-width:100%}
     .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #475569;padding-bottom:4px}
     .boss-tl-rc{flex-shrink:0;font-size:8px;color:#475569;font-weight:600;white-space:nowrap}
-    .boss-tl-row{display:flex;align-items:center;height:34px;border-bottom:1px solid #475569}
+    .boss-tl-row{display:flex;align-items:center;height:48px;border-bottom:1px solid #475569}
     .boss-tl-row:last-of-type{border:none}
-    .boss-tl-name{width:64px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk)}
-    .boss-tl-track{position:relative;height:34px;flex-shrink:0}
-    .boss-tl-bar{position:absolute;top:6px;bottom:6px;border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .boss-tl-name{width:80px;flex-shrink:0;font-size:.95rem;font-weight:700;color:var(--dk)}
+    .boss-tl-track{position:relative;height:48px;flex-shrink:0}
+    .boss-tl-bar{position:absolute;top:8px;bottom:8px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.10)}
     .boss-tl-now{position:absolute;top:0;bottom:0;width:2px;background:#F97316;z-index:3;pointer-events:none}
     .boss-tl-now::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#F97316}
     .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
@@ -693,7 +693,7 @@
         <div class="cal-grid" id="boss-cal-grid"></div>
       </div>
       <!-- 선택 날짜 직원 스케줄 -->
-      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:16px;margin-bottom:14px">
+      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:24px 28px;margin-bottom:14px;position:relative;left:50%;transform:translateX(-50%);width:92vw;max-width:1200px;box-shadow:0 6px 24px rgba(0,0,0,.06)">
         <div style="font-size:.9rem;font-weight:800;margin-bottom:12px" id="boss-schedule-date-title"></div>
         <div id="boss-schedule-list"></div>
       </div>
@@ -2903,7 +2903,7 @@ function selectBossDate(ds) {
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
   // fit all 24h exactly to container — no scroll, no labels, just grid cells
-  const availW = (sec.offsetWidth || window.innerWidth) - 64 - 32;
+  const availW = (sec.offsetWidth || window.innerWidth) - 80 - 56;
   const CELL_W = availW / 48; // 30min cells
   const totalW = availW;
   // grid bg: 1px line every cell, darker #475569
@@ -2935,7 +2935,7 @@ function selectBossDate(ds) {
       </div>`;
     }).filter(Boolean).join('');
   }
-  const nowLine = showNow ? `<div class="boss-tl-now" style="left:${64 + nowLeft}px"></div>` : '';
+  const nowLine = showNow ? `<div class="boss-tl-now" style="left:${80 + nowLeft}px"></div>` : '';
   sec.innerHTML = `<div class="boss-tl-wrap">
     <div class="boss-tl-hdr"><div class="boss-tl-date">${dateLabel}</div></div>
     <div style="position:relative">${rows}${nowLine}</div>
