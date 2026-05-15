@@ -2910,9 +2910,9 @@ function selectBossDate(ds) {
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
   const TL_START = 0, TL_END = 24;
-  // responsive COL_W: try to fill container, min 40px (scroll hidden when needed)
+  // responsive COL_W: try to fill container, min 28px
   const availW = (sec.offsetWidth || window.innerWidth) - 72 - 32;
-  const COL_W = Math.max(40, Math.floor(availW / 24));
+  const COL_W = Math.max(28, Math.floor(availW / 24));
   const totalW = 24 * COL_W;
   // ruler: label every 3h, tick every 1h
   let ruler = '<div class="boss-tl-ruler-row"><div class="boss-tl-ruler-name"></div>';
