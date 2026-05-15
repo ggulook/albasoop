@@ -1865,14 +1865,14 @@ function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function switchModal(from, to) { closeModal(from); openModal(to); }
 document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
-function showToast(msg, shake) {
+function showToast(msg, shake, duration) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.remove('shake');
   void t.offsetWidth;
   t.classList.add('show');
   if (shake) t.classList.add('shake');
-  setTimeout(() => t.classList.remove('show', 'shake'), 400);
+  setTimeout(() => t.classList.remove('show', 'shake'), duration || 400);
 }
 
 // ===== MOBILE MENU =====
@@ -2444,7 +2444,7 @@ function addSchedule() {
   if (!selectedDate) { showToast('⚠️ 날짜를 먼저 선택해주세요.'); return; }
   const newH = calcShiftHours(start, end);
   if (getWeekTotalHours(selectedDate) + newH > 52) {
-    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true);
+    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true, 800);
     return;
   }
   if (!workRecords[selectedDate]) workRecords[selectedDate] = [];
