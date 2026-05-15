@@ -2902,10 +2902,10 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  // responsive cell width to fit all 24h (48 cells of 30min) in container
+  // fit all 24h (48 cells of 30min) exactly to container — no scroll
   const availW = (sec.offsetWidth || window.innerWidth) - 64 - 32;
-  const CELL_W = Math.max(8, Math.floor(availW / 48));
-  const totalW = 48 * CELL_W;
+  const CELL_W = availW / 48; // fractional, exact fit
+  const totalW = availW;
   // ruler: 48 cells, label every hour (every 2 cells)
   let rulerCells = '';
   for (let i = 0; i < 48; i++) {
