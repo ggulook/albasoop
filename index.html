@@ -2902,16 +2902,10 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  // fit all 24h (48 cells of 30min) exactly to container — no scroll
+  // fit all 24h exactly to container — no scroll, no labels, just grid cells
   const availW = (sec.offsetWidth || window.innerWidth) - 64 - 32;
-  const CELL_W = availW / 48; // fractional, exact fit
+  const CELL_W = availW / 48; // 30min cells
   const totalW = availW;
-  // ruler: 48 cells, label every hour (every 2 cells)
-  let rulerCells = '';
-  for (let i = 0; i < 48; i++) {
-    const label = i % 2 === 0 ? String(i / 2).padStart(2, '0') : '';
-    rulerCells += `<div class="boss-tl-rc" style="width:${CELL_W}px">${label}</div>`;
-  }
   // grid bg: 1px line every cell, darker #475569
   const gridBg = `repeating-linear-gradient(to right,transparent,transparent ${CELL_W-1}px,#475569 ${CELL_W-1}px,#475569 ${CELL_W}px)`;
   // current time
@@ -2944,10 +2938,7 @@ function selectBossDate(ds) {
   const nowLine = showNow ? `<div class="boss-tl-now" style="left:${64 + nowLeft}px"></div>` : '';
   sec.innerHTML = `<div class="boss-tl-wrap">
     <div class="boss-tl-hdr"><div class="boss-tl-date">${dateLabel}</div></div>
-    <div class="boss-tl-scroll"><div class="boss-tl-inner">
-      <div class="boss-tl-ruler">${rulerCells}</div>
-      <div style="position:relative">${rows}${nowLine}</div>
-    </div></div>
+    <div style="position:relative">${rows}${nowLine}</div>
   </div>`;
   sec.style.display = '';
 }
