@@ -460,13 +460,16 @@
     .boss-tl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
     .boss-tl-date{font-size:1.05rem;font-weight:900}
     .boss-tl-empty{color:var(--g);font-size:.86rem;padding:10px 0}
-    .boss-tl-ruler{display:flex;margin-left:60px;border-bottom:1px solid #EEF2F7;padding-bottom:4px;margin-bottom:0}
-    .boss-tl-rc{flex:1;font-size:.6rem;color:#94A3B8;font-weight:600;text-align:left}
-    .boss-tl-row{display:flex;align-items:center;height:30px;border-bottom:1px solid #F8FAFC}
+    .boss-tl-scroll{overflow-x:auto;scrollbar-width:none}
+    .boss-tl-scroll::-webkit-scrollbar{display:none}
+    .boss-tl-inner{display:inline-block;min-width:100%}
+    .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #EEF2F7;padding-bottom:4px}
+    .boss-tl-rc{width:72px;flex-shrink:0;font-size:.62rem;color:#94A3B8;font-weight:600}
+    .boss-tl-row{display:flex;align-items:center;height:34px;border-bottom:1px solid #F8FAFC}
     .boss-tl-row:last-of-type{border:none}
-    .boss-tl-name{width:60px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk)}
-    .boss-tl-track{flex:1;position:relative;height:30px}
-    .boss-tl-bar{position:absolute;top:5px;bottom:5px;border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .boss-tl-name{width:64px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk)}
+    .boss-tl-track{position:relative;height:34px;flex-shrink:0}
+    .boss-tl-bar{position:absolute;top:6px;bottom:6px;border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
     .boss-tl-now{position:absolute;top:0;bottom:0;width:2px;background:#F97316;z-index:3;pointer-events:none}
     .boss-tl-now::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#F97316}
     .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
@@ -2899,22 +2902,29 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  // COL_W: fit all 24h into container width, no scrolling
-  const trackW = (sec.offsetWidth || window.innerWidth) - 60 - 24;
-  const COL_W = Math.floor(trackW / 24);
-  const totalW = COL_W * 24;
-  // ruler: label every 6h
-  let rulerCells = '';
-  for (let h = 0; h < 24; h++) {
-    const label = h % 6 === 0 ? `${String(h).padStart(2,'0')}:00` : '';
-    rulerCells += `<div class="boss-tl-rc">${label}</div>`;
+  // auto-range from actual shifts ±1h, fallback full day
+  let TL_START = 0, TL_END = 24;
+  if (recs.length) {
+    const allStarts = recs.map(r => { const [h,m]=r.start.split(':').map(Number); return h+m/60; });
+    const allEnds   = recs.map(r => { const [h,m]=r.end.split(':').map(Number);   return h+m/60; });
+    TL_START = Math.max(0,  Math.floor(Math.min(...allStarts)) - 1);
+    TL_END   = Math.min(24, Math.ceil(Math.max(...allEnds))    + 1);
   }
-  // grid bg using repeating gradient
+  const COL_W = 72; // fixed 72px per hour — readable, scrolls naturally
+  const totalW = (TL_END - TL_START) * COL_W;
+  // ruler: every hour
+  let rulerCells = '';
+  for (let h = TL_START; h < TL_END; h++) {
+    rulerCells += `<div class="boss-tl-rc">${String(h).padStart(2,'0')}:00</div>`;
+  }
+  // grid bg
   const gridBg = `repeating-linear-gradient(to right,transparent,transparent ${COL_W-1}px,#F1F5F9 ${COL_W-1}px,#F1F5F9 ${COL_W}px)`;
   // current time
   const now = new Date();
+  const nowH = now.getHours() + now.getMinutes()/60;
   const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const nowLeft = (now.getHours() + now.getMinutes()/60) / 24 * totalW;
+  const nowLeft = (nowH - TL_START) * COL_W;
+  const showNow  = ds === todayStr && nowH >= TL_START && nowH <= TL_END;
   // worker rows
   let rows = '';
   if (!recs.length) {
@@ -2924,13 +2934,13 @@ function selectBossDate(ds) {
       const r = recs.find(r => r.workerId === w.id);
       let bar = '';
       if (r) {
-        const [sh, sm] = r.start.split(':').map(Number);
-        const [eh, em] = r.end.split(':').map(Number);
-        const left  = (sh + sm/60) / 24 * totalW;
-        const width = Math.max((eh + em/60) - (sh + sm/60), 0) / 24 * totalW;
+        const [sh,sm] = r.start.split(':').map(Number);
+        const [eh,em] = r.end.split(':').map(Number);
+        const left  = (sh + sm/60 - TL_START) * COL_W;
+        const width = Math.max((eh + em/60) - (sh + sm/60), 0) * COL_W;
         if (width > 0) bar = `<div class="boss-tl-bar" style="left:${left}px;width:${width}px;background:${w.color}99"></div>`;
       }
-      const nowLine = ds === todayStr ? `<div class="boss-tl-now" style="left:${nowLeft}px"></div>` : '';
+      const nowLine = showNow ? `<div class="boss-tl-now" style="left:${nowLeft}px"></div>` : '';
       return `<div class="boss-tl-row">
         <div class="boss-tl-name">${w.name}</div>
         <div class="boss-tl-track" style="width:${totalW}px;background:${gridBg}">${bar}${nowLine}</div>
@@ -2939,8 +2949,10 @@ function selectBossDate(ds) {
   }
   sec.innerHTML = `<div class="boss-tl-wrap">
     <div class="boss-tl-hdr"><div class="boss-tl-date">${dateLabel}</div></div>
-    <div class="boss-tl-ruler" style="width:${totalW}px">${rulerCells}</div>
-    ${rows}
+    <div class="boss-tl-scroll"><div class="boss-tl-inner">
+      <div class="boss-tl-ruler">${rulerCells}</div>
+      ${rows}
+    </div></div>
   </div>`;
   sec.style.display = '';
 }
