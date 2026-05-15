@@ -463,9 +463,9 @@
     .boss-tl-scroll{overflow-x:auto;scrollbar-width:none}
     .boss-tl-scroll::-webkit-scrollbar{display:none}
     .boss-tl-inner{display:inline-block;min-width:100%}
-    .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #94A3B8;padding-bottom:4px}
-    .boss-tl-rc{width:20px;flex-shrink:0;font-size:8px;color:#94A3B8;font-weight:600;white-space:nowrap}
-    .boss-tl-row{display:flex;align-items:center;height:34px;border-bottom:1px solid #94A3B8}
+    .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #475569;padding-bottom:4px}
+    .boss-tl-rc{flex-shrink:0;font-size:8px;color:#475569;font-weight:600;white-space:nowrap}
+    .boss-tl-row{display:flex;align-items:center;height:34px;border-bottom:1px solid #475569}
     .boss-tl-row:last-of-type{border:none}
     .boss-tl-name{width:64px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk)}
     .boss-tl-track{position:relative;height:34px;flex-shrink:0}
@@ -2902,16 +2902,18 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  const CELL_W = 20; // 20px per 30min cell
-  const totalW = 48 * CELL_W; // 24h * 2 cells = 960px
+  // responsive cell width to fit all 24h (48 cells of 30min) in container
+  const availW = (sec.offsetWidth || window.innerWidth) - 64 - 32;
+  const CELL_W = Math.max(8, Math.floor(availW / 48));
+  const totalW = 48 * CELL_W;
   // ruler: 48 cells, label every hour (every 2 cells)
   let rulerCells = '';
   for (let i = 0; i < 48; i++) {
     const label = i % 2 === 0 ? String(i / 2).padStart(2, '0') : '';
-    rulerCells += `<div class="boss-tl-rc">${label}</div>`;
+    rulerCells += `<div class="boss-tl-rc" style="width:${CELL_W}px">${label}</div>`;
   }
-  // grid bg: 1px line every 20px (every 30min), #94A3B8
-  const gridBg = `repeating-linear-gradient(to right,transparent,transparent 19px,#94A3B8 19px,#94A3B8 20px)`;
+  // grid bg: 1px line every cell, darker #475569
+  const gridBg = `repeating-linear-gradient(to right,transparent,transparent ${CELL_W-1}px,#475569 ${CELL_W-1}px,#475569 ${CELL_W}px)`;
   // current time
   const now = new Date();
   const nowH = now.getHours() + now.getMinutes()/60;
