@@ -453,6 +453,29 @@
     .boss-worker-pay{font-weight:700;color:var(--p)}
     .boss-total-row{background:#EFF6FF;border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
     .boss-cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:0 1px}
+    /* Boss week scheduler */
+    .boss-week-section{background:#fff;border-radius:20px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:18px;overflow:hidden}
+    .boss-week-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .boss-week-title{font-size:1rem;font-weight:800}
+    .boss-week-nav-btns{display:flex;gap:6px;align-items:center}
+    .boss-today-btn{font-size:.75rem;font-weight:700;padding:4px 12px;border:1.5px solid var(--b);border-radius:6px;background:#fff;cursor:pointer;color:var(--dk)}
+    .boss-week-wrap{overflow-x:auto}
+    .boss-week-inner{min-width:580px}
+    .boss-week-hdr{display:grid;grid-template-columns:48px repeat(7,1fr);border-bottom:1.5px solid var(--b);padding-bottom:8px;margin-bottom:0}
+    .boss-week-hdr-cell{text-align:center;padding:4px 2px}
+    .boss-week-hdr-cell .wd{font-size:.72rem;font-weight:600;color:var(--g);margin-bottom:4px}
+    .boss-week-hdr-cell .wn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:0 auto;font-size:.88rem;font-weight:800;color:var(--dk)}
+    .boss-week-hdr-cell.bw-today .wn{background:var(--p);color:#fff}
+    .boss-week-hdr-cell.bw-sun .wd,.boss-week-hdr-cell.bw-sun .wn{color:#EF4444}
+    .boss-week-hdr-cell.bw-sat .wd,.boss-week-hdr-cell.bw-sat .wn{color:#3B82F6}
+    .boss-week-body{display:grid;grid-template-columns:48px repeat(7,1fr)}
+    .boss-time-gutter{display:flex;flex-direction:column}
+    .boss-time-lbl{height:52px;display:flex;align-items:flex-start;justify-content:flex-end;padding-right:8px;font-size:.65rem;color:#94A3B8;transform:translateY(-8px)}
+    .boss-day-col{position:relative;border-left:1px solid #F1F5F9}
+    .boss-day-col.bw-today-col{background:#FAFBFF}
+    .boss-hour-row{height:52px;border-bottom:1px solid #F1F5F9}
+    .boss-shift-blk{position:absolute;left:3px;right:3px;border-radius:8px;padding:4px 7px;font-size:.7rem;font-weight:700;color:#fff;overflow:hidden;line-height:1.35;box-shadow:0 2px 6px rgba(0,0,0,.18);cursor:pointer}
+    .boss-shift-blk:hover{filter:brightness(1.08)}
     .boss-schedule-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);font-size:.86rem}
     .boss-schedule-item:last-of-type{border:none}
     .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
@@ -663,22 +686,19 @@
     <!-- 업장 미등록 상태 -->
     <!-- 사장님 모드 내 업장 -->
     <div id="boss-myplace-content" style="display:none">
-      <!-- 캘린더 -->
-      <div class="cal-section">
-        <div class="cal-nav">
-          <button class="cal-nav-btn" onclick="changeBossMonth(-1)">‹</button>
-          <div class="cal-nav-title" id="boss-cal-title"></div>
-          <button class="cal-nav-btn" onclick="changeBossMonth(1)">›</button>
+      <!-- 주간 타임라인 스케줄러 -->
+      <div class="boss-week-section">
+        <div class="boss-week-nav">
+          <button class="cal-nav-btn" onclick="changeBossWeek(-1)">‹</button>
+          <div class="boss-week-title" id="boss-week-title"></div>
+          <div class="boss-week-nav-btns">
+            <button class="boss-today-btn" onclick="goBossToday()">오늘</button>
+            <button class="cal-nav-btn" onclick="changeBossWeek(1)">›</button>
+          </div>
         </div>
-        <div class="cal-header-row">
-          <div class="cal-header-cell sun">일</div><div class="cal-header-cell">월</div><div class="cal-header-cell">화</div><div class="cal-header-cell">수</div><div class="cal-header-cell">목</div><div class="cal-header-cell">금</div><div class="cal-header-cell sat">토</div>
+        <div class="boss-week-wrap">
+          <div class="boss-week-inner" id="boss-week-view"></div>
         </div>
-        <div class="cal-grid" id="boss-cal-grid"></div>
-      </div>
-      <!-- 선택 날짜 직원 스케줄 -->
-      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:16px;margin-bottom:14px">
-        <div style="font-size:.9rem;font-weight:800;margin-bottom:12px" id="boss-schedule-date-title"></div>
-        <div id="boss-schedule-list"></div>
       </div>
       <!-- 이번달 급여 지급 -->
       <div style="background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:14px">
@@ -2838,73 +2858,70 @@ let bossSelectedDate = null;
   }
 })();
 
-function changeBossMonth(dir) {
-  bossCalMonth += dir;
-  if (bossCalMonth < 0) { bossCalMonth = 11; bossCalYear--; }
-  if (bossCalMonth > 11) { bossCalMonth = 0; bossCalYear++; }
-  bossSelectedDate = null;
-  document.getElementById('boss-schedule-section').style.display = 'none';
+// ===== BOSS WEEK SCHEDULER =====
+const BW_START_H = 7, BW_END_H = 23, BW_ROW_H = 52;
+let bossWeekStart = _getBossWeekStart(new Date());
+
+function _getBossWeekStart(date) {
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const day = d.getDay();
+  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); // Monday
+  return d;
+}
+function changeBossWeek(dir) {
+  bossWeekStart = new Date(bossWeekStart);
+  bossWeekStart.setDate(bossWeekStart.getDate() + dir * 7);
   renderBossCalendar();
   renderBossPayroll();
 }
-
-function renderBossCalendar() {
-  const title = document.getElementById('boss-cal-title');
-  const grid = document.getElementById('boss-cal-grid');
-  if (!title || !grid) return;
-  title.textContent = `${bossCalYear}년 ${bossCalMonth + 1}월`;
-  const firstDay = new Date(bossCalYear, bossCalMonth, 1).getDay();
-  const daysInMonth = new Date(bossCalYear, bossCalMonth + 1, 0).getDate();
-  const today = new Date();
-  let html = '';
-  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const ds = `${bossCalYear}-${String(bossCalMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday = today.getFullYear()===bossCalYear && today.getMonth()===bossCalMonth && today.getDate()===d;
-    const isSel = ds === bossSelectedDate;
-    const dayOfWeek = new Date(bossCalYear, bossCalMonth, d).getDay();
-    const cls = ['cal-day', isToday?'today':'', isSel?'selected':'', dayOfWeek===0?'sun':dayOfWeek===6?'sat':''].filter(Boolean).join(' ');
-    const recs = bossSchedules[ds] || [];
-    const dots = recs.map(r => {
-      const w = bossWorkers.find(bw => bw.id === r.workerId);
-      return w ? `<span class="boss-cal-dot" style="background:${w.color}"></span>` : '';
-    }).join('');
-    html += `<div class="${cls}" onclick="selectBossDate('${ds}')">
-      <span>${d}</span>
-      ${dots ? `<div style="display:flex;justify-content:center;gap:2px;margin-top:2px">${dots}</div>` : ''}
-    </div>`;
-  }
-  grid.innerHTML = html;
-}
-
-function selectBossDate(ds) {
-  bossSelectedDate = ds;
+function goBossToday() {
+  bossWeekStart = _getBossWeekStart(new Date());
   renderBossCalendar();
-  const recs = bossSchedules[ds] || [];
-  const sec = document.getElementById('boss-schedule-section');
-  const dateTitle = document.getElementById('boss-schedule-date-title');
-  const list = document.getElementById('boss-schedule-list');
-  const d = new Date(ds);
-  const days = ['일','월','화','수','목','금','토'];
-  dateTitle.textContent = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
-  if (!recs.length) {
-    list.innerHTML = '<div style="color:var(--g);font-size:.86rem;padding:8px 0">등록된 근무 없음</div>';
-  } else {
-    list.innerHTML = recs.map(r => {
-      const w = bossWorkers.find(bw => bw.id === r.workerId);
-      if (!w) return '';
-      const h = calcShiftHours(r.start, r.end);
-      const brk = calcBreakHours(h);
-      const net = Math.max(h - brk, 0);
-      return `<div class="boss-schedule-item">
-        <span class="boss-cal-dot" style="background:${w.color};width:10px;height:10px"></span>
-        <span style="font-weight:700;min-width:56px">${w.name}</span>
-        <span style="color:var(--g)">${r.start} ~ ${r.end}</span>
-        <span style="margin-left:auto;color:var(--p);font-weight:700">${fmtHours(net)}</span>
-      </div>`;
-    }).join('');
+  renderBossPayroll();
+}
+function renderBossCalendar() {
+  const view = document.getElementById('boss-week-view');
+  const titleEl = document.getElementById('boss-week-title');
+  if (!view || !titleEl) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const ws = new Date(bossWeekStart);
+  const we = new Date(bossWeekStart); we.setDate(we.getDate() + 6);
+  titleEl.textContent = `${ws.getMonth()+1}월 ${ws.getDate()}일 — ${we.getMonth()+1}월 ${we.getDate()}일`;
+  const DAY_NAMES = ['일','월','화','수','목','금','토'];
+  // Header
+  let hdr = '<div class="boss-week-hdr"><div></div>';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(d.getDate() + i);
+    const isT = d.getTime() === today.getTime();
+    const isSun = d.getDay() === 0, isSat = d.getDay() === 6;
+    const cls = ['boss-week-hdr-cell', isT?'bw-today':'', isSun?'bw-sun':'', isSat?'bw-sat':''].filter(Boolean).join(' ');
+    hdr += `<div class="${cls}"><div class="wd">${DAY_NAMES[d.getDay()]}</div><div class="wn">${d.getDate()}</div></div>`;
   }
-  sec.style.display = '';
+  hdr += '</div>';
+  // Body
+  let body = '<div class="boss-week-body"><div class="boss-time-gutter">';
+  for (let h = BW_START_H; h < BW_END_H; h++) body += `<div class="boss-time-lbl">${h}시</div>`;
+  body += '</div>';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(d.getDate() + i);
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const isT = d.getTime() === today.getTime();
+    body += `<div class="boss-day-col${isT?' bw-today-col':''}">`;
+    for (let h = BW_START_H; h < BW_END_H; h++) body += '<div class="boss-hour-row"></div>';
+    (bossSchedules[ds] || []).forEach(r => {
+      const w = bossWorkers.find(bw => bw.id === r.workerId);
+      if (!w) return;
+      const [sh, sm] = r.start.split(':').map(Number);
+      const [eh, em] = r.end.split(':').map(Number);
+      const top = (Math.max(sh + sm/60, BW_START_H) - BW_START_H) * BW_ROW_H;
+      const ht = Math.max((eh + em/60) - Math.max(sh + sm/60, BW_START_H), 0) * BW_ROW_H;
+      if (ht <= 0) return;
+      body += `<div class="boss-shift-blk" style="top:${top}px;height:${ht}px;background:${w.color}">${w.name}<br>${r.start}~${r.end}</div>`;
+    });
+    body += '</div>';
+  }
+  body += '</div>';
+  view.innerHTML = hdr + body;
 }
 
 function renderBossPayroll() {
