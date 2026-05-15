@@ -2932,18 +2932,18 @@ function selectBossDate(ds) {
         const width = Math.max((eh + em/60) - (sh + sm/60), 0) * COL_W;
         if (width > 0) bar = `<div class="boss-tl-bar" style="left:${left}px;width:${width}px;background:${w.color}99"></div>`;
       }
-      const nowLine = showNow ? `<div class="boss-tl-now" style="left:${nowLeft}px"></div>` : '';
       return `<div class="boss-tl-row">
         <div class="boss-tl-name">${w.name}</div>
-        <div class="boss-tl-track" style="width:${totalW}px;background:${gridBg}">${bar}${nowLine}</div>
+        <div class="boss-tl-track" style="width:${totalW}px;background:${gridBg}">${bar}</div>
       </div>`;
     }).filter(Boolean).join('');
   }
+  const nowLine = showNow ? `<div class="boss-tl-now" style="left:${64 + nowLeft}px"></div>` : '';
   sec.innerHTML = `<div class="boss-tl-wrap">
     <div class="boss-tl-hdr"><div class="boss-tl-date">${dateLabel}</div></div>
     <div class="boss-tl-scroll"><div class="boss-tl-inner">
       <div class="boss-tl-ruler">${rulerCells}</div>
-      ${rows}
+      <div style="position:relative">${rows}${nowLine}</div>
     </div></div>
   </div>`;
   sec.style.display = '';
