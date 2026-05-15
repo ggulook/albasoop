@@ -437,10 +437,10 @@
   <div style="display:flex;align-items:center;gap:8px">
     <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
     <div class="role-picker">
-      <button class="role-btn" id="role-btn">👷 알바생 ▾</button>
+      <button class="role-btn" id="role-btn">알바생 ▾</button>
       <div class="role-dropdown" id="role-dropdown">
-        <div class="role-option active" onclick="setRole('worker')">👷 알바생</div>
-        <div class="role-option" onclick="setRole('boss')">👔 사장님</div>
+        <div class="role-option active" onclick="setRole('worker')">알바생</div>
+        <div class="role-option" onclick="setRole('boss')">사장님</div>
       </div>
     </div>
   </div>
@@ -2615,7 +2615,7 @@ function applyRole() {
   const isBoss = userRole === 'boss';
   // 헤더 역할 버튼
   const btn = document.getElementById('role-btn');
-  if (btn) btn.textContent = (isBoss ? '👔 사장님' : '👷 알바생') + ' ▾';
+  if (btn) btn.textContent = (isBoss ? '사장님' : '알바생') + ' ▾';
   document.querySelectorAll('.role-option').forEach(el => {
     el.classList.toggle('active', el.textContent.includes(isBoss ? '사장님' : '알바생'));
   });
