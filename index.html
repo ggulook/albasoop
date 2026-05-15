@@ -275,6 +275,19 @@
     .mob-footer{padding:16px 20px;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:8px}
     .mob-footer .btn-login,.mob-footer .btn-signup{width:100%;text-align:center;padding:11px}
 
+    /* GPS CHECKIN */
+    .gps-checkin-btn{width:100%;padding:16px;background:#22C55E;color:#fff;border:none;border-radius:16px;font-size:1.05rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:20px;transition:background .2s}
+    .gps-checkin-btn:hover{background:#16A34A}
+    .gps-modal-map{height:260px;border-radius:14px;overflow:hidden;margin-bottom:16px;border:1.5px solid var(--b)}
+    .gps-dist-box{text-align:center;padding:16px 12px;background:var(--l);border-radius:12px;margin-bottom:16px}
+    .gps-dist-num{font-size:2.2rem;font-weight:900;color:var(--p);line-height:1.1}
+    .gps-dist-num.out{color:#EF4444}
+    .gps-dist-sub{font-size:.82rem;color:var(--g);margin-top:5px}
+    .gps-ok-btn{width:100%;padding:13px;background:#22C55E;color:#fff;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer}
+    .gps-blocked{text-align:center;color:#EF4444;font-weight:700;font-size:.88rem;padding:8px;line-height:1.6}
+    .wp-loc-badge{font-size:.72rem;padding:3px 9px;border-radius:999px;cursor:pointer;border:1px solid #D1D5DB;background:#fff;color:#9CA3AF;font-weight:600;white-space:nowrap;flex-shrink:0}
+    .wp-loc-badge.set{border-color:#22C55E;color:#22C55E;background:#F0FDF4}
+
     /* MY PLACE PAGE */
     .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto}
     .myplace-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
@@ -692,9 +705,15 @@
           <div class="wp-reg-name" id="myplace-name">GS25 강원대학교점</div>
           <div class="wp-reg-meta" id="myplace-meta">편의점 · 근무기간 2025.04~</div>
         </div>
-        <span class="wp-reg-badge" data-i18n="mp_cert_badge">공정인증</span>
+        <button id="wp-loc-badge" class="wp-loc-badge" onclick="setWorkplaceLoc()">📍 위치 미설정</button>
         <button class="wp-change-btn" onclick="openModal('addWpModal')" data-i18n="mp_change_btn">변경</button>
       </div>
+
+      <!-- GPS 출퇴근 버튼 -->
+      <button class="gps-checkin-btn" onclick="openGpsCheckin()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        출퇴근하기
+      </button>
 
       <!-- 캘린더 -->
       <div class="cal-section">
@@ -961,6 +980,21 @@
       <input class="minput" id="wp-wage-input" type="number" data-i18n-ph="calc_wage" placeholder="시급 (원)" value="10030" min="9860">
       <button class="msubmit" onclick="registerWorkplace()" data-i18n="mp_add_submit">등록하기</button>
     </div>
+  </div>
+</div>
+
+<!-- GPS CHECKIN MODAL -->
+<div class="modal-overlay" id="gpsCheckinModal" onclick="if(event.target===this)closeGpsModal()">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeGpsModal()">✕</button>
+    <h2 style="margin-bottom:16px">출퇴근 위치 확인</h2>
+    <div id="gps-modal-map" class="gps-modal-map"></div>
+    <div class="gps-dist-box">
+      <div id="gps-dist-num" class="gps-dist-num">-</div>
+      <div id="gps-dist-sub" class="gps-dist-sub">거리 계산 중...</div>
+    </div>
+    <button id="gps-confirm-btn" class="gps-ok-btn" onclick="confirmGpsCheckin()" style="display:none">✅ 출근 시간 기록하기</button>
+    <div id="gps-blocked-msg" class="gps-blocked" style="display:none">출퇴근 허용 범위(100m)를 벗어났습니다.<br>업장에 도착한 후 다시 시도해주세요.</div>
   </div>
 </div>
 
@@ -2595,6 +2629,87 @@ function registerWorkplace() {
   updateMyPlaceHeader();
   renderWageCalc();
   showToast('✅ 업장이 등록됐습니다.');
+}
+
+// ===== GPS CHECKIN =====
+const GPS_RADIUS_M = 100;
+let _gpsCheckinMap = null;
+let _gpsCheckinUserPos = null;
+
+function calcDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function setWorkplaceLoc() {
+  if (!navigator.geolocation) { showToast('⚠️ GPS를 지원하지 않는 기기예요', true); return; }
+  showToast('📍 현재 위치를 업장 위치로 저장 중...');
+  navigator.geolocation.getCurrentPosition(pos => {
+    myWorkplace.lat = pos.coords.latitude;
+    myWorkplace.lng = pos.coords.longitude;
+    const badge = document.getElementById('wp-loc-badge');
+    if (badge) { badge.textContent = '📍 위치 설정됨'; badge.className = 'wp-loc-badge set'; }
+    showToast('✅ 업장 위치가 저장됐어요!');
+  }, () => showToast('⚠️ 위치를 가져올 수 없어요', true), { enableHighAccuracy: true, timeout: 10000 });
+}
+
+function openGpsCheckin() {
+  if (!navigator.geolocation) { showToast('⚠️ GPS를 지원하지 않는 기기예요', true); return; }
+  if (!myWorkplace.lat || !myWorkplace.lng) {
+    showToast('⚠️ 먼저 업장 위치를 설정해주세요', true);
+    return;
+  }
+  showToast('📍 위치 확인 중...');
+  navigator.geolocation.getCurrentPosition(pos => {
+    const dist = calcDistance(pos.coords.latitude, pos.coords.longitude, myWorkplace.lat, myWorkplace.lng);
+    _gpsCheckinUserPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    _showGpsCheckinModal(dist);
+  }, () => showToast('⚠️ 위치를 가져올 수 없어요. 위치 권한을 확인해주세요.', true), { enableHighAccuracy: true, timeout: 10000 });
+}
+
+function _showGpsCheckinModal(dist) {
+  const inRange = dist <= GPS_RADIUS_M;
+  const distTxt = dist >= 1000 ? (dist/1000).toFixed(1)+'km' : Math.round(dist)+'m';
+  document.getElementById('gps-dist-num').textContent = distTxt;
+  document.getElementById('gps-dist-num').className = 'gps-dist-num' + (inRange ? '' : ' out');
+  document.getElementById('gps-dist-sub').textContent = inRange
+    ? '✅ 출퇴근 가능 범위입니다'
+    : `업장까지 ${Math.round(Math.max(0, dist - GPS_RADIUS_M))}m 더 이동해야 해요`;
+  document.getElementById('gps-confirm-btn').style.display = inRange ? 'block' : 'none';
+  document.getElementById('gps-blocked-msg').style.display = inRange ? 'none' : 'block';
+  document.getElementById('gpsCheckinModal').classList.add('active');
+
+  setTimeout(() => {
+    if (_gpsCheckinMap) { _gpsCheckinMap.remove(); _gpsCheckinMap = null; }
+    const el = document.getElementById('gps-modal-map');
+    const wLat = myWorkplace.lat, wLng = myWorkplace.lng;
+    const uLat = _gpsCheckinUserPos.lat, uLng = _gpsCheckinUserPos.lng;
+    _gpsCheckinMap = L.map(el, { zoomControl: false }).setView([(wLat+uLat)/2, (wLng+uLng)/2], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'' }).addTo(_gpsCheckinMap);
+    L.circle([wLat, wLng], { radius: GPS_RADIUS_M, color: inRange ? '#22C55E' : '#EF4444', weight: 2, fillOpacity: 0.12 }).addTo(_gpsCheckinMap);
+    L.circleMarker([wLat, wLng], { radius: 11, color:'#fff', weight:3, fillColor: inRange?'#22C55E':'#EF4444', fillOpacity:1 }).addTo(_gpsCheckinMap).bindPopup(myWorkplace.name).openPopup();
+    L.circleMarker([uLat, uLng], { radius: 9, color:'#fff', weight:3, fillColor:'#3B82F6', fillOpacity:1 }).addTo(_gpsCheckinMap).bindPopup('내 위치');
+    const bounds = L.latLngBounds([[wLat, wLng],[uLat, uLng]]);
+    _gpsCheckinMap.fitBounds(bounds.pad(0.4));
+  }, 120);
+}
+
+function confirmGpsCheckin() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = now.getMinutes() < 30 ? '00' : '30';
+  const sel = document.getElementById('start-time');
+  if (sel) { sel.value = `${h}:${m}`; updateWorkHoursDisplay(); }
+  closeGpsModal();
+  showToast('✅ 출근 시간이 기록됐어요!');
+}
+
+function closeGpsModal() {
+  document.getElementById('gpsCheckinModal').classList.remove('active');
+  if (_gpsCheckinMap) { _gpsCheckinMap.remove(); _gpsCheckinMap = null; }
 }
 
 function toggleWageDetail(el) {
