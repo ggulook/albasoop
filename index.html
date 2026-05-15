@@ -464,7 +464,7 @@
     .boss-tl-scroll::-webkit-scrollbar{display:none}
     .boss-tl-inner{display:inline-block;min-width:100%}
     .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #EEF2F7;padding-bottom:4px}
-    .boss-tl-rc{width:72px;flex-shrink:0;font-size:.62rem;color:#94A3B8;font-weight:600}
+    .boss-tl-rc{width:20px;flex-shrink:0;font-size:.52rem;color:#94A3B8;font-weight:600;white-space:nowrap}
     .boss-tl-row{display:flex;align-items:center;height:34px;border-bottom:1px solid #F8FAFC}
     .boss-tl-row:last-of-type{border:none}
     .boss-tl-name{width:64px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk)}
@@ -2902,29 +2902,21 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  // auto-range from actual shifts ±1h, fallback full day
-  let TL_START = 0, TL_END = 24;
-  if (recs.length) {
-    const allStarts = recs.map(r => { const [h,m]=r.start.split(':').map(Number); return h+m/60; });
-    const allEnds   = recs.map(r => { const [h,m]=r.end.split(':').map(Number);   return h+m/60; });
-    TL_START = Math.max(0,  Math.floor(Math.min(...allStarts)) - 1);
-    TL_END   = Math.min(24, Math.ceil(Math.max(...allEnds))    + 1);
-  }
-  const COL_W = 72; // fixed 72px per hour — readable, scrolls naturally
-  const totalW = (TL_END - TL_START) * COL_W;
-  // ruler: every hour
+  const COL_W = 20; // 20px per hour, 24h = 480px total
+  const totalW = 24 * COL_W; // 480px
+  // ruler: label every 6h (20px too narrow for every-hour labels)
   let rulerCells = '';
-  for (let h = TL_START; h < TL_END; h++) {
-    rulerCells += `<div class="boss-tl-rc">${String(h).padStart(2,'0')}:00</div>`;
+  for (let h = 0; h < 24; h++) {
+    rulerCells += `<div class="boss-tl-rc">${h % 6 === 0 ? String(h).padStart(2,'0') : ''}</div>`;
   }
-  // grid bg
-  const gridBg = `repeating-linear-gradient(to right,transparent,transparent ${COL_W-1}px,#F1F5F9 ${COL_W-1}px,#F1F5F9 ${COL_W}px)`;
+  // grid bg: 1px line every 20px
+  const gridBg = `repeating-linear-gradient(to right,transparent,transparent 19px,#EEF2F7 19px,#EEF2F7 20px)`;
   // current time
   const now = new Date();
   const nowH = now.getHours() + now.getMinutes()/60;
   const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const nowLeft = (nowH - TL_START) * COL_W;
-  const showNow  = ds === todayStr && nowH >= TL_START && nowH <= TL_END;
+  const showNow = ds === todayStr;
+  const nowLeft = nowH * COL_W;
   // worker rows
   let rows = '';
   if (!recs.length) {
@@ -2936,7 +2928,7 @@ function selectBossDate(ds) {
       if (r) {
         const [sh,sm] = r.start.split(':').map(Number);
         const [eh,em] = r.end.split(':').map(Number);
-        const left  = (sh + sm/60 - TL_START) * COL_W;
+        const left  = (sh + sm/60) * COL_W;
         const width = Math.max((eh + em/60) - (sh + sm/60), 0) * COL_W;
         if (width > 0) bar = `<div class="boss-tl-bar" style="left:${left}px;width:${width}px;background:${w.color}99"></div>`;
       }
