@@ -457,28 +457,19 @@
     .boss-schedule-item:last-of-type{border:none}
     /* Boss timeline scheduler */
     .boss-tl-wrap{background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:14px 16px;margin-bottom:14px}
-    .boss-tl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .boss-tl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .boss-tl-date{font-size:1.05rem;font-weight:900}
-    .boss-tl-fade-wrap{position:relative}
-    .boss-tl-fade-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,#fff);pointer-events:none;z-index:4;border-radius:0 16px 16px 0}
-    .boss-tl-scroll{overflow-x:auto;scrollbar-width:none}
-    .boss-tl-scroll::-webkit-scrollbar{display:none}
-    .boss-tl-inner{min-width:max-content}
-    .boss-tl-ruler-row{display:flex;border-bottom:1px solid var(--b);padding-bottom:5px}
-    .boss-tl-ruler-name{width:72px;flex-shrink:0;position:sticky;left:0;background:#fff;z-index:3}
-    .boss-tl-ruler-cell{flex-shrink:0;font-size:.65rem;color:#CBD5E1;font-weight:600;text-align:left}
-    .boss-tl-ruler-cell.marked{color:#94A3B8}
-    .boss-tl-row{display:flex;align-items:center;height:32px;border-bottom:1px solid #F8FAFC}
-    .boss-tl-row:last-of-type{border:none}
-    .boss-tl-name{width:72px;flex-shrink:0;font-size:.8rem;font-weight:700;color:var(--dk);white-space:nowrap;position:sticky;left:0;background:#fff;z-index:2}
-    .boss-tl-track{position:relative;flex-shrink:0}
-    .boss-tl-grid{position:absolute;inset:0;display:flex;pointer-events:none}
-    .boss-tl-grid-line{flex-shrink:0;height:100%}
-    .boss-tl-grid-line.marked{border-left:1px solid #EEF2F7}
-    .boss-tl-bar{position:absolute;top:5px;bottom:5px;border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-    .boss-tl-now{position:absolute;top:0;bottom:0;width:2px;background:#F97316;z-index:3;pointer-events:none}
-    .boss-tl-now::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#F97316}
-    .boss-tl-empty{color:var(--g);font-size:.86rem;padding:10px 0 2px}
+    .boss-tl-empty{color:var(--g);font-size:.86rem;padding:10px 0}
+    /* vertical timeline */
+    .boss-tlv-names{display:flex;margin-left:40px;margin-bottom:4px}
+    .boss-tlv-wh{flex:1;text-align:center;font-size:.78rem;font-weight:700;padding:4px 0 6px;border-radius:6px 6px 0 0}
+    .boss-tlv-body{display:flex;position:relative}
+    .boss-tlv-times{width:40px;flex-shrink:0}
+    .boss-tlv-tc{display:flex;justify-content:flex-end;padding-right:8px;font-size:.6rem;color:#94A3B8;box-sizing:border-box;transform:translateY(-7px)}
+    .boss-tlv-wc{flex:1;position:relative;border-left:1px solid #F1F5F9}
+    .boss-tlv-bar{position:absolute;left:4px;right:4px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.10)}
+    .boss-tlv-now{position:absolute;left:40px;right:0;height:2px;background:#F97316;z-index:3;pointer-events:none}
+    .boss-tlv-now::before{content:'';position:absolute;left:-5px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#F97316}
     .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
     .boss-pay-row:last-of-type{border:none}
     .boss-pay-info{display:flex;align-items:center;gap:8px}
@@ -2909,55 +2900,52 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  const TL_START = 0, TL_END = 24;
-  // responsive COL_W: try to fill container, min 28px
-  const availW = (sec.offsetWidth || window.innerWidth) - 72 - 32;
-  const COL_W = Math.max(28, Math.floor(availW / 24));
-  const totalW = 24 * COL_W;
-  // ruler: label every 3h, tick every 1h
-  let ruler = '<div class="boss-tl-ruler-row"><div class="boss-tl-ruler-name"></div>';
+  // row height: fit ~65% of viewport, min 22px per hour
+  const ROW_H = Math.max(22, Math.floor(window.innerHeight * 0.65 / 24));
+  const totalH = 24 * ROW_H;
+  // time labels
+  let timeCells = '';
   for (let h = 0; h < 24; h++) {
-    const label = h % 3 === 0 ? `${String(h).padStart(2,'0')}:00` : '';
-    ruler += `<div class="boss-tl-ruler-cell${h%3===0?' marked':''}" style="width:${COL_W}px">${label}</div>`;
+    const label = h % 2 === 0 ? `${String(h).padStart(2,'0')}:00` : '';
+    timeCells += `<div class="boss-tlv-tc" style="height:${ROW_H}px">${label}</div>`;
   }
-  ruler += '</div>';
-  // grid lines: solid on 3h marks, none otherwise
-  let gridLines = '<div class="boss-tl-grid">';
-  for (let h = 0; h < 24; h++) gridLines += `<div class="boss-tl-grid-line${h%3===0?' marked':''}" style="width:${COL_W}px"></div>`;
-  gridLines += '</div>';
-  // current time line
-  const now = new Date();
-  const nowH = now.getHours() + now.getMinutes()/60;
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const nowLine = ds === todayStr ? `<div class="boss-tl-now" style="left:${nowH*COL_W}px"></div>` : '';
-  // rows
-  let rows = '';
-  if (!recs.length) {
-    rows = `<div class="boss-tl-empty">이 날짜에 등록된 근무가 없어요</div>`;
-  } else {
-    rows = bossWorkers.map(w => {
-      const r = recs.find(r => r.workerId === w.id);
-      if (!r) return '';
+  // grid bg per worker column
+  const gridBg = `repeating-linear-gradient(to bottom,transparent,transparent ${ROW_H-1}px,#F1F5F9 ${ROW_H-1}px,#F1F5F9 ${ROW_H}px)`;
+  // worker columns
+  const workerCols = bossWorkers.map(w => {
+    const r = recs.find(r => r.workerId === w.id);
+    let bar = '';
+    if (r) {
       const [sh, sm] = r.start.split(':').map(Number);
       const [eh, em] = r.end.split(':').map(Number);
-      const left  = (sh + sm/60) * COL_W;
-      const width = Math.max((eh + em/60) - (sh + sm/60), 0) * COL_W;
-      const bar = width > 0 ? `<div class="boss-tl-bar" style="left:${left}px;width:${width}px;background:${w.color}99"></div>` : '';
-      return `<div class="boss-tl-row">
-        <div class="boss-tl-name">${w.name}</div>
-        <div class="boss-tl-track" style="width:${totalW}px;height:32px">${gridLines}${bar}</div>
-      </div>`;
-    }).filter(Boolean).join('');
-    if (!rows) rows = `<div class="boss-tl-empty">이 날짜에 등록된 근무가 없어요</div>`;
-  }
+      const top = (sh + sm / 60) * ROW_H;
+      const height = Math.max((eh + em / 60) - (sh + sm / 60), 0) * ROW_H;
+      if (height > 0) bar = `<div class="boss-tlv-bar" style="top:${top}px;height:${height}px;background:${w.color}99"></div>`;
+    }
+    return `<div class="boss-tlv-wc" style="height:${totalH}px;background:${gridBg}">${bar}</div>`;
+  }).join('');
+  // worker name headers
+  const nameHeaders = bossWorkers.map(w =>
+    `<div class="boss-tlv-wh" style="color:${w.color}">${w.name}</div>`
+  ).join('');
+  // current time line
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const nowLine = ds === todayStr
+    ? `<div class="boss-tlv-now" style="top:${(now.getHours()+now.getMinutes()/60)*ROW_H}px"></div>`
+    : '';
+  const emptyMsg = !recs.length ? `<div class="boss-tl-empty">이 날짜에 등록된 근무가 없어요</div>` : '';
   sec.innerHTML = `<div class="boss-tl-wrap">
     <div class="boss-tl-hdr">
       <div class="boss-tl-date">${dateLabel}</div>
     </div>
-    <div class="boss-tl-fade-wrap">
-    <div class="boss-tl-scroll">
-      <div class="boss-tl-inner" style="position:relative">${ruler}${rows}${nowLine}</div>
-    </div></div>
+    ${emptyMsg}
+    <div class="boss-tlv-names">${nameHeaders}</div>
+    <div class="boss-tlv-body" style="height:${totalH}px">
+      <div class="boss-tlv-times">${timeCells}</div>
+      ${workerCols}
+      ${nowLine}
+    </div>
   </div>`;
   sec.style.display = '';
 }
