@@ -34,6 +34,14 @@
     .lang-option:hover{background:var(--l)}
     .lang-option.active{background:#EFF6FF;color:var(--p);font-weight:700}
     .coming{font-size:.7rem;color:var(--g);margin-left:auto;background:var(--l);padding:2px 7px;border-radius:999px}
+    .role-picker{position:relative}
+    .role-btn{display:flex;align-items:center;gap:5px;padding:3px 8px;border:1px solid var(--b);border-radius:6px;background:#fff;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--dk);transition:all .2s;white-space:nowrap}
+    .role-btn:hover,.role-btn.active{border-color:var(--p);color:var(--p)}
+    .role-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1.5px solid var(--b);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.12);min-width:130px;overflow:hidden;z-index:1100}
+    .role-dropdown.open{display:block}
+    .role-option{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:.87rem;font-weight:500;cursor:pointer;transition:background .15s;color:var(--dk)}
+    .role-option:hover{background:var(--l)}
+    .role-option.active{background:#EFF6FF;color:var(--p);font-weight:700}
 
     .page{display:none;padding-top:64px;min-height:100vh}
     .page.active{display:block}
@@ -121,13 +129,13 @@
     .map-job-popup button{background:var(--p);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;width:100%}
 
     /* COMMUNITY PAGE */
-    .comm-page{padding:72px 5% 52px;max-width:840px;margin:0 auto}
+    .comm-page{padding:72px 5% 52px;max-width:1200px;margin:0 auto}
     .comm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
     .comm-header h1{font-size:1.7rem;font-weight:900}
     .comm-tabs{display:flex;gap:4px;background:var(--l);border-radius:10px;padding:4px;margin-bottom:18px}
     .comm-tab{flex:1;text-align:center;padding:7px;border-radius:7px;font-size:.85rem;font-weight:600;cursor:pointer;color:var(--g);transition:all .2s;border:none;background:none}
     .comm-tab.active{background:#fff;color:var(--p);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-    .comm-list{display:flex;flex-direction:column;gap:1px;background:var(--b);border-radius:16px;overflow:hidden}
+    .comm-list{display:flex;flex-direction:column;gap:1px;background:var(--b);border-radius:16px;overflow:hidden;max-width:780px;margin:0 auto}
     .comm-item{background:#fff;padding:18px 22px;cursor:pointer;transition:background .15s}
     .comm-item:hover{background:var(--l)}
     .comm-item-cat{font-size:.73rem;font-weight:700;color:var(--p);margin-bottom:5px}
@@ -267,8 +275,21 @@
     .mob-footer{padding:16px 20px;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:8px}
     .mob-footer .btn-login,.mob-footer .btn-signup{width:100%;text-align:center;padding:11px}
 
+    /* GPS CHECKIN */
+    .gps-checkin-btn{width:100%;padding:16px;background:#22C55E;color:#fff;border:none;border-radius:16px;font-size:1.05rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:20px;transition:background .2s}
+    .gps-checkin-btn:hover{background:#16A34A}
+    .gps-modal-map{height:260px;border-radius:14px;overflow:hidden;margin-bottom:16px;border:1.5px solid var(--b)}
+    .gps-dist-box{text-align:center;padding:16px 12px;background:var(--l);border-radius:12px;margin-bottom:16px}
+    .gps-dist-num{font-size:2.2rem;font-weight:900;color:var(--p);line-height:1.1}
+    .gps-dist-num.out{color:#EF4444}
+    .gps-dist-sub{font-size:.82rem;color:var(--g);margin-top:5px}
+    .gps-ok-btn{width:100%;padding:13px;background:#22C55E;color:#fff;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer}
+    .gps-blocked{text-align:center;color:#EF4444;font-weight:700;font-size:.88rem;padding:8px;line-height:1.6}
+    .wp-loc-badge{font-size:.72rem;padding:3px 9px;border-radius:999px;cursor:pointer;border:1px solid #D1D5DB;background:#fff;color:#9CA3AF;font-weight:600;white-space:nowrap;flex-shrink:0}
+    .wp-loc-badge.set{border-color:#22C55E;color:#22C55E;background:#F0FDF4}
+
     /* MY PLACE PAGE */
-    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto}
+    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto;overflow-x:clip}
     .myplace-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
     .myplace-hdr h1{font-size:1.7rem;font-weight:900}
     .wp-reg-card{background:var(--l);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:24px;border:1.5px solid var(--b)}
@@ -393,6 +414,57 @@
       .myplace-page{padding-bottom:72px}
       .page{padding-bottom:60px}
     }
+
+    /* BLIND-STYLE REVIEW CARDS */
+    .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:20px}
+    .rev-card{border-radius:20px;border:1.5px solid var(--b);overflow:hidden;background:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s}
+    .rev-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.13)}
+    .rev-banner{height:140px;position:relative}
+    .rev-logo-wrap{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;border:4px solid #fff;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);background:#fff}
+    .rev-logo-wrap svg{width:100%;height:100%;display:block}
+    .rev-body{padding:50px 22px 22px;text-align:center}
+    .rev-name{font-size:1.05rem;font-weight:800;margin-bottom:6px;color:var(--dk)}
+    .rev-rating{display:flex;align-items:center;justify-content:center;gap:4px;font-size:.85rem;color:var(--g);margin-bottom:12px}
+    .rev-rating-score{font-weight:700;color:#F59E0B;font-size:.9rem}
+    .rev-badge{display:block;background:#FFFBEB;color:#D97706;font-size:.8rem;font-weight:600;padding:9px;border-radius:10px;margin-bottom:16px;border:1px solid #FDE68A;text-align:center}
+    .rev-scores{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-bottom:18px;text-align:left;padding:0 2px}
+    .rev-score-item{display:flex;align-items:center;gap:5px;font-size:.83rem;color:var(--g)}
+    .rev-score-item strong{color:var(--dk);font-weight:700}
+    .rev-quote{background:#F8F9FA;border-radius:10px;padding:14px 16px;font-size:.83rem;color:var(--dk);line-height:1.6;margin-bottom:16px;text-align:left;border:1px solid var(--b);min-height:60px}
+    .rev-cta{width:100%;padding:14px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:.92rem;font-weight:700;cursor:pointer;transition:background .2s}
+    .rev-cta:hover{background:#1d4ed8}
+    @media(max-width:900px){.rev-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.rev-grid{grid-template-columns:1fr}}
+  </style>
+  <style>
+    /* ===== ROLE OVERLAY ===== */
+    #role-overlay{position:fixed;inset:0;background:#fff;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px}
+    .role-card{flex:1;max-width:180px;padding:28px 16px;border-radius:20px;border:2px solid var(--b);background:#fff;cursor:pointer;font-size:1rem;font-weight:700;color:var(--dk);transition:all .2s;text-align:center}
+    .role-card:hover{border-color:var(--p);background:#EFF6FF;transform:translateY(-2px)}
+    .role-card .rc-emoji{font-size:2.4rem;margin-bottom:10px}
+    .role-card .rc-sub{font-size:.75rem;color:var(--g);font-weight:400;margin-top:6px}
+    /* ===== BOSS MODE ===== */
+    .boss-salary-card{background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px}
+    .boss-salary-ttl{font-size:.85rem;color:var(--g);font-weight:600;margin-bottom:14px}
+    .boss-worker-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b);font-size:.88rem}
+    .boss-worker-row:last-of-type{border:none}
+    .boss-worker-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:7px}
+    .boss-worker-name{font-weight:700;display:flex;align-items:center}
+    .boss-worker-pay{font-weight:700;color:var(--p)}
+    .boss-total-row{background:#EFF6FF;border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .boss-cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:0 1px}
+    .boss-schedule-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);font-size:.86rem}
+    .boss-schedule-item:last-of-type{border:none}
+    /* Boss timeline scheduler */
+    .boss-tl-scroll::-webkit-scrollbar{display:none}
+    .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
+    .boss-pay-row:last-of-type{border:none}
+    .boss-pay-info{display:flex;align-items:center;gap:8px}
+    .boss-pay-approve{padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:700;border:none;cursor:pointer;background:var(--p);color:#fff;transition:all .2s}
+    .boss-pay-approve.paid{background:#E2E8F0;color:var(--g);cursor:default}
+    .role-chip{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;cursor:pointer;border:none;margin-left:8px}
+    .role-chip.worker{background:#EFF6FF;color:var(--p)}
+    .role-chip.boss{background:#F0FDF4;color:#059669}
   </style>
   <style>
     /* ===== ROLE OVERLAY ===== */
@@ -426,7 +498,16 @@
 <body>
 
 <nav>
-  <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
+    <div class="role-picker">
+      <button class="role-btn" id="role-btn">알바생 ▾</button>
+      <div class="role-dropdown" id="role-dropdown">
+        <div class="role-option active" onclick="setRole('worker')">알바생</div>
+        <div class="role-option" onclick="setRole('boss')">사장님</div>
+      </div>
+    </div>
+  </div>
   <div class="nav-center">
     <button class="nav-tab active" data-i18n="nav_home" onclick="showPage('home')">홈</button>
     <button class="nav-tab" data-i18n="nav_jobs" onclick="showPage('jobs')">알바 찾기</button>
@@ -466,11 +547,6 @@
       <div class="hero-btns">
         <button class="btn-p" data-i18n="hero_btn1" onclick="showPage('jobs')">알바 찾기</button>
         <button class="btn-s" data-i18n="hero_btn2" onclick="showPage('calc')">급여 계산해보기</button>
-      </div>
-      <div class="hero-stats">
-        <div class="stat"><div class="num">47만+</div><div class="lbl" data-i18n="stat_members">누적 회원</div></div>
-        <div class="stat"><div class="num">1.2만</div><div class="lbl" data-i18n="stat_jobs">등록 공고</div></div>
-        <div class="stat"><div class="num">4.8★</div><div class="lbl" data-i18n="stat_rating">앱스토어 평점</div></div>
       </div>
     </div>
     <div class="hero-visual">
@@ -633,7 +709,7 @@
         <div class="cal-grid" id="boss-cal-grid"></div>
       </div>
       <!-- 선택 날짜 직원 스케줄 -->
-      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:16px;margin-bottom:14px">
+      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:20px 24px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.06);box-sizing:border-box;position:relative;left:50%;transform:translateX(-50%);width:min(calc(100vw - 32px),960px)">
         <div style="font-size:.9rem;font-weight:800;margin-bottom:12px" id="boss-schedule-date-title"></div>
         <div id="boss-schedule-list"></div>
       </div>
@@ -662,9 +738,15 @@
           <div class="wp-reg-name" id="myplace-name">GS25 강원대학교점</div>
           <div class="wp-reg-meta" id="myplace-meta">편의점 · 근무기간 2025.04~</div>
         </div>
-        <span class="wp-reg-badge" data-i18n="mp_cert_badge">공정인증</span>
+        <button id="wp-loc-badge" class="wp-loc-badge" onclick="setWorkplaceLoc()">📍 위치 미설정</button>
         <button class="wp-change-btn" onclick="openModal('addWpModal')" data-i18n="mp_change_btn">변경</button>
       </div>
+
+      <!-- GPS 출퇴근 버튼 -->
+      <button class="gps-checkin-btn" onclick="openGpsCheckin()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        출퇴근하기
+      </button>
 
       <!-- 캘린더 -->
       <div class="cal-section">
@@ -931,6 +1013,21 @@
       <input class="minput" id="wp-wage-input" type="number" data-i18n-ph="calc_wage" placeholder="시급 (원)" value="10030" min="9860">
       <button class="msubmit" onclick="registerWorkplace()" data-i18n="mp_add_submit">등록하기</button>
     </div>
+  </div>
+</div>
+
+<!-- GPS CHECKIN MODAL -->
+<div class="modal-overlay" id="gpsCheckinModal" onclick="if(event.target===this)closeGpsModal()">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeGpsModal()">✕</button>
+    <h2 style="margin-bottom:16px">출퇴근 위치 확인</h2>
+    <div id="gps-modal-map" class="gps-modal-map"></div>
+    <div class="gps-dist-box">
+      <div id="gps-dist-num" class="gps-dist-num">-</div>
+      <div id="gps-dist-sub" class="gps-dist-sub">거리 계산 중...</div>
+    </div>
+    <button id="gps-confirm-btn" class="gps-ok-btn" onclick="confirmGpsCheckin()" style="display:none">✅ 출근 시간 기록하기</button>
+    <div id="gps-blocked-msg" class="gps-blocked" style="display:none">출퇴근 허용 범위(100m)를 벗어났습니다.<br>업장에 도착한 후 다시 시도해주세요.</div>
   </div>
 </div>
 
@@ -1801,14 +1898,14 @@ function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function switchModal(from, to) { closeModal(from); openModal(to); }
 document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
-function showToast(msg, shake) {
+function showToast(msg, shake, duration) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.remove('shake');
   void t.offsetWidth;
   t.classList.add('show');
   if (shake) t.classList.add('shake');
-  setTimeout(() => t.classList.remove('show', 'shake'), 400);
+  setTimeout(() => t.classList.remove('show', 'shake'), duration || 1500);
 }
 
 // ===== MOBILE MENU =====
@@ -1862,10 +1959,17 @@ document.getElementById('lang-btn').addEventListener('click', function(e) {
   this.classList.toggle('active', !isOpen);
 });
 document.addEventListener('click', function() {
-  document.querySelectorAll('.lang-dropdown.open').forEach(d => {
+  document.querySelectorAll('.lang-dropdown.open, .role-dropdown.open').forEach(d => {
     d.classList.remove('open');
     d.previousElementSibling.classList.remove('active');
   });
+});
+document.getElementById('role-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const dropdown = this.nextElementSibling;
+  const isOpen = dropdown.classList.contains('open');
+  dropdown.classList.toggle('open');
+  this.classList.toggle('active', !isOpen);
 });
 
 // ===== REVIEW DATA =====
@@ -1891,11 +1995,37 @@ function getWpList() {
   })).sort((a,b) => b.avg - a.avg);
 }
 
-const WP_ICONS = { 'GS25':'🏪', '스타벅스':'☕', '쿠팡':'📦', '맥도날드':'🍔', '다이소':'🛍', '본죽':'🍜' };
-function wpIcon(name) {
-  for (const [k,v] of Object.entries(WP_ICONS)) if (name.includes(k)) return v;
-  return '🏢';
+const WP_BRANDS = {
+  '스타벅스': {
+    banner:'linear-gradient(135deg,#1E3932,#00704A)',
+    logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><circle cx="28" cy="28" r="28" fill="#1E3932"/><text x="28" y="33" text-anchor="middle" fill="#CBA960" font-size="24" font-family="serif">★</text><text x="28" y="48" text-anchor="middle" fill="#CBA960" font-size="5" font-weight="bold" letter-spacing="1.5" font-family="Arial,sans-serif">STARBUCKS</text></svg>`
+  },
+  'GS25': {
+    banner:'linear-gradient(135deg,#0033A0,#00B5E2)',
+    logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="56" fill="#1A1A1A"/><text x="4" y="36" fill="#0085CA" font-size="19" font-weight="900" font-family="Arial Black,sans-serif">GS</text><text x="30" y="36" fill="#00B5E2" font-size="19" font-weight="900" font-family="Arial Black,sans-serif">25</text></svg>`
+  },
+  '맥도날드': {
+    banner:'linear-gradient(135deg,#8B0000,#DA0204)',
+    logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="56" fill="#DA0204"/><text x="28" y="42" text-anchor="middle" fill="#FFC72C" font-size="44" font-weight="900" font-family="Arial Black,sans-serif">M</text></svg>`
+  },
+  '다이소': {
+    banner:'linear-gradient(135deg,#A50010,#E60012)',
+    logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="56" fill="#fff"/><rect x="3" y="3" width="22" height="22" rx="2" fill="#E60012"/><circle cx="8.5" cy="8.5" r="2" fill="#fff"/><circle cx="14" cy="8.5" r="2" fill="#fff"/><circle cx="19.5" cy="8.5" r="2" fill="#fff"/><circle cx="8.5" cy="14" r="2" fill="#fff"/><circle cx="14" cy="14" r="2" fill="#fff"/><circle cx="19.5" cy="14" r="2" fill="#fff"/><circle cx="8.5" cy="19.5" r="2" fill="#fff"/><circle cx="14" cy="19.5" r="2" fill="#fff"/><circle cx="19.5" cy="19.5" r="2" fill="#fff"/><text x="28" y="40" text-anchor="middle" fill="#E60012" font-size="10" font-weight="900" font-family="Arial,sans-serif">daiso</text></svg>`
+  },
+  '쿠팡': {
+    banner:'linear-gradient(135deg,#111,#2D2D2D)',
+    logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="56" fill="#1A1A1A"/><text x="3" y="34" fill="#fff" font-size="12" font-weight="900" font-family="Arial Black,sans-serif">cou</text><text x="27" y="34" fill="#E60012" font-size="12" font-weight="900" font-family="Arial Black,sans-serif">p</text><text x="34" y="34" fill="#F5A200" font-size="12" font-weight="900" font-family="Arial Black,sans-serif">a</text><text x="41" y="34" fill="#26A65B" font-size="12" font-weight="900" font-family="Arial Black,sans-serif">n</text><text x="48" y="34" fill="#00A2E8" font-size="12" font-weight="900" font-family="Arial Black,sans-serif">g</text></svg>`
+  },
+  '본죽': {
+    banner:'linear-gradient(135deg,#3D0000,#7A0000)',
+    logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="56" fill="#7A0000"/><text x="28" y="37" text-anchor="middle" fill="#fff" font-size="20" font-weight="900" font-family="serif">본죽</text></svg>`
+  }
+};
+function getWpBrand(name) {
+  for (const [k,v] of Object.entries(WP_BRANDS)) if (name.includes(k)) return v;
+  return { banner:'linear-gradient(135deg,#64748B,#94A3B8)', logo:`<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><rect width="56" height="56" fill="#64748B"/><text x="28" y="36" text-anchor="middle" fill="#fff" font-size="22" font-weight="700" font-family="Arial,sans-serif">🏢</text></svg>` };
 }
+function wpIcon(name) { return ''; }
 function starsHtml(n) {
   const filled = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1" style="vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
   const empty = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" style="vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
@@ -1904,19 +2034,27 @@ function starsHtml(n) {
 
 function renderWpList() {
   const wps = getWpList();
-  document.getElementById('wp-list').innerHTML = wps.map(w => `
-    <div class="workplace-item" onclick="showWpDetail('${w.name}')">
-      <div class="wp-icon">${wpIcon(w.name)}</div>
-      <div class="wp-info">
-        <div class="wp-name">${w.name}</div>
-        <div class="wp-meta">후기 ${w.count}개 · ${w.reviews[0]?.date || ''}</div>
+  const cats = [{key:'pay',label:'시급'},{key:'env',label:'환경'},{key:'work',label:'업무량'},{key:'mgmt',label:'매니저'}];
+  const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1" style="vertical-align:middle;flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+  document.getElementById('wp-list').innerHTML = `<div class="rev-grid">${wps.map(w => {
+    const brand = getWpBrand(w.name);
+    const avg = k => (w.reviews.reduce((s,r) => s+r[k], 0) / w.reviews.length).toFixed(1);
+    const quote = w.reviews[0]?.pros || '';
+    const rec = parseFloat(w.avg) >= 4.0;
+    return `<div class="rev-card" onclick="showWpDetail('${w.name.replace(/'/g,"\\'")}')">
+      <div class="rev-banner" style="background:${brand.banner}">
+        <div class="rev-logo-wrap">${brand.logo}</div>
       </div>
-      <div class="wp-rating">
-        <div class="wp-stars"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1" style="vertical-align:middle;margin-bottom:1px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${w.avg}</div>
-        <div class="wp-cnt">${w.count}개 후기</div>
+      <div class="rev-body">
+        <div class="rev-name">${w.name}</div>
+        <div class="rev-rating">${starSvg}<span class="rev-rating-score">${w.avg}</span><span>· 후기 ${w.count}개</span></div>
+        ${rec ? '<div class="rev-badge">🔥 알바생 추천 업장</div>' : '<div class="rev-badge" style="background:#F1F5F9;border-color:#E2E8F0;color:#94A3B8">후기 작성 업장</div>'}
+        <div class="rev-scores">${cats.map(c=>`<div class="rev-score-item">${starSvg}<strong>${avg(c.key)}</strong>${c.label}</div>`).join('')}</div>
+        ${quote ? `<div class="rev-quote">${quote.length>60?quote.slice(0,60)+'…':quote}</div>` : ''}
+        <button class="rev-cta" onclick="event.stopPropagation();showWpDetail('${w.name.replace(/'/g,"\\'")}')">알바 리뷰 보러가기 ›</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function showWpDetail(wpName) {
@@ -2339,7 +2477,7 @@ function addSchedule() {
   if (!selectedDate) { showToast('⚠️ 날짜를 먼저 선택해주세요.'); return; }
   const newH = calcShiftHours(start, end);
   if (getWeekTotalHours(selectedDate) + newH > 52) {
-    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true);
+    showToast('⚠️ 52시간이 법적으로 일할 수 있는 최대치입니다', true, 1500);
     return;
   }
   if (!workRecords[selectedDate]) workRecords[selectedDate] = [];
@@ -2526,6 +2664,87 @@ function registerWorkplace() {
   showToast('✅ 업장이 등록됐습니다.');
 }
 
+// ===== GPS CHECKIN =====
+const GPS_RADIUS_M = 100;
+let _gpsCheckinMap = null;
+let _gpsCheckinUserPos = null;
+
+function calcDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function setWorkplaceLoc() {
+  if (!navigator.geolocation) { showToast('⚠️ GPS를 지원하지 않는 기기예요', true); return; }
+  showToast('📍 현재 위치를 업장 위치로 저장 중...');
+  navigator.geolocation.getCurrentPosition(pos => {
+    myWorkplace.lat = pos.coords.latitude;
+    myWorkplace.lng = pos.coords.longitude;
+    const badge = document.getElementById('wp-loc-badge');
+    if (badge) { badge.textContent = '📍 위치 설정됨'; badge.className = 'wp-loc-badge set'; }
+    showToast('✅ 업장 위치가 저장됐어요!');
+  }, () => showToast('⚠️ 위치를 가져올 수 없어요', true), { enableHighAccuracy: true, timeout: 10000 });
+}
+
+function openGpsCheckin() {
+  if (!navigator.geolocation) { showToast('⚠️ GPS를 지원하지 않는 기기예요', true); return; }
+  if (!myWorkplace.lat || !myWorkplace.lng) {
+    showToast('⚠️ 먼저 업장 위치를 설정해주세요', true);
+    return;
+  }
+  showToast('📍 위치 확인 중...');
+  navigator.geolocation.getCurrentPosition(pos => {
+    const dist = calcDistance(pos.coords.latitude, pos.coords.longitude, myWorkplace.lat, myWorkplace.lng);
+    _gpsCheckinUserPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    _showGpsCheckinModal(dist);
+  }, () => showToast('⚠️ 위치를 가져올 수 없어요. 위치 권한을 확인해주세요.', true), { enableHighAccuracy: true, timeout: 10000 });
+}
+
+function _showGpsCheckinModal(dist) {
+  const inRange = dist <= GPS_RADIUS_M;
+  const distTxt = dist >= 1000 ? (dist/1000).toFixed(1)+'km' : Math.round(dist)+'m';
+  document.getElementById('gps-dist-num').textContent = distTxt;
+  document.getElementById('gps-dist-num').className = 'gps-dist-num' + (inRange ? '' : ' out');
+  document.getElementById('gps-dist-sub').textContent = inRange
+    ? '✅ 출퇴근 가능 범위입니다'
+    : `업장까지 ${Math.round(Math.max(0, dist - GPS_RADIUS_M))}m 더 이동해야 해요`;
+  document.getElementById('gps-confirm-btn').style.display = inRange ? 'block' : 'none';
+  document.getElementById('gps-blocked-msg').style.display = inRange ? 'none' : 'block';
+  document.getElementById('gpsCheckinModal').classList.add('active');
+
+  setTimeout(() => {
+    if (_gpsCheckinMap) { _gpsCheckinMap.remove(); _gpsCheckinMap = null; }
+    const el = document.getElementById('gps-modal-map');
+    const wLat = myWorkplace.lat, wLng = myWorkplace.lng;
+    const uLat = _gpsCheckinUserPos.lat, uLng = _gpsCheckinUserPos.lng;
+    _gpsCheckinMap = L.map(el, { zoomControl: false }).setView([(wLat+uLat)/2, (wLng+uLng)/2], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'' }).addTo(_gpsCheckinMap);
+    L.circle([wLat, wLng], { radius: GPS_RADIUS_M, color: inRange ? '#22C55E' : '#EF4444', weight: 2, fillOpacity: 0.12 }).addTo(_gpsCheckinMap);
+    L.circleMarker([wLat, wLng], { radius: 11, color:'#fff', weight:3, fillColor: inRange?'#22C55E':'#EF4444', fillOpacity:1 }).addTo(_gpsCheckinMap).bindPopup(myWorkplace.name).openPopup();
+    L.circleMarker([uLat, uLng], { radius: 9, color:'#fff', weight:3, fillColor:'#3B82F6', fillOpacity:1 }).addTo(_gpsCheckinMap).bindPopup('내 위치');
+    const bounds = L.latLngBounds([[wLat, wLng],[uLat, uLng]]);
+    _gpsCheckinMap.fitBounds(bounds.pad(0.4));
+  }, 120);
+}
+
+function confirmGpsCheckin() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = now.getMinutes() < 30 ? '00' : '30';
+  const sel = document.getElementById('start-time');
+  if (sel) { sel.value = `${h}:${m}`; updateWorkHoursDisplay(); }
+  closeGpsModal();
+  showToast('✅ 출근 시간이 기록됐어요!');
+}
+
+function closeGpsModal() {
+  document.getElementById('gpsCheckinModal').classList.remove('active');
+  if (_gpsCheckinMap) { _gpsCheckinMap.remove(); _gpsCheckinMap = null; }
+}
+
 function toggleWageDetail(el) {
   const detail = el.parentElement.querySelector('.wage-detail');
   if (!detail) return;
@@ -2581,6 +2800,8 @@ function setRole(role) {
   userRole = role;
   localStorage.setItem('userRole', role);
   document.getElementById('role-overlay').style.display = 'none';
+  document.getElementById('role-dropdown')?.classList.remove('open');
+  document.getElementById('role-btn')?.classList.remove('active');
   applyRole();
 }
 
@@ -2590,12 +2811,12 @@ function openRoleOverlay() {
 
 function applyRole() {
   const isBoss = userRole === 'boss';
-  // 헤더 역할 칩
-  const btn = document.getElementById('role-switch-btn');
-  if (btn) {
-    btn.textContent = isBoss ? '👔 사장님' : '👷 알바생';
-    btn.className = 'role-chip ' + (isBoss ? 'boss' : 'worker');
-  }
+  // 헤더 역할 버튼
+  const btn = document.getElementById('role-btn');
+  if (btn) btn.textContent = (isBoss ? '사장님' : '알바생') + ' ▾';
+  document.querySelectorAll('.role-option').forEach(el => {
+    el.classList.toggle('active', el.textContent.includes(isBoss ? '사장님' : '알바생'));
+  });
   // 홈 히어로
   document.getElementById('hero-worker-view').style.display = isBoss ? 'none' : '';
   document.getElementById('hero-boss-view').style.display = isBoss ? '' : 'none';
@@ -2692,30 +2913,102 @@ function renderBossCalendar() {
 function selectBossDate(ds) {
   bossSelectedDate = ds;
   renderBossCalendar();
-  const recs = bossSchedules[ds] || [];
   const sec = document.getElementById('boss-schedule-section');
-  const dateTitle = document.getElementById('boss-schedule-date-title');
-  const list = document.getElementById('boss-schedule-list');
   const d = new Date(ds);
   const days = ['일','월','화','수','목','금','토'];
-  dateTitle.textContent = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
-  if (!recs.length) {
-    list.innerHTML = '<div style="color:var(--g);font-size:.86rem;padding:8px 0">등록된 근무 없음</div>';
-  } else {
-    list.innerHTML = recs.map(r => {
-      const w = bossWorkers.find(bw => bw.id === r.workerId);
-      if (!w) return '';
-      const h = calcShiftHours(r.start, r.end);
-      const brk = calcBreakHours(h);
-      const net = Math.max(h - brk, 0);
-      return `<div class="boss-schedule-item">
-        <span class="boss-cal-dot" style="background:${w.color};width:10px;height:10px"></span>
-        <span style="font-weight:700;min-width:56px">${w.name}</span>
-        <span style="color:var(--g)">${r.start} ~ ${r.end}</span>
-        <span style="margin-left:auto;color:var(--p);font-weight:700">${fmtHours(net)}</span>
+  const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
+  const recs = bossSchedules[ds] || [];
+
+  const HOUR_W = 34; // px per hour
+  const NAME_W = 116; // px for left name column
+  const trackW = HOUR_W * 24; // 816px
+
+  // Current time indicator
+  const now = new Date();
+  const nowH = now.getHours() + now.getMinutes() / 60;
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const showNow = ds === todayStr;
+  const nowLeft = nowH * HOUR_W;
+
+  // Header stats
+  const activeCount = recs.length;
+  let totalMins = 0;
+  recs.forEach(r => {
+    const [sh,sm] = r.start.split(':').map(Number);
+    const [eh,em] = r.end.split(':').map(Number);
+    totalMins += (eh*60+em) - (sh*60+sm);
+  });
+  const totalHours = Math.round(totalMins / 60);
+
+  // Hour ruler (00~24)
+  const rulerHtml = Array.from({length:25}, (_,i) =>
+    `<div style="width:${HOUR_W}px;flex-shrink:0;font-size:10px;color:#94A3B8;font-weight:600;text-align:left;padding-left:2px">${String(i).padStart(2,'0')}</div>`
+  ).join('');
+
+  // Worker rows — all workers shown; unscheduled shows 휴무
+  const rowsHtml = bossWorkers.map(w => {
+    const r = recs.find(rec => rec.workerId === w.id);
+    const initial = w.name.charAt(0);
+    let barHtml = '';
+    let hoursText = '미배정';
+    let hoursColor = '#94A3B8';
+
+    if (r) {
+      const [sh,sm] = r.start.split(':').map(Number);
+      const [eh,em] = r.end.split(':').map(Number);
+      const mins = (eh*60+em) - (sh*60+sm);
+      const hrs = Math.round(mins / 60);
+      hoursText = `${hrs}시간`;
+      hoursColor = w.color;
+      const left = (sh + sm/60) * HOUR_W;
+      const width = Math.max(mins/60 * HOUR_W, 8);
+      const timeText = `${r.start}-${r.end}`;
+      const statusBadge = sh < 14 ? '오픈' : '마감';
+      barHtml = `<div style="position:absolute;left:${left}px;width:${width}px;top:10px;bottom:10px;border-radius:9px;background:${w.color};display:flex;align-items:center;padding:0 10px;gap:5px;overflow:hidden;z-index:2;box-shadow:0 2px 8px ${w.color}55">
+        <span style="color:#fff;font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0">${timeText}</span>
+        <span style="background:rgba(255,255,255,0.3);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0">${hrs}h</span>
+        <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0">${statusBadge}</span>
       </div>`;
-    }).join('');
-  }
+    } else {
+      barHtml = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:12px;font-weight:600;letter-spacing:.04em">휴무</div>`;
+    }
+
+    return `<div style="display:flex;align-items:center;height:64px;border-bottom:1px solid #F1F5F9">
+      <div style="width:${NAME_W}px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding-right:8px">
+        <div style="width:38px;height:38px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:900;flex-shrink:0">${initial}</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#1E293B;line-height:1.3">${w.name}</div>
+          <div style="font-size:11px;font-weight:600;color:${hoursColor};line-height:1.4">${hoursText}</div>
+        </div>
+      </div>
+      <div style="position:relative;width:${trackW}px;height:64px;flex-shrink:0;background:repeating-linear-gradient(to right,transparent,transparent ${HOUR_W-1}px,#E2E8F0 ${HOUR_W-1}px,#E2E8F0 ${HOUR_W}px)">${barHtml}</div>
+    </div>`;
+  }).join('');
+
+  const nowLine = showNow
+    ? `<div style="position:absolute;top:0;bottom:0;left:${NAME_W+nowLeft}px;width:2px;background:#F97316;z-index:5;pointer-events:none"><div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#F97316"></div></div>`
+    : '';
+
+  sec.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:1.05rem;font-weight:900;color:#1E293B">${dateLabel}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:.83rem;color:#64748B;font-weight:600">근무자 <b style="color:#1E293B">${activeCount}명</b> · <b style="color:#1E293B">${totalHours}h</b></span>
+        <button onclick="showToast('준비 중입니다')" style="background:#1E293B;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">+ 근무 추가</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+      <div style="display:inline-block;min-width:100%">
+        <div style="display:flex;padding-bottom:6px;border-bottom:2px solid #E2E8F0;padding-left:${NAME_W}px">
+          ${rulerHtml}
+        </div>
+        <div style="position:relative">
+          ${rowsHtml}
+          ${nowLine}
+        </div>
+      </div>
+    </div>
+  `;
   sec.style.display = '';
 }
 
