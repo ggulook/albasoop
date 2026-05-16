@@ -289,7 +289,7 @@
     .wp-loc-badge.set{border-color:#22C55E;color:#22C55E;background:#F0FDF4}
 
     /* MY PLACE PAGE */
-    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto}
+    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto;overflow-x:clip}
     .myplace-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
     .myplace-hdr h1{font-size:1.7rem;font-weight:900}
     .wp-reg-card{background:var(--l);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:24px;border:1.5px solid var(--b)}
@@ -456,22 +456,35 @@
     .boss-schedule-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);font-size:.86rem}
     .boss-schedule-item:last-of-type{border:none}
     /* Boss timeline scheduler */
-    .boss-tl-wrap{background:transparent}
-    .boss-tl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-    .boss-tl-date{font-size:1.25rem;font-weight:900}
-    .boss-tl-empty{color:var(--g);font-size:.86rem;padding:10px 0}
-    .boss-tl-scroll{overflow-x:auto;scrollbar-width:none}
     .boss-tl-scroll::-webkit-scrollbar{display:none}
-    .boss-tl-inner{display:inline-block;min-width:100%}
-    .boss-tl-ruler{display:flex;margin-left:64px;border-bottom:1px solid #475569;padding-bottom:4px}
-    .boss-tl-rc{flex-shrink:0;font-size:8px;color:#475569;font-weight:600;white-space:nowrap}
-    .boss-tl-row{display:flex;align-items:center;height:48px;border-bottom:1px solid #475569}
-    .boss-tl-row:last-of-type{border:none}
-    .boss-tl-name{width:80px;flex-shrink:0;font-size:.95rem;font-weight:700;color:var(--dk)}
-    .boss-tl-track{position:relative;height:48px;flex-shrink:0}
-    .boss-tl-bar{position:absolute;top:8px;bottom:8px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.10)}
-    .boss-tl-now{position:absolute;top:0;bottom:0;width:2px;background:#F97316;z-index:3;pointer-events:none}
-    .boss-tl-now::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#F97316}
+    .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
+    .boss-pay-row:last-of-type{border:none}
+    .boss-pay-info{display:flex;align-items:center;gap:8px}
+    .boss-pay-approve{padding:6px 14px;border-radius:8px;font-size:.8rem;font-weight:700;border:none;cursor:pointer;background:var(--p);color:#fff;transition:all .2s}
+    .boss-pay-approve.paid{background:#E2E8F0;color:var(--g);cursor:default}
+    .role-chip{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;cursor:pointer;border:none;margin-left:8px}
+    .role-chip.worker{background:#EFF6FF;color:var(--p)}
+    .role-chip.boss{background:#F0FDF4;color:#059669}
+  </style>
+  <style>
+    /* ===== ROLE OVERLAY ===== */
+    #role-overlay{position:fixed;inset:0;background:#fff;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px}
+    .role-card{flex:1;max-width:180px;padding:28px 16px;border-radius:20px;border:2px solid var(--b);background:#fff;cursor:pointer;font-size:1rem;font-weight:700;color:var(--dk);transition:all .2s;text-align:center}
+    .role-card:hover{border-color:var(--p);background:#EFF6FF;transform:translateY(-2px)}
+    .role-card .rc-emoji{font-size:2.4rem;margin-bottom:10px}
+    .role-card .rc-sub{font-size:.75rem;color:var(--g);font-weight:400;margin-top:6px}
+    /* ===== BOSS MODE ===== */
+    .boss-salary-card{background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px}
+    .boss-salary-ttl{font-size:.85rem;color:var(--g);font-weight:600;margin-bottom:14px}
+    .boss-worker-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b);font-size:.88rem}
+    .boss-worker-row:last-of-type{border:none}
+    .boss-worker-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:7px}
+    .boss-worker-name{font-weight:700;display:flex;align-items:center}
+    .boss-worker-pay{font-weight:700;color:var(--p)}
+    .boss-total-row{background:#EFF6FF;border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .boss-cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:0 1px}
+    .boss-schedule-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--b);font-size:.86rem}
+    .boss-schedule-item:last-of-type{border:none}
     .boss-pay-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--b);font-size:.88rem;flex-wrap:wrap;gap:8px}
     .boss-pay-row:last-of-type{border:none}
     .boss-pay-info{display:flex;align-items:center;gap:8px}
@@ -674,7 +687,10 @@
   <div class="myplace-page">
     <div class="myplace-hdr">
       <h1 data-i18n="nav_myplace">내 업장</h1>
-      <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="role-switch-btn" class="role-chip worker" onclick="openRoleOverlay()"></button>
+        <button class="btn-s" style="font-size:.82rem;padding:7px 14px" onclick="openModal('certInfoModal')" data-i18n="mp_cert_btn">공정인증 알아보기</button>
+      </div>
     </div>
 
     <!-- 업장 미등록 상태 -->
@@ -693,7 +709,7 @@
         <div class="cal-grid" id="boss-cal-grid"></div>
       </div>
       <!-- 선택 날짜 직원 스케줄 -->
-      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:20px 24px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.06);width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto">
+      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:20px 24px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.06);box-sizing:border-box;position:relative;left:50%;transform:translateX(-50%);width:min(calc(100vw - 32px),960px)">
         <div style="font-size:.9rem;font-weight:800;margin-bottom:12px" id="boss-schedule-date-title"></div>
         <div id="boss-schedule-list"></div>
       </div>
@@ -2902,44 +2918,97 @@ function selectBossDate(ds) {
   const days = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
   const recs = bossSchedules[ds] || [];
-  // fit all 24h exactly to container — no scroll, no labels, just grid cells
-  const availW = (sec.offsetWidth || window.innerWidth) - 80 - 56;
-  const CELL_W = availW / 48; // 30min cells
-  const totalW = availW;
-  // grid bg: 1px line every cell, darker #475569
-  const gridBg = `repeating-linear-gradient(to right,transparent,transparent ${CELL_W-1}px,#475569 ${CELL_W-1}px,#475569 ${CELL_W}px)`;
-  // current time
+
+  const HOUR_W = 34; // px per hour
+  const NAME_W = 116; // px for left name column
+  const trackW = HOUR_W * 24; // 816px
+
+  // Current time indicator
   const now = new Date();
-  const nowH = now.getHours() + now.getMinutes()/60;
+  const nowH = now.getHours() + now.getMinutes() / 60;
   const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   const showNow = ds === todayStr;
-  const nowLeft = nowH * 2 * CELL_W; // hours → 30min cells → px
-  // worker rows
-  let rows = '';
-  if (!recs.length) {
-    rows = `<div class="boss-tl-empty">이 날짜에 등록된 근무가 없어요</div>`;
-  } else {
-    rows = bossWorkers.map(w => {
-      const r = recs.find(r => r.workerId === w.id);
-      let bar = '';
-      if (r) {
-        const [sh,sm] = r.start.split(':').map(Number);
-        const [eh,em] = r.end.split(':').map(Number);
-        const left  = (sh * 60 + sm) / 30 * CELL_W;
-        const width = Math.max((eh * 60 + em) - (sh * 60 + sm), 0) / 30 * CELL_W;
-        if (width > 0) bar = `<div class="boss-tl-bar" style="left:${left}px;width:${width}px;background:${w.color}99"></div>`;
-      }
-      return `<div class="boss-tl-row">
-        <div class="boss-tl-name">${w.name}</div>
-        <div class="boss-tl-track" style="width:${totalW}px;background:${gridBg}">${bar}</div>
+  const nowLeft = nowH * HOUR_W;
+
+  // Header stats
+  const activeCount = recs.length;
+  let totalMins = 0;
+  recs.forEach(r => {
+    const [sh,sm] = r.start.split(':').map(Number);
+    const [eh,em] = r.end.split(':').map(Number);
+    totalMins += (eh*60+em) - (sh*60+sm);
+  });
+  const totalHours = Math.round(totalMins / 60);
+
+  // Hour ruler (00~24)
+  const rulerHtml = Array.from({length:25}, (_,i) =>
+    `<div style="width:${HOUR_W}px;flex-shrink:0;font-size:10px;color:#94A3B8;font-weight:600;text-align:left;padding-left:2px">${String(i).padStart(2,'0')}</div>`
+  ).join('');
+
+  // Worker rows — all workers shown; unscheduled shows 휴무
+  const rowsHtml = bossWorkers.map(w => {
+    const r = recs.find(rec => rec.workerId === w.id);
+    const initial = w.name.charAt(0);
+    let barHtml = '';
+    let hoursText = '미배정';
+    let hoursColor = '#94A3B8';
+
+    if (r) {
+      const [sh,sm] = r.start.split(':').map(Number);
+      const [eh,em] = r.end.split(':').map(Number);
+      const mins = (eh*60+em) - (sh*60+sm);
+      const hrs = Math.round(mins / 60);
+      hoursText = `${hrs}시간`;
+      hoursColor = w.color;
+      const left = (sh + sm/60) * HOUR_W;
+      const width = Math.max(mins/60 * HOUR_W, 8);
+      const timeText = `${r.start}-${r.end}`;
+      const statusBadge = sh < 14 ? '오픈' : '마감';
+      barHtml = `<div style="position:absolute;left:${left}px;width:${width}px;top:10px;bottom:10px;border-radius:9px;background:${w.color};display:flex;align-items:center;padding:0 10px;gap:5px;overflow:hidden;z-index:2;box-shadow:0 2px 8px ${w.color}55">
+        <span style="color:#fff;font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0">${timeText}</span>
+        <span style="background:rgba(255,255,255,0.3);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0">${hrs}h</span>
+        <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0">${statusBadge}</span>
       </div>`;
-    }).filter(Boolean).join('');
-  }
-  const nowLine = showNow ? `<div class="boss-tl-now" style="left:${80 + nowLeft}px"></div>` : '';
-  sec.innerHTML = `<div class="boss-tl-wrap">
-    <div class="boss-tl-hdr"><div class="boss-tl-date">${dateLabel}</div></div>
-    <div style="position:relative">${rows}${nowLine}</div>
-  </div>`;
+    } else {
+      barHtml = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:12px;font-weight:600;letter-spacing:.04em">휴무</div>`;
+    }
+
+    return `<div style="display:flex;align-items:center;height:64px;border-bottom:1px solid #F1F5F9">
+      <div style="width:${NAME_W}px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding-right:8px">
+        <div style="width:38px;height:38px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:900;flex-shrink:0">${initial}</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#1E293B;line-height:1.3">${w.name}</div>
+          <div style="font-size:11px;font-weight:600;color:${hoursColor};line-height:1.4">${hoursText}</div>
+        </div>
+      </div>
+      <div style="position:relative;width:${trackW}px;height:64px;flex-shrink:0;background:repeating-linear-gradient(to right,transparent,transparent ${HOUR_W-1}px,#E2E8F0 ${HOUR_W-1}px,#E2E8F0 ${HOUR_W}px)">${barHtml}</div>
+    </div>`;
+  }).join('');
+
+  const nowLine = showNow
+    ? `<div style="position:absolute;top:0;bottom:0;left:${NAME_W+nowLeft}px;width:2px;background:#F97316;z-index:5;pointer-events:none"><div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#F97316"></div></div>`
+    : '';
+
+  sec.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:1.05rem;font-weight:900;color:#1E293B">${dateLabel}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:.83rem;color:#64748B;font-weight:600">근무자 <b style="color:#1E293B">${activeCount}명</b> · <b style="color:#1E293B">${totalHours}h</b></span>
+        <button onclick="showToast('준비 중입니다')" style="background:#1E293B;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">+ 근무 추가</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+      <div style="display:inline-block;min-width:100%">
+        <div style="display:flex;padding-bottom:6px;border-bottom:2px solid #E2E8F0;padding-left:${NAME_W}px">
+          ${rulerHtml}
+        </div>
+        <div style="position:relative">
+          ${rowsHtml}
+          ${nowLine}
+        </div>
+      </div>
+    </div>
+  `;
   sec.style.display = '';
 }
 
