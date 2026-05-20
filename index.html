@@ -500,6 +500,13 @@
 <nav>
   <div style="display:flex;align-items:center;gap:8px">
     <div class="logo" onclick="showPage('home')">알바<span>숲</span></div>
+    <div class="role-picker">
+      <button class="role-btn" id="role-btn">알바생 ▾</button>
+      <div class="role-dropdown" id="role-dropdown">
+        <div class="role-option active" onclick="setRole('worker')">알바생</div>
+        <div class="role-option" onclick="setRole('boss')">사장님</div>
+      </div>
+    </div>
   </div>
   <div class="nav-center">
     <button class="nav-tab active" data-i18n="nav_home" onclick="showPage('home')">홈</button>
