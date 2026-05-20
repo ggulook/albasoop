@@ -289,7 +289,7 @@
     .wp-loc-badge.set{border-color:#22C55E;color:#22C55E;background:#F0FDF4}
 
     /* MY PLACE PAGE */
-    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto;overflow-x:clip}
+    .myplace-page{padding:72px 5% 52px;max-width:680px;margin:0 auto}
     .myplace-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
     .myplace-hdr h1{font-size:1.7rem;font-weight:900}
     .wp-reg-card{background:var(--l);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:24px;border:1.5px solid var(--b)}
@@ -709,7 +709,7 @@
         <div class="cal-grid" id="boss-cal-grid"></div>
       </div>
       <!-- 선택 날짜 직원 스케줄 -->
-      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:20px 24px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.06);box-sizing:border-box;position:relative;left:50%;transform:translateX(-50%);width:min(calc(100vw - 32px),960px)">
+      <div id="boss-schedule-section" style="display:none;background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:20px 24px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.06);box-sizing:border-box;width:100%">
         <div style="font-size:.9rem;font-weight:800;margin-bottom:12px" id="boss-schedule-date-title"></div>
         <div id="boss-schedule-list"></div>
       </div>
@@ -2974,7 +2974,7 @@ function selectBossDate(ds) {
     }
 
     return `<div style="display:flex;align-items:center;height:64px;border-bottom:1px solid #F1F5F9">
-      <div style="width:${NAME_W}px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding-right:8px">
+      <div style="width:${NAME_W}px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding-right:8px;position:sticky;left:0;background:#fff;z-index:3">
         <div style="width:38px;height:38px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:900;flex-shrink:0">${initial}</div>
         <div>
           <div style="font-size:13px;font-weight:700;color:#1E293B;line-height:1.3">${w.name}</div>
@@ -2999,7 +2999,8 @@ function selectBossDate(ds) {
     </div>
     <div data-drag-scroll style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none">
       <div style="display:inline-block;min-width:100%">
-        <div style="display:flex;padding-bottom:6px;border-bottom:2px solid #E2E8F0;padding-left:${NAME_W}px">
+        <div style="display:flex;padding-bottom:6px;border-bottom:2px solid #E2E8F0">
+          <div style="width:${NAME_W}px;flex-shrink:0;position:sticky;left:0;background:#fff;z-index:4"></div>
           ${rulerHtml}
         </div>
         <div style="position:relative">
