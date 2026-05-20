@@ -737,7 +737,7 @@
           <div class="wp-reg-name" id="myplace-name">GS25 강원대학교점</div>
           <div class="wp-reg-meta" id="myplace-meta">편의점 · 근무기간 2025.04~</div>
         </div>
-        <button id="wp-loc-badge" class="wp-loc-badge" onclick="setWorkplaceLoc()">📍 위치 미설정</button>
+        <button id="wp-loc-badge" class="wp-loc-badge set" onclick="setWorkplaceLoc()">📍 위치 설정됨</button>
         <button class="wp-change-btn" onclick="openModal('addWpModal')" data-i18n="mp_change_btn">변경</button>
       </div>
 
@@ -2237,7 +2237,9 @@ let myWorkplace = {
   wage: 10030,
   since: '2025.04',
   contractedHours: 0,
-  isLarge: true
+  isLarge: true,
+  lat: 37.8718,
+  lng: 127.7428
 };
 let workRecords = {};
 let calYear = new Date().getFullYear();
