@@ -2997,7 +2997,7 @@ function selectBossDate(ds) {
         <button onclick="showToast('준비 중입니다')" style="background:#1E293B;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">+ 근무 추가</button>
       </div>
     </div>
-    <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+    <div data-drag-scroll style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none">
       <div style="display:inline-block;min-width:100%">
         <div style="display:flex;padding-bottom:6px;border-bottom:2px solid #E2E8F0;padding-left:${NAME_W}px">
           ${rulerHtml}
@@ -3010,6 +3010,23 @@ function selectBossDate(ds) {
     </div>
   `;
   sec.style.display = '';
+
+  // Drag-to-scroll
+  const drag = sec.querySelector('[data-drag-scroll]');
+  if (drag) {
+    let isDown = false, startX = 0, scrollLeft = 0;
+    drag.addEventListener('mousedown', e => {
+      isDown = true; startX = e.pageX - drag.offsetLeft; scrollLeft = drag.scrollLeft;
+      drag.style.cursor = 'grabbing';
+    });
+    drag.addEventListener('mouseleave', () => { isDown = false; drag.style.cursor = 'grab'; });
+    drag.addEventListener('mouseup', () => { isDown = false; drag.style.cursor = 'grab'; });
+    drag.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      drag.scrollLeft = scrollLeft - (e.pageX - drag.offsetLeft - startX) * 1.5;
+    });
+  }
 }
 
 function renderBossPayroll() {
