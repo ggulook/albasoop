@@ -2168,6 +2168,7 @@ function doSearch() {
 function toggleFilter(el) { el.classList.toggle('on'); }
 function openModal(id) {
   document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
   if (id === 'reportModal') {
     const dateInput = document.getElementById('report-date');
     if (dateInput && !dateInput.value) {
@@ -2176,7 +2177,12 @@ function openModal(id) {
     }
   }
 }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  if (!document.querySelector('.modal-overlay.active')) {
+    document.body.style.overflow = '';
+  }
+}
 function switchModal(from, to) { closeModal(from); openModal(to); }
 document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
 function showToast(msg, shake, duration) {
