@@ -932,27 +932,6 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeModal('reportModal')">
-  <div class="modal" style="max-width:500px">
-    <button class="modal-close" onclick="closeModal('reportModal')">✕</button>
-    <h2 data-i18n="report_h2">익명 신고</h2>
-    <p data-i18n="report_p">신고 내용은 완전히 익명으로 처리됩니다.</p>
-    <div class="mform">
-      <input class="minput" id="r-place" type="text" data-i18n-ph="report_place" placeholder="업장명 (선택)">
-      <select class="minput" id="r-type">
-        <option value="" data-i18n="report_type_sel">신고 유형</option>
-        <option value="wage" data-i18n="rt_wage">임금 체불</option>
-        <option value="holiday" data-i18n="rt_holiday">주휴수당 미지급</option>
-        <option value="night" data-i18n="rt_night">야간수당 미지급</option>
-        <option value="abuse" data-i18n="rt_abuse">갑질 / 폭언</option>
-        <option value="fraud" data-i18n="rt_fraud">사기 / 착취</option>
-        <option value="etc" data-i18n="rt_etc">기타</option>
-      </select>
-      <textarea class="minput report-textarea" id="r-content" data-i18n-ph="report_content_ph" placeholder="구체적인 내용..."></textarea>
-      <button class="msubmit" data-i18n="report_submit" onclick="submitReport()">신고 접수</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal-overlay" id="postModal" onclick="if(event.target===this)closeModal('postModal')">
   <div class="modal" style="max-width:540px">
