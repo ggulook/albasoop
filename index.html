@@ -1093,6 +1093,70 @@
   </div>
 </div>
 
+<!-- PAYSLIP MODAL -->
+<div class="modal-overlay" id="payslipModal" onclick="if(event.target===this)closeModal('payslipModal')">
+  <div class="modal" style="max-width:480px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('payslipModal')">✕</button>
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:.8rem;color:var(--g);margin-bottom:4px" id="ps-month"></div>
+      <div style="font-size:.95rem;font-weight:800;color:var(--dk)" id="ps-name"></div>
+    </div>
+
+    <!-- 실지급액 -->
+    <div style="background:#FFF8E7;border:1.5px solid #F5C842;border-radius:14px;padding:18px 20px;margin-bottom:14px;text-align:center">
+      <div style="font-size:.82rem;color:#92700A;font-weight:600;margin-bottom:6px">실지급액</div>
+      <div style="font-size:1.9rem;font-weight:900;color:#1E293B" id="ps-net"></div>
+    </div>
+
+    <!-- 지급내역 -->
+    <div style="background:#fff;border:1.5px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:10px">
+      <div style="display:flex;background:#F8FAFC;padding:10px 16px;font-size:.82rem;font-weight:800;color:var(--g);border-bottom:1px solid var(--b)">
+        <span style="flex:1">지급내역</span><span>지급액</span>
+      </div>
+      <div style="padding:0 16px">
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
+          <span>기본급</span><span style="font-weight:700" id="ps-base"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
+          <span>연장수당</span><span style="font-weight:700" id="ps-overtime"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
+          <span>야간수당</span><span style="font-weight:700" id="ps-night"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:.86rem;font-weight:800">
+          <span>지급액 계</span><span id="ps-gross"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 공제내역 -->
+    <div style="background:#fff;border:1.5px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:14px">
+      <div style="display:flex;background:#F8FAFC;padding:10px 16px;font-size:.82rem;font-weight:800;color:var(--g);border-bottom:1px solid var(--b)">
+        <span style="flex:1">공제내역</span><span>공제액</span>
+      </div>
+      <div style="padding:0 16px">
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
+          <span>국민연금 (4.5%)</span><span style="font-weight:700" id="ps-pension"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
+          <span>고용보험 (0.9%)</span><span style="font-weight:700" id="ps-employ"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:.86rem;font-weight:800">
+          <span>공제액 계</span><span id="ps-deduct"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 계산방법 -->
+    <details style="border:1.5px solid var(--b);border-radius:14px;overflow:hidden">
+      <summary style="padding:12px 16px;font-size:.85rem;font-weight:700;cursor:pointer;background:#F8FAFC;list-style:none;display:flex;justify-content:space-between;align-items:center">
+        계산방법 등 <span style="font-size:.7rem;color:var(--g)">▼</span>
+      </summary>
+      <div style="padding:12px 16px;font-size:.82rem;background:#fff" id="ps-calc-detail"></div>
+    </details>
+  </div>
+</div>
+
 <!-- CONTRACT MODAL -->
 <div class="modal-overlay" id="contractModal" onclick="if(event.target===this)closeModal('contractModal')">
   <div class="modal" style="max-width:560px;max-height:90vh;overflow-y:auto">
@@ -3280,8 +3344,9 @@ function renderBossPayroll() {
         <span style="font-weight:700">${w.name}</span>
         <span style="color:var(--g);font-size:.8rem">${fmtHours(totalNet)}</span>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:8px">
         <span style="font-weight:700;color:var(--p)">${pay.toLocaleString()}${won}</span>
+        <button onclick="openPayslip(${w.id})" style="padding:6px 10px;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid var(--b);background:#fff;color:var(--dk);cursor:pointer">📄 명세서</button>
         <button class="boss-pay-approve${paid?' paid':''}" onclick="approvePay(${w.id},this)" ${paid?'disabled':''}>${paid?'지급 완료':'지급 수락'}</button>
       </div>
     </div>`;
@@ -3296,6 +3361,74 @@ function approvePay(workerId, btn) {
   btn.classList.add('paid');
   btn.disabled = true;
   showToast('✅ 지급 수락 완료');
+}
+
+function openPayslip(workerId) {
+  const w = bossWorkers.find(b => b.id === workerId);
+  if (!w) return;
+  const prefix = `${bossCalYear}-${String(bossCalMonth+1).padStart(2,'0')}`;
+
+  let baseHours = 0, overtimeHours = 0, nightHours = 0;
+  Object.entries(bossSchedules).forEach(([ds, recs]) => {
+    if (!ds.startsWith(prefix)) return;
+    recs.filter(r => r.workerId === workerId).forEach(r => {
+      const [sh, sm] = r.start.split(':').map(Number);
+      const [eh, em] = r.end.split(':').map(Number);
+      const startMin = sh * 60 + sm;
+      const endMin = eh * 60 + em;
+      const totalH = Math.max((endMin - startMin) / 60, 0);
+      const breakH = calcBreakHours(totalH);
+      const netH = Math.max(totalH - breakH, 0);
+
+      // 야간: 22:00~06:00 겹치는 시간
+      const nightStart = 22 * 60, nightEnd = 24 * 60;
+      const nightOverlap = Math.max(0, Math.min(endMin, nightEnd) - Math.max(startMin, nightStart)) / 60;
+      nightHours += nightOverlap;
+
+      // 연장: 8시간 초과분
+      const overH = Math.max(netH - 8, 0);
+      overtimeHours += overH;
+
+      // 기본 (정규)
+      baseHours += Math.min(netH, 8);
+    });
+  });
+
+  const basePay   = Math.round(baseHours * w.wage);
+  const nightPay  = Math.round(nightHours * w.wage * 0.5);
+  const overtimePay = Math.round(overtimeHours * w.wage * 0.5);
+  const gross     = basePay + nightPay + overtimePay;
+  const pension   = Math.round(gross * 0.045);
+  const employ    = Math.round(gross * 0.009);
+  const deduct    = pension + employ;
+  const net       = gross - deduct;
+
+  const fmt = v => v.toLocaleString() + '원';
+  document.getElementById('ps-month').textContent = `${bossCalYear}년 ${bossCalMonth+1}월 급여명세서`;
+  document.getElementById('ps-name').textContent = w.name;
+  document.getElementById('ps-net').textContent = fmt(net);
+  document.getElementById('ps-base').textContent = fmt(basePay);
+  document.getElementById('ps-overtime').textContent = fmt(overtimePay);
+  document.getElementById('ps-night').textContent = fmt(nightPay);
+  document.getElementById('ps-gross').textContent = fmt(gross);
+  document.getElementById('ps-pension').textContent = fmt(pension);
+  document.getElementById('ps-employ').textContent = fmt(employ);
+  document.getElementById('ps-deduct').textContent = fmt(deduct);
+  document.getElementById('ps-calc-detail').innerHTML = `
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b)">
+      <span>기본급 (시급×기본근무시간 / 유급휴일수당 포함)</span>
+      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${baseHours.toFixed(1)}시간</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b)">
+      <span>야간수당 (시급×0.5×야간근로시간)</span>
+      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${nightHours.toFixed(1)}시간</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0">
+      <span>연장수당 (시급×0.5×연장시간)</span>
+      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${overtimeHours.toFixed(1)}시간</span>
+    </div>
+  `;
+  openModal('payslipModal');
 }
 
 function renderBossHero() {
