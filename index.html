@@ -1159,75 +1159,164 @@
 
 <!-- CONTRACT MODAL -->
 <div class="modal-overlay" id="contractModal" onclick="if(event.target===this)closeModal('contractModal')">
-  <div class="modal" style="max-width:560px;max-height:90vh;overflow-y:auto">
+  <div class="modal" style="max-width:620px;max-height:92vh;overflow-y:auto;padding:24px 20px;font-size:.82rem">
     <button class="modal-close" onclick="closeModal('contractModal')">✕</button>
-    <h2 style="margin-bottom:4px">표준 근로계약서</h2>
-    <div id="contract-status-badge" style="display:inline-block;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:14px">미서명</div>
 
-    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
-      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">① 사업장 정보</div>
-      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업장명</b> <span id="ct-wp-name">CU 강원대학교점</span></div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업주</b> 김철수</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업자번호</b> 215-86-XXXXX</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">소재지</b> 강원 춘천시 강원대학길 1</div>
-      </div>
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:1.25rem;font-weight:900;letter-spacing:.08em;border-bottom:2.5px solid #000;padding-bottom:8px;display:inline-block">STAFF 근로계약서</div>
+      <div id="contract-status-badge" style="display:inline-block;font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:999px;margin-left:10px;vertical-align:middle">미서명</div>
     </div>
 
-    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
-      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">② 근로자 정보</div>
-      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">성명</b> <span class="contract-worker-name-field">홍길동</span></div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">연락처</b> 010-1234-XXXX</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">주소</b> 강원 춘천시 효자동</div>
-      </div>
+    <style>
+      .ct-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:.8rem}
+      .ct-table td,.ct-table th{border:1px solid #555;padding:6px 8px;vertical-align:middle;line-height:1.5}
+      .ct-table th{background:#f0f0f0;font-weight:800;text-align:center;white-space:nowrap}
+      .ct-section{font-weight:900;margin:12px 0 4px;font-size:.83rem}
+    </style>
+
+    <!-- 1. 양당사자 -->
+    <div class="ct-section">1. 양당사자</div>
+    <table class="ct-table">
+      <tr>
+        <th rowspan="2">사용자</th>
+        <th>사업체명</th>
+        <td>CU 강원대학교점 (BGF리테일)</td>
+        <th>대 표 자</th>
+        <td>홍 길 동</td>
+      </tr>
+      <tr>
+        <th>소 재 지</th>
+        <td colspan="3">강원특별자치도 춘천시 강원대학길 1</td>
+      </tr>
+      <tr>
+        <th rowspan="2">근로자</th>
+        <th>성 명</th>
+        <td class="contract-worker-name-field">김 남 훈</td>
+        <th>H P</th>
+        <td>010-3048-XXXX</td>
+      </tr>
+      <tr>
+        <th>주 소</th>
+        <td colspan="3">강원특별자치도 춘천시 백령로 127-14, 102호</td>
+      </tr>
+    </table>
+
+    <!-- 2. 근로조건 -->
+    <div class="ct-section">2. 근로조건</div>
+    <table class="ct-table">
+      <tr>
+        <th rowspan="2">계약기간</th>
+        <th>시작일</th>
+        <th>종료일</th>
+        <th>근무장소</th>
+        <td>CU &nbsp; 강 대 병 원 &nbsp; 점</td>
+      </tr>
+      <tr>
+        <td style="text-align:center">2026.05.16</td>
+        <td style="text-align:center">2026.06.28</td>
+        <th>업무내용</th>
+        <td>상품판매, 매장관리 및 관련 부대 업무</td>
+      </tr>
+      <tr>
+        <th rowspan="4">근로시간</th>
+        <td colspan="4">
+          ☐ 1주 15시간이상 &nbsp;&nbsp; ☑ 1주 15시간미만(유급 주휴일 미부여)
+        </td>
+      </tr>
+      <tr>
+        <th>근무요일</th>
+        <td colspan="3">토요일, 일요일</td>
+      </tr>
+      <tr>
+        <th>시업 및 종업시간</th>
+        <td colspan="3">19:00 ~ 24:00</td>
+      </tr>
+      <tr>
+        <th>휴게시간</th>
+        <td colspan="3">19:30 ~ 20:00 (30분)</td>
+      </tr>
+      <tr>
+        <th>부가사항</th>
+        <td colspan="4" style="font-size:.75rem;line-height:1.7;color:#333">
+          1. 상기 근로계약기간 만료시 근로계약은 자동 종료된다. 단, 필요시 상호협의로 근로계약기간을 연장 또는 갱신할 수 있다.<br>
+          2. 입사 후 최초 1개월 간은 수습기간으로 하며, 수습기간 중 또는 기간 만료시 근무태도나 능력, 건강상태 등을 평가하여 계속근로가 부적합하다고 판단 될 시에는 근로계약을 해지 할 수 있다.<br>
+          3. 휴게시간은 1일 실근로시간 기준으로 4시간인 경우에는 30분, 8시간인 경우에는 1시간을 근로시간 도중에 부여한다.
+        </td>
+      </tr>
+      <tr>
+        <th>임금지급</th>
+        <td colspan="4" style="font-size:.75rem;line-height:1.7;color:#333">
+          1. 시급 <b>10,320원</b>, 급여는 매월 초일부터 말일까지 정산하여 익월 13일에 근로자의 계좌로 입금한다.<br>
+          2. 상기 급여 외에 근로자가 연장근로, 야간근로(22시~06시), 휴일근로 시에는 통상시급의 50%를 가산하여 지급한다.<br>
+          3. 상기 시급이 법정 최저임금 인상으로 인하여 최저임금에 미달 될 경우, 해당 연도의 최저임금으로 적용된다.
+        </td>
+      </tr>
+      <tr>
+        <th>휴일/휴가</th>
+        <td colspan="4" style="font-size:.75rem;line-height:1.7;color:#333">
+          1. 근로기준법 제55조에서 정한 주휴일 및 동조에서 대통령령으로 정한 휴일, 근로자의날은 유급휴일로 한다.<br>
+          2. 사용자는 점포운영의 사정에 따라 위 휴일을 변경하여 부여할 수 있다.<br>
+          3. 유급휴가는 근로기준법 제60조에 따른 연차휴가를 부여한다.
+        </td>
+      </tr>
+      <tr>
+        <th>법정보험</th>
+        <td colspan="4" style="font-size:.75rem">관련법에 따라 산재보험, 고용보험, 국민연금, 건강보험에 가입한다.</td>
+      </tr>
+      <tr>
+        <th>기 타</th>
+        <td colspan="4" style="font-size:.75rem;line-height:1.7;color:#333">
+          1. 본 계약에 정함이 없는 사항은 근로기준법에 의한다.<br>
+          2. 단시간근로자의 근로조건은 통상근로자의 근무시간에 비례한다. 단, 1주 평균 소정근로시간이 15시간 미만인 초단시간근로자에 대하여는 상기 연차휴가, 퇴직금, 주휴일의 적용이 배제된다.<br>
+          3. 근로자는 점포 운영상의 필요에 따라 실시하는 연장/야간/휴일 근로에 동의한다.<br>
+          4. 상기 계약정보 사항은 근로계약관계 외에 어떠한 용도로도 사용되지 않을 것이며, 근로자는 사용자가 본인의 개인정보를 수집 및 이용함에 동의한다.
+        </td>
+      </tr>
+    </table>
+
+    <div style="font-size:.75rem;color:#333;margin:10px 0;line-height:1.7">
+      사용자는 상기와 같이 근로계약을 체결하며, 본 계약서를 근로자에게 교부하여 양당사자가 각 1부씩 보관한다.
     </div>
 
-    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
-      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">③ 근로 조건</div>
-      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 기간</b> 2025.04.01 ~ 계속근로</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 장소</b> CU 강원대학교점</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">업무 내용</b> 매장 운영 보조 (계산, 진열, 청소)</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 시간</b> 주 평균 20시간 (협의 가능)</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">휴게 시간</b> 4시간당 30분</div>
-      </div>
-    </div>
-
-    <div style="background:#EFF6FF;border-radius:12px;padding:14px 16px;margin-bottom:12px">
-      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--p)">④ 임금 및 수당</div>
-      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">기본 시급</b> <span style="color:var(--p);font-weight:800">10,030원</span> (2025년 최저시급 준수)</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">주휴수당</b> 주 15시간 이상 근무 시 지급</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">야간수당</b> 22:00~06:00, 시급 50% 가산</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">연장수당</b> 1일 8시간 초과, 시급 50% 가산</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">지급일</b> 매월 25일, 본인 명의 계좌 이체</div>
-      </div>
-    </div>
-
-    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:14px">
-      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">⑤ 사회보험 및 기타</div>
-      <div style="font-size:.83rem;line-height:1.7;color:var(--dk)">
-        · 4대보험(국민·건강·고용·산재) 가입<br>
-        · 연차유급휴가는 근로기준법에 따라 부여<br>
-        · 본 계약에 명시되지 않은 사항은 근로기준법에 따름
-      </div>
-    </div>
-
-    <div id="contract-sign-section" style="border-top:1.5px dashed var(--b);padding-top:14px">
-      <label style="display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--dk);cursor:pointer;margin-bottom:12px">
+    <!-- 작성일 / 서명 -->
+    <div id="contract-sign-section">
+      <table class="ct-table" style="margin-bottom:14px">
+        <tr>
+          <th style="width:80px">작성일</th>
+          <td id="ct-write-date" style="width:140px"></td>
+          <th>사 용 자</th>
+          <td>BGF리테일 (서명/인)</td>
+        </tr>
+        <tr>
+          <th colspan="2"></th>
+          <th>근 로 자</th>
+          <td class="contract-worker-name-field" style="font-weight:800"></td>
+        </tr>
+      </table>
+      <label style="display:flex;align-items:flex-start;gap:8px;font-size:.83rem;color:var(--dk);cursor:pointer;margin-bottom:10px">
         <input type="checkbox" id="contract-agree" style="margin-top:3px;width:16px;height:16px;cursor:pointer">
-        <span>본인은 위 근로계약 조건을 충분히 이해하였으며, 이에 동의합니다.</span>
+        <span>본인은 위 근로계약 조건을 충분히 이해하였으며, 이에 동의하고 서명합니다.</span>
       </label>
-      <input class="minput" id="contract-name" type="text" placeholder="서명 (이름 입력)" style="margin-bottom:10px">
+      <input class="minput" id="contract-name" type="text" placeholder="근로자 서명 (이름 입력)" style="margin-bottom:10px">
       <button class="msubmit" onclick="signContract()">동의하고 서명하기</button>
     </div>
 
-    <div id="contract-signed-info" style="display:none;border-top:1.5px dashed var(--b);padding-top:14px;text-align:center">
-      <div style="font-size:.85rem;color:var(--g);margin-bottom:6px">서명 완료</div>
-      <div style="font-size:1.1rem;font-weight:900;color:var(--dk)" id="contract-signed-name">홍길동</div>
-      <div style="font-size:.78rem;color:var(--g);margin-top:4px" id="contract-signed-date"></div>
-      <button class="msubmit" style="margin-top:12px;background:var(--dk)" onclick="showToast('📄 PDF로 저장됐어요')">PDF 다운로드</button>
+    <div id="contract-signed-info" style="display:none">
+      <table class="ct-table" style="margin-bottom:10px">
+        <tr>
+          <th style="width:80px">작성일</th>
+          <td id="ct-write-date2" style="width:140px"></td>
+          <th>사 용 자</th>
+          <td>BGF리테일 (서명/인)</td>
+        </tr>
+        <tr>
+          <th colspan="2"></th>
+          <th>근 로 자</th>
+          <td style="font-weight:900;color:var(--p)" id="contract-signed-name">김남훈 (서명완료)</td>
+        </tr>
+      </table>
+      <div style="font-size:.78rem;color:var(--g);margin-bottom:10px;text-align:center" id="contract-signed-date"></div>
+      <button class="msubmit" style="background:var(--dk)" onclick="showToast('📄 PDF로 저장됐어요')">PDF 다운로드</button>
     </div>
   </div>
 </div>
