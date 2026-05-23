@@ -718,6 +718,14 @@
         <div id="boss-payroll-list"></div>
         <div class="boss-total-row" style="margin-top:12px"><span style="font-weight:700">총 지급 예정</span><span style="font-size:1.2rem;font-weight:900;color:var(--p)" id="boss-payroll-total"></span></div>
       </div>
+      <!-- 직원 근로계약서 -->
+      <div style="background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div style="font-size:.97rem;font-weight:800">직원 근로계약서</div>
+          <span style="font-size:.78rem;color:var(--g)">총 3명</span>
+        </div>
+        <div id="boss-contract-list"></div>
+      </div>
     </div>
 
     <div id="myplace-empty" style="display:none">
@@ -746,6 +754,18 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
         출퇴근하기
       </button>
+
+      <!-- 근로계약서 / 익명 신고 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <button onclick="openContractModal()" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1.5px solid var(--b);border-radius:14px;padding:14px;font-size:.92rem;font-weight:700;color:var(--dk);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--p)';this.style.color='var(--p)'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--dk)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+          근로계약서
+        </button>
+        <button onclick="openModal('reportModal')" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1.5px solid var(--b);border-radius:14px;padding:14px;font-size:.92rem;font-weight:700;color:var(--dk);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='#EF4444';this.style.color='#EF4444'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--dk)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          익명 신고
+        </button>
+      </div>
 
       <!-- 캘린더 -->
       <div class="cal-section">
@@ -1084,6 +1104,125 @@
         </div>
       </div>
       <button class="msubmit" onclick="closeModal('certInfoModal')">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT MODAL -->
+<div class="modal-overlay" id="contractModal" onclick="if(event.target===this)closeModal('contractModal')">
+  <div class="modal" style="max-width:560px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('contractModal')">✕</button>
+    <h2 style="margin-bottom:4px">표준 근로계약서</h2>
+    <div id="contract-status-badge" style="display:inline-block;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:14px">미서명</div>
+
+    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">① 사업장 정보</div>
+      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업장명</b> <span id="ct-wp-name">GS25 강원대학교점</span></div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업주</b> 김철수</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업자번호</b> 215-86-XXXXX</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">소재지</b> 강원 춘천시 강원대학길 1</div>
+      </div>
+    </div>
+
+    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">② 근로자 정보</div>
+      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">성명</b> 홍길동</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">연락처</b> 010-1234-XXXX</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">주소</b> 강원 춘천시 효자동</div>
+      </div>
+    </div>
+
+    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">③ 근로 조건</div>
+      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 기간</b> 2025.04.01 ~ 계속근로</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 장소</b> GS25 강원대학교점</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">업무 내용</b> 매장 운영 보조 (계산, 진열, 청소)</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 시간</b> 주 평균 20시간 (협의 가능)</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">휴게 시간</b> 4시간당 30분</div>
+      </div>
+    </div>
+
+    <div style="background:#EFF6FF;border-radius:12px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--p)">④ 임금 및 수당</div>
+      <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">기본 시급</b> <span style="color:var(--p);font-weight:800">10,030원</span> (2025년 최저시급 준수)</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">주휴수당</b> 주 15시간 이상 근무 시 지급</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">야간수당</b> 22:00~06:00, 시급 50% 가산</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">연장수당</b> 1일 8시간 초과, 시급 50% 가산</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:100px">지급일</b> 매월 25일, 본인 명의 계좌 이체</div>
+      </div>
+    </div>
+
+    <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">⑤ 사회보험 및 기타</div>
+      <div style="font-size:.83rem;line-height:1.7;color:var(--dk)">
+        · 4대보험(국민·건강·고용·산재) 가입<br>
+        · 연차유급휴가는 근로기준법에 따라 부여<br>
+        · 본 계약에 명시되지 않은 사항은 근로기준법에 따름
+      </div>
+    </div>
+
+    <div id="contract-sign-section" style="border-top:1.5px dashed var(--b);padding-top:14px">
+      <label style="display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--dk);cursor:pointer;margin-bottom:12px">
+        <input type="checkbox" id="contract-agree" style="margin-top:3px;width:16px;height:16px;cursor:pointer">
+        <span>본인은 위 근로계약 조건을 충분히 이해하였으며, 이에 동의합니다.</span>
+      </label>
+      <input class="minput" id="contract-name" type="text" placeholder="서명 (이름 입력)" style="margin-bottom:10px">
+      <button class="msubmit" onclick="signContract()">동의하고 서명하기</button>
+    </div>
+
+    <div id="contract-signed-info" style="display:none;border-top:1.5px dashed var(--b);padding-top:14px;text-align:center">
+      <div style="font-size:.85rem;color:var(--g);margin-bottom:6px">서명 완료</div>
+      <div style="font-size:1.1rem;font-weight:900;color:var(--dk)" id="contract-signed-name">홍길동</div>
+      <div style="font-size:.78rem;color:var(--g);margin-top:4px" id="contract-signed-date"></div>
+      <button class="msubmit" style="margin-top:12px;background:var(--dk)" onclick="showToast('📄 PDF로 저장됐어요')">PDF 다운로드</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeModal('reportModal')">
+  <div class="modal" style="max-width:500px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('reportModal')">✕</button>
+    <h2 style="margin-bottom:4px">🚨 익명 신고</h2>
+    <p style="font-size:.83rem;color:var(--g);margin-bottom:14px">신고자 정보는 외부에 공개되지 않으며, 노무사 검토 후 노동부에 익명으로 접수됩니다.</p>
+
+    <div class="mform">
+      <div>
+        <label style="display:block;font-size:.83rem;font-weight:700;color:var(--dk);margin-bottom:6px">신고 유형</label>
+        <select class="minput" id="report-type">
+          <option value="">유형 선택</option>
+          <option>주휴수당 미지급</option>
+          <option>임금 체불</option>
+          <option>근로계약서 미작성</option>
+          <option>부당해고</option>
+          <option>근로시간 위반</option>
+          <option>최저임금 미만 지급</option>
+          <option>4대보험 미가입</option>
+          <option>직장 내 괴롭힘</option>
+          <option>기타</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:.83rem;font-weight:700;color:var(--dk);margin-bottom:6px">신고 대상 업장</label>
+        <input class="minput" id="report-target" type="text" placeholder="예) GS25 강원대학교점">
+      </div>
+      <div>
+        <label style="display:block;font-size:.83rem;font-weight:700;color:var(--dk);margin-bottom:6px">발생일</label>
+        <input class="minput" id="report-date" type="date">
+      </div>
+      <div>
+        <label style="display:block;font-size:.83rem;font-weight:700;color:var(--dk);margin-bottom:6px">상세 내용</label>
+        <textarea class="minput" id="report-content" rows="5" placeholder="언제, 어떤 일이 있었는지 구체적으로 작성해주세요." style="resize:vertical;min-height:100px;font-family:inherit"></textarea>
+      </div>
+      <div style="background:#FEF3C7;border-radius:10px;padding:10px 12px;font-size:.78rem;color:#92400E;line-height:1.6">
+        ⚠️ 허위 신고 시 무고죄로 처벌받을 수 있습니다.<br>
+        📎 추후 증빙 자료 제출이 필요할 수 있습니다.
+      </div>
+      <button class="msubmit" onclick="submitReport()" style="background:#EF4444">신고 접수하기</button>
     </div>
   </div>
 </div>
@@ -1714,6 +1853,7 @@ function showPage(name) {
       document.getElementById('boss-myplace-content').style.display = '';
       renderBossCalendar();
       renderBossPayroll();
+      renderBossContractList();
     } else {
       document.getElementById('boss-myplace-content').style.display = 'none';
       initTimeSelects();
@@ -1893,7 +2033,16 @@ function doSearch() {
   if (q) showToast(`🔍 "${q}"`);
 }
 function toggleFilter(el) { el.classList.toggle('on'); }
-function openModal(id) { document.getElementById(id).classList.add('active'); }
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  if (id === 'reportModal') {
+    const dateInput = document.getElementById('report-date');
+    if (dateInput && !dateInput.value) {
+      const d = new Date();
+      dateInput.value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+  }
+}
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function switchModal(from, to) { closeModal(from); openModal(to); }
 document.addEventListener('keydown', e => { if (e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); });
@@ -2690,6 +2839,89 @@ function setWorkplaceLoc() {
   }, () => showToast('⚠️ 위치를 가져올 수 없어요', true), { enableHighAccuracy: true, timeout: 10000 });
 }
 
+// ===== 근로계약서 =====
+let contractSigned = false;
+let contractSignedName = '';
+let contractSignedDate = '';
+
+function openContractModal() {
+  const badge = document.getElementById('contract-status-badge');
+  const signSection = document.getElementById('contract-sign-section');
+  const signedInfo = document.getElementById('contract-signed-info');
+  if (contractSigned) {
+    badge.textContent = '✓ 서명 완료';
+    badge.style.background = '#D1FAE5';
+    badge.style.color = '#065F46';
+    signSection.style.display = 'none';
+    signedInfo.style.display = '';
+    document.getElementById('contract-signed-name').textContent = contractSignedName;
+    document.getElementById('contract-signed-date').textContent = `서명일 ${contractSignedDate}`;
+  } else {
+    badge.textContent = '미서명';
+    badge.style.background = '#FEE2E2';
+    badge.style.color = '#991B1B';
+    signSection.style.display = '';
+    signedInfo.style.display = 'none';
+  }
+  openModal('contractModal');
+}
+
+function signContract() {
+  const agreed = document.getElementById('contract-agree').checked;
+  const name = document.getElementById('contract-name').value.trim();
+  if (!agreed) { showToast('⚠️ 동의 체크박스를 선택해주세요', true); return; }
+  if (!name) { showToast('⚠️ 서명할 이름을 입력해주세요', true); return; }
+  contractSigned = true;
+  contractSignedName = name;
+  const d = new Date();
+  contractSignedDate = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  showToast('✅ 근로계약서 서명이 완료됐어요!');
+  closeModal('contractModal');
+}
+
+// ===== 익명 신고 =====
+function submitReport() {
+  const type = document.getElementById('report-type').value;
+  const target = document.getElementById('report-target').value.trim();
+  const content = document.getElementById('report-content').value.trim();
+  if (!type) { showToast('⚠️ 신고 유형을 선택해주세요', true); return; }
+  if (!target) { showToast('⚠️ 신고 대상 업장을 입력해주세요', true); return; }
+  if (!content || content.length < 10) { showToast('⚠️ 상세 내용을 10자 이상 입력해주세요', true); return; }
+  showToast('✅ 익명 신고가 접수됐어요. 24시간 내 검토됩니다.');
+  closeModal('reportModal');
+  document.getElementById('report-type').value = '';
+  document.getElementById('report-target').value = '';
+  document.getElementById('report-date').value = '';
+  document.getElementById('report-content').value = '';
+}
+
+// ===== 사장님: 직원 근로계약서 =====
+function renderBossContractList() {
+  const list = document.getElementById('boss-contract-list');
+  if (!list) return;
+  const data = [
+    { name: '김민준', wage: 10030, color: '#3B82F6', signed: true, date: '2025.04.02' },
+    { name: '이서연', wage: 10500, color: '#10B981', signed: true, date: '2025.04.05' },
+    { name: '박지훈', wage: 10030, color: '#F59E0B', signed: false, date: null },
+  ];
+  list.innerHTML = data.map(w => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--b)">
+      <div style="width:36px;height:36px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900;flex-shrink:0">${w.name.charAt(0)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.93rem;font-weight:700;color:var(--dk)">${w.name}</div>
+        <div style="font-size:.78rem;color:var(--g)">시급 ${w.wage.toLocaleString()}원 ${w.date ? '· 서명 '+w.date : ''}</div>
+      </div>
+      ${w.signed
+        ? `<span style="font-size:.72rem;font-weight:700;color:#065F46;background:#D1FAE5;padding:4px 10px;border-radius:999px">✓ 서명완료</span>`
+        : `<span style="font-size:.72rem;font-weight:700;color:#991B1B;background:#FEE2E2;padding:4px 10px;border-radius:999px">대기중</span>`}
+      <button onclick="openContractModal()" style="font-size:.78rem;font-weight:700;color:var(--p);background:none;border:1.5px solid var(--p);padding:5px 12px;border-radius:8px;cursor:pointer">보기</button>
+    </div>
+  `).join('');
+  // remove last border
+  const lastBorder = list.querySelector('div:last-child');
+  if (lastBorder) lastBorder.style.borderBottom = 'none';
+}
+
 function openGpsCheckin() {
   if (!navigator.geolocation) { showToast('⚠️ GPS를 지원하지 않는 기기예요', true); return; }
   if (!myWorkplace.lat || !myWorkplace.lng) {
@@ -2832,6 +3064,7 @@ function applyRole() {
       bossMP.style.display = '';
       renderBossCalendar();
       renderBossPayroll();
+      renderBossContractList();
     } else {
       mp.style.display = '';
       bossMP.style.display = 'none';
