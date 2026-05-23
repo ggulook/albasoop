@@ -1206,10 +1206,7 @@
           <option>기타</option>
         </select>
       </div>
-      <div>
-        <label style="display:block;font-size:.83rem;font-weight:700;color:var(--dk);margin-bottom:6px">신고 대상 업장</label>
-        <input class="minput" id="report-target" type="text" placeholder="예) GS25 강원대학교점">
-      </div>
+
       <div>
         <label style="display:block;font-size:.83rem;font-weight:700;color:var(--dk);margin-bottom:6px">발생일</label>
         <input class="minput" id="report-date" type="date">
@@ -2892,15 +2889,12 @@ function signContract() {
 // ===== 익명 신고 =====
 function submitReport() {
   const type = document.getElementById('report-type').value;
-  const target = document.getElementById('report-target').value.trim();
   const content = document.getElementById('report-content').value.trim();
   if (!type) { showToast('⚠️ 신고 유형을 선택해주세요', true); return; }
-  if (!target) { showToast('⚠️ 신고 대상 업장을 입력해주세요', true); return; }
   if (!content || content.length < 10) { showToast('⚠️ 상세 내용을 10자 이상 입력해주세요', true); return; }
   showToast('✅ 익명 신고가 접수됐어요. 24시간 내 검토됩니다.');
   closeModal('reportModal');
   document.getElementById('report-type').value = '';
-  document.getElementById('report-target').value = '';
   document.getElementById('report-date').value = '';
   document.getElementById('report-content').value = '';
 }
