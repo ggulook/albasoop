@@ -1128,7 +1128,7 @@
     <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
       <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">② 근로자 정보</div>
       <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">성명</b> 홍길동</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">성명</b> <span class="contract-worker-name-field">홍길동</span></div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">연락처</b> 010-1234-XXXX</div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">주소</b> 강원 춘천시 효자동</div>
       </div>
@@ -2844,18 +2844,28 @@ let contractSigned = false;
 let contractSignedName = '';
 let contractSignedDate = '';
 
-function openContractModal() {
+function openContractModal(workerName) {
+  const name = workerName || '홍길동';
+  document.querySelector('#contractModal [id="contract-worker-name"]') && (document.getElementById('contract-worker-name').textContent = name);
+  // 모달 내 근로자 성명 갱신
+  const nameEls = document.querySelectorAll('.contract-worker-name-field');
+  nameEls.forEach(el => el.textContent = name);
+
   const badge = document.getElementById('contract-status-badge');
   const signSection = document.getElementById('contract-sign-section');
   const signedInfo = document.getElementById('contract-signed-info');
-  if (contractSigned) {
+  const signed = workerName ? bossContractData.find(w => w.name === workerName)?.signed : contractSigned;
+  const signedDate = workerName ? bossContractData.find(w => w.name === workerName)?.date : contractSignedDate;
+  const signedNameVal = workerName || contractSignedName;
+
+  if (signed) {
     badge.textContent = '✓ 서명 완료';
     badge.style.background = '#D1FAE5';
     badge.style.color = '#065F46';
     signSection.style.display = 'none';
     signedInfo.style.display = '';
-    document.getElementById('contract-signed-name').textContent = contractSignedName;
-    document.getElementById('contract-signed-date').textContent = `서명일 ${contractSignedDate}`;
+    document.getElementById('contract-signed-name').textContent = signedNameVal;
+    document.getElementById('contract-signed-date').textContent = `서명일 ${signedDate}`;
   } else {
     badge.textContent = '미서명';
     badge.style.background = '#FEE2E2';
@@ -2896,15 +2906,16 @@ function submitReport() {
 }
 
 // ===== 사장님: 직원 근로계약서 =====
+const bossContractData = [
+  { name: '김민준', wage: 10030, color: '#3B82F6', signed: true, date: '2025.04.02' },
+  { name: '이서연', wage: 10500, color: '#10B981', signed: true, date: '2025.04.05' },
+  { name: '박지훈', wage: 10030, color: '#F59E0B', signed: false, date: null },
+];
+
 function renderBossContractList() {
   const list = document.getElementById('boss-contract-list');
   if (!list) return;
-  const data = [
-    { name: '김민준', wage: 10030, color: '#3B82F6', signed: true, date: '2025.04.02' },
-    { name: '이서연', wage: 10500, color: '#10B981', signed: true, date: '2025.04.05' },
-    { name: '박지훈', wage: 10030, color: '#F59E0B', signed: false, date: null },
-  ];
-  list.innerHTML = data.map(w => `
+  list.innerHTML = bossContractData.map(w => `
     <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--b)">
       <div style="width:36px;height:36px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900;flex-shrink:0">${w.name.charAt(0)}</div>
       <div style="flex:1;min-width:0">
@@ -2914,10 +2925,9 @@ function renderBossContractList() {
       ${w.signed
         ? `<span style="font-size:.72rem;font-weight:700;color:#065F46;background:#D1FAE5;padding:4px 10px;border-radius:999px">✓ 서명완료</span>`
         : `<span style="font-size:.72rem;font-weight:700;color:#991B1B;background:#FEE2E2;padding:4px 10px;border-radius:999px">대기중</span>`}
-      <button onclick="openContractModal()" style="font-size:.78rem;font-weight:700;color:var(--p);background:none;border:1.5px solid var(--p);padding:5px 12px;border-radius:8px;cursor:pointer">보기</button>
+      <button onclick="openContractModal('${w.name}')" style="font-size:.78rem;font-weight:700;color:var(--p);background:none;border:1.5px solid var(--p);padding:5px 12px;border-radius:8px;cursor:pointer">보기</button>
     </div>
   `).join('');
-  // remove last border
   const lastBorder = list.querySelector('div:last-child');
   if (lastBorder) lastBorder.style.borderBottom = 'none';
 }
