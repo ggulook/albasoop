@@ -620,6 +620,42 @@
   </div>
 </div>
 
+<!-- RESUMES PAGE (BOSS) -->
+<div class="page" id="page-resumes">
+  <div style="padding:72px 5% 100px;max-width:680px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div style="font-size:1.3rem;font-weight:900;color:var(--dk)">이력서 관리</div>
+      <span id="resume-count" style="font-size:.82rem;color:var(--g)">총 5건</span>
+    </div>
+    <!-- 필터 칩 -->
+    <div style="display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px">
+      <button class="resume-filter active" onclick="filterResumes('all',this)">전체</button>
+      <button class="resume-filter" onclick="filterResumes('pending',this)">검토전</button>
+      <button class="resume-filter" onclick="filterResumes('accept',this)">수락</button>
+      <button class="resume-filter" onclick="filterResumes('reject',this)">거절</button>
+    </div>
+    <style>
+      .resume-filter{padding:7px 16px;border-radius:999px;border:1.5px solid var(--b);background:#fff;font-size:.82rem;font-weight:600;color:var(--g);cursor:pointer;white-space:nowrap;transition:all .15s}
+      .resume-filter.active{background:var(--p);border-color:var(--p);color:#fff}
+      .resume-card{background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:box-shadow .15s}
+      .resume-card:active{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+    </style>
+    <div id="resume-list"></div>
+  </div>
+</div>
+
+<!-- RESUME DETAIL MODAL -->
+<div class="modal-overlay" id="resumeDetailModal" onclick="if(event.target===this)closeModal('resumeDetailModal')">
+  <div class="modal" style="max-width:480px;width:96vw;max-height:88vh;overflow:hidden;padding:0;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid var(--b);flex-shrink:0">
+      <span style="font-size:1rem;font-weight:800;color:var(--dk)">이력서 상세</span>
+      <button onclick="closeModal('resumeDetailModal')" style="background:#f1f5f9;border:none;border-radius:50%;width:30px;height:30px;font-size:1rem;cursor:pointer;color:var(--dk);display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div id="resume-detail-body" style="overflow-y:auto;padding:16px;flex:1"></div>
+    <div style="display:flex;gap:10px;padding:12px 16px;border-top:1px solid var(--b);flex-shrink:0" id="resume-action-btns"></div>
+  </div>
+</div>
+
 <!-- MAP PAGE -->
 <div class="page" id="page-map">
   <div class="map-page">
@@ -1972,9 +2008,11 @@ function updateMap() {
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
+  const tabName = name === 'resumes' ? 'jobs' : name;
   document.querySelectorAll('.nav-tab').forEach((tab, i) => {
-    tab.classList.toggle('active', ['home','jobs','map','community','calc','myplace'][i] === name);
+    tab.classList.toggle('active', ['home','jobs','map','community','calc','myplace'][i] === tabName);
   });
+  if (name === 'resumes') renderResumeList();
   window.scrollTo(0, 0);
   if (name === 'map') {
     setTimeout(() => {
@@ -3178,8 +3216,9 @@ function saveAccount() {
 
 // 하단 탭바 동기화
 function syncBottomTab(name) {
+  const tabName = name === 'resumes' ? 'jobs' : name;
   document.querySelectorAll('.bottom-tab').forEach(el => {
-    el.classList.toggle('active', el.id === 'bt-' + name);
+    el.classList.toggle('active', el.id === 'bt-' + tabName);
   });
 }
 
@@ -3207,6 +3246,17 @@ function applyRole() {
   document.querySelectorAll('.role-option').forEach(el => {
     el.classList.toggle('active', el.textContent.includes(isBoss ? '사장님' : '알바생'));
   });
+  // 알바찾기 ↔ 이력서관리 탭 전환
+  const jobsNavTab = document.querySelector('.nav-tab[onclick*="jobs"]');
+  const jobsBtTab = document.getElementById('bt-jobs');
+  if (jobsNavTab) {
+    jobsNavTab.textContent = isBoss ? '이력서 관리' : '알바 찾기';
+    jobsNavTab.setAttribute('onclick', isBoss ? "showPage('resumes')" : "showPage('jobs')");
+  }
+  if (jobsBtTab) {
+    jobsBtTab.querySelector('span:last-child').textContent = isBoss ? '이력서' : '알바 찾기';
+    jobsBtTab.setAttribute('onclick', isBoss ? "showPage('resumes')" : "showPage('jobs')");
+  }
   // 홈 히어로
   document.getElementById('hero-worker-view').style.display = isBoss ? 'none' : '';
   document.getElementById('hero-boss-view').style.display = isBoss ? '' : 'none';
@@ -3227,6 +3277,102 @@ function applyRole() {
       bossMP.style.display = 'none';
     }
   }
+}
+
+// ===== 이력서 관리 =====
+const resumeData = [
+  { id:1, name:'이준호', age:22, avatar:'#3B82F6', position:'편의점 판매직', wage:10030, schedule:'주말 오픈 (08:00~14:00)', experience:'없음', intro:'성실하게 일하겠습니다. 주말 전부 가능합니다.', status:'pending', date:'2026.05.20' },
+  { id:2, name:'최유진', age:20, avatar:'#10B981', position:'편의점 판매직', wage:11000, schedule:'평일 마감 (22:00~06:00)', experience:'편의점 6개월', intro:'야간 근무 경험 있습니다. 장기 근무 원합니다.', status:'accept', date:'2026.05.18' },
+  { id:3, name:'정다은', age:21, avatar:'#F59E0B', position:'편의점 판매직', wage:10030, schedule:'주중/주말 협의', experience:'카페 3개월', intro:'빠르게 적응할 자신 있습니다.', status:'reject', date:'2026.05.15' },
+  { id:4, name:'한승우', age:23, avatar:'#8B5CF6', position:'편의점 판매직', wage:10500, schedule:'주말 전체 (14:00~22:00)', experience:'마트 아르바이트 1년', intro:'유통 경험 있어 재고 관리도 가능합니다.', status:'pending', date:'2026.05.22' },
+  { id:5, name:'김소희', age:19, avatar:'#EF4444', position:'편의점 판매직', wage:10030, schedule:'평일 오전 (09:00~14:00)', experience:'없음', intro:'첫 알바지만 열심히 하겠습니다!', status:'pending', date:'2026.05.23' },
+];
+let resumeFilter = 'all';
+
+const statusLabel = { pending:'검토전', accept:'수락', reject:'거절' };
+const statusStyle = {
+  pending:'background:#FEF3C7;color:#92400E',
+  accept:'background:#D1FAE5;color:#065F46',
+  reject:'background:#FEE2E2;color:#991B1B',
+};
+
+function filterResumes(filter, btn) {
+  resumeFilter = filter;
+  document.querySelectorAll('.resume-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderResumeList();
+}
+
+function renderResumeList() {
+  const list = document.getElementById('resume-list');
+  if (!list) return;
+  const filtered = resumeFilter === 'all' ? resumeData : resumeData.filter(r => r.status === resumeFilter);
+  document.getElementById('resume-count').textContent = `총 ${filtered.length}건`;
+  list.innerHTML = filtered.map(r => `
+    <div class="resume-card" onclick="openResumeDetail(${r.id})">
+      <div style="width:44px;height:44px;border-radius:50%;background:${r.avatar};flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:900">${r.name.charAt(0)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+          <span style="font-weight:800;font-size:.95rem;color:var(--dk)">${r.name}</span>
+          <span style="font-size:.78rem;color:var(--g)">${r.age}세</span>
+          <span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]}</span>
+        </div>
+        <div style="font-size:.8rem;color:var(--g);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.schedule}</div>
+        <div style="font-size:.75rem;color:var(--g);margin-top:1px">${r.date} 지원</div>
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  `).join('') || '<div style="text-align:center;color:var(--g);padding:40px 0;font-size:.9rem">해당 항목이 없습니다</div>';
+}
+
+function openResumeDetail(id) {
+  const r = resumeData.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('resume-detail-body').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div style="width:56px;height:56px;border-radius:50%;background:${r.avatar};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;font-weight:900;flex-shrink:0">${r.name.charAt(0)}</div>
+      <div>
+        <div style="font-size:1.1rem;font-weight:800;color:var(--dk)">${r.name} <span style="font-size:.85rem;color:var(--g);font-weight:400">${r.age}세</span></div>
+        <span style="font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]}</span>
+      </div>
+    </div>
+    <div style="display:grid;gap:10px;font-size:.85rem">
+      ${[
+        ['지원 포지션', r.position],
+        ['희망 시급', r.wage.toLocaleString() + '원'],
+        ['근무 가능 시간', r.schedule],
+        ['경력', r.experience],
+        ['지원일', r.date],
+      ].map(([k,v]) => `
+        <div style="display:flex;gap:12px;padding:10px 12px;background:#F8FAFC;border-radius:10px">
+          <span style="color:var(--g);min-width:90px;flex-shrink:0">${k}</span>
+          <span style="font-weight:600;color:var(--dk)">${v}</span>
+        </div>`).join('')}
+      <div style="padding:12px;background:#F8FAFC;border-radius:10px">
+        <div style="color:var(--g);margin-bottom:6px;font-size:.8rem">자기소개</div>
+        <div style="color:var(--dk);font-weight:500;line-height:1.6">${r.intro}</div>
+      </div>
+    </div>
+  `;
+  const btns = document.getElementById('resume-action-btns');
+  if (r.status === 'pending') {
+    btns.innerHTML = `
+      <button onclick="setResumeStatus(${r.id},'reject')" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid #EF4444;background:#fff;color:#EF4444;font-weight:700;cursor:pointer">거절</button>
+      <button onclick="setResumeStatus(${r.id},'accept')" style="flex:1;padding:11px;border-radius:12px;border:none;background:var(--p);color:#fff;font-weight:700;cursor:pointer">수락</button>
+    `;
+  } else {
+    btns.innerHTML = `<button onclick="setResumeStatus(${r.id},'pending')" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--b);background:#fff;color:var(--g);font-weight:700;cursor:pointer">검토전으로 되돌리기</button>`;
+  }
+  openModal('resumeDetailModal');
+}
+
+function setResumeStatus(id, status) {
+  const r = resumeData.find(x => x.id === id);
+  if (!r) return;
+  r.status = status;
+  closeModal('resumeDetailModal');
+  renderResumeList();
+  showToast(status === 'accept' ? '✅ 수락했어요' : status === 'reject' ? '❌ 거절했어요' : '↩️ 검토전으로 변경했어요');
 }
 
 // ===== BOSS DATA =====
