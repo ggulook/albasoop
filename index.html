@@ -740,9 +740,11 @@
     <div id="myplace-content">
       <!-- 업장 카드 -->
       <div class="wp-reg-card">
-        <div class="wp-reg-icon" id="myplace-icon">🏪</div>
+        <div class="wp-reg-icon" id="myplace-icon" style="background:#1C1C1C;padding:0;overflow:hidden">
+          <div style="background:#78BE20;border-radius:9px 9px 9px 3px;width:36px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;letter-spacing:-0.5px;font-family:Arial,sans-serif">CU</div>
+        </div>
         <div class="wp-reg-info">
-          <div class="wp-reg-name" id="myplace-name">GS25 강원대학교점</div>
+          <div class="wp-reg-name" id="myplace-name">CU 강원대학교점</div>
           <div class="wp-reg-meta" id="myplace-meta">편의점 · 근무기간 2025.04~</div>
         </div>
         <button id="wp-loc-badge" class="wp-loc-badge set" onclick="setWorkplaceLoc()">📍 위치 설정됨</button>
@@ -953,7 +955,7 @@
     <div class="mform">
       <select class="minput" id="rv-workplace">
         <option value="">업장 선택</option>
-        <option value="GS25 강원대학교점">GS25 강원대학교점</option>
+        <option value="CU 강원대학교점">CU 강원대학교점</option>
         <option value="스타벅스 춘천명동점">스타벅스 춘천명동점</option>
         <option value="쿠팡 춘천물류센터">쿠팡 춘천물류센터</option>
         <option value="본죽 춘천효자점">본죽 춘천효자점</option>
@@ -997,7 +999,7 @@
     <h2 data-i18n="mp_add_h2">업장 등록</h2>
     <p data-i18n="mp_add_p">일하는 곳을 등록하고 근무 기록을 관리해보세요.</p>
     <div class="mform">
-      <input class="minput" id="wp-name-input" type="text" data-i18n-ph="mp_wp_name_ph" placeholder="업장명 (예: GS25 강원대학교점)">
+      <input class="minput" id="wp-name-input" type="text" data-i18n-ph="mp_wp_name_ph" placeholder="업장명 (예: CU 강원대학교점)">
       <select class="minput" id="wp-type-input">
         <option value="">업종 선택</option>
         <option value="편의점">편의점</option>
@@ -1097,7 +1099,7 @@
     <div style="background:var(--l);border-radius:12px;padding:14px 16px;margin-bottom:12px">
       <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">① 사업장 정보</div>
       <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업장명</b> <span id="ct-wp-name">GS25 강원대학교점</span></div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업장명</b> <span id="ct-wp-name">CU 강원대학교점</span></div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업주</b> 김철수</div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">사업자번호</b> 215-86-XXXXX</div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">소재지</b> 강원 춘천시 강원대학길 1</div>
@@ -1117,7 +1119,7 @@
       <div style="font-weight:800;font-size:.88rem;margin-bottom:10px;color:var(--dk)">③ 근로 조건</div>
       <div style="font-size:.83rem;line-height:1.8;color:var(--dk)">
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 기간</b> 2025.04.01 ~ 계속근로</div>
-        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 장소</b> GS25 강원대학교점</div>
+        <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 장소</b> CU 강원대학교점</div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">업무 내용</b> 매장 운영 보조 (계산, 진열, 청소)</div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">근무 시간</b> 주 평균 20시간 (협의 가능)</div>
         <div><b style="color:var(--g);font-weight:600;display:inline-block;width:90px">휴게 시간</b> 4시간당 30분</div>
@@ -1289,7 +1291,7 @@ function setLocationDisplay(name) {
 const JOBS = [
   { id:1, lat:37.8698, lng:127.7447, score:4.8, badges:['v','n'],
     t:{
-      ko:{title:'GS25 강원대학교점', type:'편의점', pay:'시급 11,500원', loc:'강원 춘천시 효자2동', time:'주말 포함 협의', tags:['주휴보장','야간수당','4대보험'], desc:'캠퍼스 내 위치, 깨끗한 환경. 주휴수당 100% 지급. 야간근무 가능자 우대.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
+      ko:{title:'CU 강원대학교점', type:'편의점', pay:'시급 11,500원', loc:'강원 춘천시 효자2동', time:'주말 포함 협의', tags:['주휴보장','야간수당','4대보험'], desc:'캠퍼스 내 위치, 깨끗한 환경. 주휴수당 100% 지급. 야간근무 가능자 우대.', badge_v:'공정인증', badge_u:'급구', badge_n:'NEW'},
       en:{title:'GS25 Kangwon Univ.', type:'Convenience Store', pay:'₩11,500/hr', loc:'Hyoja-dong, Chuncheon', time:'Weekends negotiable', tags:['Holiday Pay','Night Pay','Insurance'], desc:'On-campus location. Clean environment. Weekly holiday pay 100% guaranteed.', badge_v:'Certified', badge_u:'Urgent', badge_n:'NEW'},
       ja:{title:'GS25 江原大学店', type:'コンビニ', pay:'時給 11,500ウォン', loc:'春川市 孝子洞', time:'週末含む要相談', tags:['週休保障','深夜手当','社会保険'], desc:'キャンパス内。清潔な職場環境。週休手当100%支給。', badge_v:'認定済', badge_u:'急募', badge_n:'NEW'},
       zh:{title:'GS25 江原大学店', type:'便利店', pay:'时薪 11,500韩元', loc:'春川市 孝子洞', time:'周末可商量', tags:['周休保障','夜班补贴','四大保险'], desc:'校内位置，环境整洁，周休津贴100%支付。', badge_v:'认证', badge_u:'急招', badge_n:'NEW'},
@@ -1446,7 +1448,7 @@ const LANGS = {
     mp_account_desc:'등록 계좌로 자동 입금합니다.', mp_wage_total:'예상 총 지급액',
     mp_ws_h2:'자동 계산 설정', mp_ws_p:'급여 계산에 사용할 시급을 설정하세요.',
     mp_save_btn:'저장하기', mp_add_h2:'업장 등록', mp_add_p:'일하는 곳을 등록하고 근무 기록을 관리해보세요.',
-    mp_wp_name_ph:'업장명 (예: GS25 강원대학교점)', mp_add_submit:'등록하기',
+    mp_wp_name_ph:'업장명 (예: CU 강원대학교점)', mp_add_submit:'등록하기',
     mp_acc_h2:'계좌 등록', mp_acc_p:'급여를 받을 계좌를 등록하세요.',
     mp_base_pay:'기본급', mp_juhyu:'주휴수당', mp_night_pay:'야간수당', mp_hol_pay:'공휴일 수당',
     mp_break_none:'휴게시간 없음', mp_break_label:'휴게시간',
@@ -2099,7 +2101,7 @@ document.getElementById('role-btn').addEventListener('click', function(e) {
 // ===== REVIEW DATA =====
 let REVIEWS = [
   { id:1, wp:'스타벅스 춘천명동점', overall:5, pay:5, env:5, work:4, mgmt:5, pros:'주휴수당이랑 야간수당 칼같이 들어와요. 점장님도 친절하고 분위기 좋음.', cons:'주말 오전엔 손님이 너무 많아서 바빠요.', date:'2026.03.20', anon:'익명' },
-  { id:2, wp:'GS25 강원대학교점', overall:4, pay:4, env:4, work:3, mgmt:4, pros:'캠퍼스 안이라 교통편하고 주휴수당 다 줘요.', cons:'새벽에 혼자 있을 때 좀 무서운 편이에요.', date:'2026.03.18', anon:'익명' },
+  { id:2, wp:'CU 강원대학교점', overall:4, pay:4, env:4, work:3, mgmt:4, pros:'캠퍼스 안이라 교통편하고 주휴수당 다 줘요.', cons:'새벽에 혼자 있을 때 좀 무서운 편이에요.', date:'2026.03.18', anon:'익명' },
   { id:3, wp:'쿠팡 춘천물류센터', overall:3, pay:5, env:2, work:2, mgmt:3, pros:'시급이 높고 셔틀버스가 있어서 편해요. 식사도 제공됩니다.', cons:'업무강도가 세고 여름엔 너무 더워요. 허리 아픔 주의.', date:'2026.03.15', anon:'익명' },
   { id:4, wp:'맥도날드 춘천점', overall:4, pay:4, env:4, work:3, mgmt:4, pros:'체계적으로 교육해줘서 처음 알바하기 좋아요.', cons:'피크타임에 정신없이 바쁨.', date:'2026.03.10', anon:'익명' },
   { id:5, wp:'다이소 춘천중앙점', overall:4, pay:4, env:4, work:3, mgmt:5, pros:'사장님이 정말 친절하고 배려심이 있어요. 야간수당 꼬박꼬박 줌.', cons:'서있는 시간이 길어서 다리가 아파요.', date:'2026.03.08', anon:'익명' },
@@ -2357,7 +2359,7 @@ function getHolidayName(dateStr) {
 
 // ===== MY PLACE =====
 let myWorkplace = {
-  name: 'GS25 강원대학교점',
+  name: 'CU 강원대학교점',
   type: '편의점',
   wage: 10030,
   since: '2025.04',
