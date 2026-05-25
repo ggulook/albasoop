@@ -561,7 +561,7 @@
       </div>
       <!-- 사장님 모드 -->
       <div id="hero-boss-view" style="display:none">
-        <div class="boss-salary-ttl">이번 달 지출 예상 급여 💼</div>
+        <div class="boss-salary-ttl" data-i18n="boss_salary_ttl">이번 달 지출 예상 급여 💼</div>
         <div id="hero-boss-list"></div>
         <div class="boss-total-row"><span style="font-weight:700;font-size:.93rem">총 지급 예정</span><span style="font-size:1.25rem;font-weight:900;color:var(--p)" id="hero-boss-total">0원</span></div>
       </div>
@@ -757,7 +757,7 @@
       <!-- 직원 근로계약서 -->
       <div style="background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-          <div style="font-size:.97rem;font-weight:800">직원 근로계약서</div>
+          <div style="font-size:.97rem;font-weight:800" data-i18n="boss_contract_title">직원 근로계약서</div>
           <span style="font-size:.78rem;color:var(--g)">총 3명</span>
         </div>
         <div id="boss-contract-list"></div>
@@ -794,18 +794,18 @@
       <!-- GPS 출퇴근 버튼 -->
       <button class="gps-checkin-btn" onclick="openGpsCheckin()">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
-        출퇴근하기
+        <span data-i18n="checkin_btn">출퇴근하기</span>
       </button>
 
       <!-- 근로계약서 / 익명 신고 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
         <button onclick="openContractModal()" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1.5px solid var(--b);border-radius:14px;padding:14px;font-size:.92rem;font-weight:700;color:var(--dk);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--p)';this.style.color='var(--p)'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--dk)'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
-          근로계약서
+          <span data-i18n="contract_btn">📄 근로계약서</span>
         </button>
         <button onclick="openModal('reportModal')" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1.5px solid var(--b);border-radius:14px;padding:14px;font-size:.92rem;font-weight:700;color:var(--dk);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='#EF4444';this.style.color='#EF4444'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--dk)'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-          익명 신고
+          <span data-i18n="anon_report_btn">🚨 익명 신고</span>
         </button>
       </div>
 
@@ -990,8 +990,8 @@
 <div class="modal-overlay" id="writeReviewModal" onclick="if(event.target===this)closeModal('writeReviewModal')">
   <div class="modal" style="max-width:520px;max-height:90vh;overflow-y:auto">
     <button class="modal-close" onclick="closeModal('writeReviewModal')">✕</button>
-    <h2>업장 후기 쓰기</h2>
-    <p>익명으로 작성됩니다. 솔직한 후기가 모두에게 도움이 돼요.</p>
+    <h2 data-i18n="review_h2">업장 후기 쓰기</h2>
+    <p data-i18n="review_anon">익명으로 작성됩니다. 솔직한 후기가 모두에게 도움이 돼요.</p>
     <div class="mform">
       <select class="minput" id="rv-workplace">
         <option value="">업장 선택</option>
@@ -1060,14 +1060,14 @@
 <div class="modal-overlay" id="gpsCheckinModal" onclick="if(event.target===this)closeGpsModal()">
   <div class="modal" style="max-width:420px">
     <button class="modal-close" onclick="closeGpsModal()">✕</button>
-    <h2 style="margin-bottom:16px">출퇴근 위치 확인</h2>
+    <h2 style="margin-bottom:16px" data-i18n="gps_title">출퇴근 위치 확인</h2>
     <div id="gps-modal-map" class="gps-modal-map"></div>
     <div class="gps-dist-box">
       <div id="gps-dist-num" class="gps-dist-num">-</div>
       <div id="gps-dist-sub" class="gps-dist-sub">거리 계산 중...</div>
     </div>
     <button id="gps-confirm-btn" class="gps-ok-btn" onclick="confirmGpsCheckin()" style="display:none">✅ 출근 시간 기록하기</button>
-    <div id="gps-blocked-msg" class="gps-blocked" style="display:none">출퇴근 허용 범위(100m)를 벗어났습니다.<br>업장에 도착한 후 다시 시도해주세요.</div>
+    <div id="gps-blocked-msg" class="gps-blocked" style="display:none" data-i18n-html="gps_out_range">출퇴근 허용 범위(100m)를 벗어났습니다.<br>업장에 도착한 후 다시 시도해주세요.</div>
   </div>
 </div>
 
@@ -1654,6 +1654,42 @@ const LANGS = {
     mp_overtime:'연장수당', mp_ws_contracted:'주 계약 근무시간 (연장수당 계산용, 시간)',
     mp_contracted_ph:'미입력 시 연장수당 미계산', mp_overtime_detail:'h × 시급 × 50%',
     mp_ws_large:'5인 이상 사업장 (야간수당·연장수당 적용)', mp_small_note:'※ 5인 미만 사업장: 야간·연장수당 미적용',
+    // Boss
+    boss_resume_title:'이력서 관리', boss_resume_tab:'이력서', boss_resume_detail:'이력서 상세',
+    boss_resume_total:'총 {n}건',
+    boss_resume_pending:'검토전', boss_resume_accept:'수락', boss_resume_reject:'거절',
+    boss_resume_position:'지원 포지션', boss_resume_wage:'희망 시급', boss_resume_schedule:'근무 가능 시간',
+    boss_resume_exp:'경력', boss_resume_apply_date:'지원일', boss_resume_intro:'자기소개',
+    boss_resume_btn_accept:'수락', boss_resume_btn_reject:'거절', boss_resume_btn_reset:'검토전으로 되돌리기',
+    boss_salary_ttl:'이번 달 지출 예상 급여 💼',
+    boss_payroll_month:'{m}월 급여 지급',
+    boss_pay_accept:'지급 수락', boss_pay_done:'지급 완료', boss_pay_toast:'✅ 지급 수락 완료',
+    boss_payslip_title:'{y}년 {m}월 급여명세서',
+    boss_contract_title:'직원 근로계약서', boss_contract_total:'총 {n}명',
+    boss_contract_signed:'✓ 서명완료', boss_contract_pending:'대기중', boss_contract_view:'보기',
+    boss_jobs_tab:'이력서 관리', boss_jobs_bottom:'이력서',
+    // Contract modal
+    contract_unsigned:'미서명', contract_signed_badge:'✓ 서명 완료',
+    contract_sign_btn:'동의하고 서명하기', contract_sign_ph:'근로자 서명 (이름 입력)',
+    contract_pdf_btn:'PDF 다운로드',
+    contract_toast:'✅ 근로계약서 서명이 완료됐어요!',
+    // Worker buttons
+    checkin_btn:'출퇴근하기', contract_btn:'📄 근로계약서', anon_report_btn:'🚨 익명 신고',
+    // GPS modal
+    gps_title:'출퇴근 위치 확인',
+    gps_out_range:'출퇴근 허용 범위(100m)를 벗어났습니다.<br>업장에 도착한 후 다시 시도해주세요.',
+    // Review form
+    review_h2:'업장 후기 쓰기', review_anon:'익명으로 작성됩니다. 솔직한 후기가 모두에게 도움이 돼요.',
+    review_overall:'종합 별점', review_detail:'세부 평가',
+    review_wage_label:'💰 급여 정직성', review_env_label:'🏢 근무환경',
+    review_intensity:'💼 업무강도', review_comm:'🤝 사장님 소통',
+    review_pos_ph:'👍 좋았던 점 (급여, 분위기, 근무환경 등)', review_neg_ph:'👎 아쉬웠던 점 (개선됐으면 하는 점)',
+    review_submit_btn:'후기 등록하기',
+    toast_contract_signed:'✅ 근로계약서 서명이 완료됐어요!',
+    toast_report_done:'✅ 익명 신고가 접수됐어요. 24시간 내 검토됩니다.',
+    toast_pay_accepted:'✅ 지급 수락 완료',
+    toast_resume_accept:'✅ 수락했어요', toast_resume_reject:'❌ 거절했어요', toast_resume_reset:'↩️ 검토전으로 변경했어요',
+    toast_pdf:'📄 PDF로 저장됐어요',
   },
   en:{
     flag:'🇺🇸', label:'English', near:'Near',
@@ -1721,6 +1757,37 @@ const LANGS = {
     mp_overtime:'Overtime Pay', mp_ws_contracted:'Contracted Weekly Hours (for overtime)',
     mp_contracted_ph:'Leave blank to skip overtime calc', mp_overtime_detail:'h × wage × 50%',
     mp_ws_large:'5+ Employee Workplace (night/overtime pay applies)', mp_small_note:'※ Under 5 employees: no night/overtime pay',
+    boss_resume_title:'Resume Management', boss_resume_tab:'Resumes', boss_resume_detail:'Resume Details',
+    boss_resume_total:'{n} total',
+    boss_resume_pending:'Pending', boss_resume_accept:'Accepted', boss_resume_reject:'Rejected',
+    boss_resume_position:'Position', boss_resume_wage:'Desired Wage', boss_resume_schedule:'Availability',
+    boss_resume_exp:'Experience', boss_resume_apply_date:'Applied', boss_resume_intro:'Introduction',
+    boss_resume_btn_accept:'Accept', boss_resume_btn_reject:'Reject', boss_resume_btn_reset:'Reset to Pending',
+    boss_salary_ttl:'Expected Payroll This Month 💼',
+    boss_payroll_month:'Month {m} Payroll',
+    boss_pay_accept:'Approve Pay', boss_pay_done:'Paid', boss_pay_toast:'✅ Payment approved',
+    boss_payslip_title:'{y}/{m} Payslip',
+    boss_contract_title:'Employee Contracts', boss_contract_total:'{n} employees',
+    boss_contract_signed:'✓ Signed', boss_contract_pending:'Pending', boss_contract_view:'View',
+    boss_jobs_tab:'Resumes', boss_jobs_bottom:'Resumes',
+    contract_unsigned:'Unsigned', contract_signed_badge:'✓ Signed',
+    contract_sign_btn:'Agree & Sign', contract_sign_ph:'Sign (enter your name)',
+    contract_pdf_btn:'Download PDF',
+    contract_toast:'✅ Contract signed!',
+    checkin_btn:'Check In/Out', contract_btn:'📄 Contract', anon_report_btn:'🚨 Report',
+    gps_title:'Location Check',
+    gps_out_range:'You are outside the check-in zone (100m).<br>Please arrive at the workplace and try again.',
+    review_h2:'Write a Review', review_anon:'Posted anonymously. Honest reviews help everyone.',
+    review_overall:'Overall Rating', review_detail:'Detailed Ratings',
+    review_wage_label:'💰 Wage Honesty', review_env_label:'🏢 Work Environment',
+    review_intensity:'💼 Work Intensity', review_comm:'🤝 Manager Communication',
+    review_pos_ph:'👍 What was good (pay, atmosphere, environment...)', review_neg_ph:'👎 Areas to improve',
+    review_submit_btn:'Submit Review',
+    toast_contract_signed:'✅ Contract signed!',
+    toast_report_done:'✅ Report submitted. Review within 24 hours.',
+    toast_pay_accepted:'✅ Payment approved',
+    toast_resume_accept:'✅ Accepted', toast_resume_reject:'❌ Rejected', toast_resume_reset:'↩️ Reset to Pending',
+    toast_pdf:'📄 Saved as PDF',
   },
   ja:{
     flag:'🇯🇵', label:'日本語', near:'近くの',
@@ -1788,6 +1855,37 @@ const LANGS = {
     mp_overtime:'残業手当', mp_ws_contracted:'週契約勤務時間（残業手当計算用）',
     mp_contracted_ph:'未入力時は残業手当未計算', mp_overtime_detail:'h × 時給 × 50%',
     mp_ws_large:'5人以上の職場（深夜・残業手当適用）', mp_small_note:'※ 5人未満：深夜・残業手当なし',
+    boss_resume_title:'履歴書管理', boss_resume_tab:'履歴書', boss_resume_detail:'履歴書詳細',
+    boss_resume_total:'合計{n}件',
+    boss_resume_pending:'未確認', boss_resume_accept:'採用', boss_resume_reject:'不採用',
+    boss_resume_position:'志望職種', boss_resume_wage:'希望時給', boss_resume_schedule:'勤務可能時間',
+    boss_resume_exp:'経歴', boss_resume_apply_date:'応募日', boss_resume_intro:'自己紹介',
+    boss_resume_btn_accept:'採用する', boss_resume_btn_reject:'不採用にする', boss_resume_btn_reset:'未確認に戻す',
+    boss_salary_ttl:'今月の支出予定給与 💼',
+    boss_payroll_month:'{m}月給与支払',
+    boss_pay_accept:'支払承認', boss_pay_done:'支払済', boss_pay_toast:'✅ 支払承認完了',
+    boss_payslip_title:'{y}年{m}月給与明細',
+    boss_contract_title:'従業員労働契約書', boss_contract_total:'合計{n}名',
+    boss_contract_signed:'✓ 署名完了', boss_contract_pending:'保留中', boss_contract_view:'見る',
+    boss_jobs_tab:'履歴書管理', boss_jobs_bottom:'履歴書',
+    contract_unsigned:'未署名', contract_signed_badge:'✓ 署名完了',
+    contract_sign_btn:'同意して署名', contract_sign_ph:'署名（お名前を入力）',
+    contract_pdf_btn:'PDFダウンロード',
+    contract_toast:'✅ 署名が完了しました！',
+    checkin_btn:'出退勤', contract_btn:'📄 労働契約書', anon_report_btn:'🚨 匿名通報',
+    gps_title:'出退勤位置確認',
+    gps_out_range:'出退勤許可範囲(100m)を超えています。<br>職場に到着してから再試行してください。',
+    review_h2:'職場レビューを書く', review_anon:'匿名で投稿されます。正直なレビューが皆の助けになります。',
+    review_overall:'総合評価', review_detail:'詳細評価',
+    review_wage_label:'💰 給与の正直さ', review_env_label:'🏢 職場環境',
+    review_intensity:'💼 業務強度', review_comm:'🤝 上司とのコミュニケーション',
+    review_pos_ph:'👍 良かった点（給与・雰囲気・環境など）', review_neg_ph:'👎 改善してほしい点',
+    review_submit_btn:'レビューを投稿',
+    toast_contract_signed:'✅ 署名が完了しました！',
+    toast_report_done:'✅ 通報を受け付けました。24時間以内に確認します。',
+    toast_pay_accepted:'✅ 支払承認完了',
+    toast_resume_accept:'✅ 採用しました', toast_resume_reject:'❌ 不採用にしました', toast_resume_reset:'↩️ 未確認に変更しました',
+    toast_pdf:'📄 PDFで保存しました',
   },
   zh:{
     flag:'🇨🇳', label:'中文', near:'附近',
@@ -1855,6 +1953,37 @@ const LANGS = {
     mp_overtime:'加班补贴', mp_ws_contracted:'每周合同工时（加班补贴计算用）',
     mp_contracted_ph:'不填则不计算加班补贴', mp_overtime_detail:'h × 时薪 × 50%',
     mp_ws_large:'5人以上工作场所（夜班·加班补贴适用）', mp_small_note:'※ 5人未满：无夜班·加班补贴',
+    boss_resume_title:'简历管理', boss_resume_tab:'简历', boss_resume_detail:'简历详情',
+    boss_resume_total:'共{n}条',
+    boss_resume_pending:'待审核', boss_resume_accept:'通过', boss_resume_reject:'拒绝',
+    boss_resume_position:'申请职位', boss_resume_wage:'期望时薪', boss_resume_schedule:'可工作时间',
+    boss_resume_exp:'工作经验', boss_resume_apply_date:'申请日期', boss_resume_intro:'自我介绍',
+    boss_resume_btn_accept:'通过', boss_resume_btn_reject:'拒绝', boss_resume_btn_reset:'重置为待审',
+    boss_salary_ttl:'本月预计工资支出 💼',
+    boss_payroll_month:'{m}月工资发放',
+    boss_pay_accept:'批准支付', boss_pay_done:'已支付', boss_pay_toast:'✅ 支付已批准',
+    boss_payslip_title:'{y}年{m}月工资单',
+    boss_contract_title:'员工劳动合同', boss_contract_total:'共{n}人',
+    boss_contract_signed:'✓ 已签名', boss_contract_pending:'待处理', boss_contract_view:'查看',
+    boss_jobs_tab:'简历管理', boss_jobs_bottom:'简历',
+    contract_unsigned:'未签名', contract_signed_badge:'✓ 已签名',
+    contract_sign_btn:'同意并签名', contract_sign_ph:'签名（请输入姓名）',
+    contract_pdf_btn:'下载PDF',
+    contract_toast:'✅ 合同签署完成！',
+    checkin_btn:'打卡', contract_btn:'📄 劳动合同', anon_report_btn:'🚨 匿名举报',
+    gps_title:'打卡位置确认',
+    gps_out_range:'超出打卡允许范围(100m)。<br>请到达工作场所后再试。',
+    review_h2:'写职场评价', review_anon:'匿名发布。真实评价对大家都有帮助。',
+    review_overall:'综合评分', review_detail:'详细评分',
+    review_wage_label:'💰 工资诚信', review_env_label:'🏢 工作环境',
+    review_intensity:'💼 工作强度', review_comm:'🤝 与老板沟通',
+    review_pos_ph:'👍 好的方面（工资、氛围、环境等）', review_neg_ph:'👎 需要改进的方面',
+    review_submit_btn:'提交评价',
+    toast_contract_signed:'✅ 合同签署完成！',
+    toast_report_done:'✅ 举报已接受。24小时内审核。',
+    toast_pay_accepted:'✅ 支付已批准',
+    toast_resume_accept:'✅ 已通过', toast_resume_reject:'❌ 已拒绝', toast_resume_reset:'↩️ 已重置为待审',
+    toast_pdf:'📄 已保存为PDF',
   }
 };
 
