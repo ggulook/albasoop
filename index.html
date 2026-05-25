@@ -624,7 +624,7 @@
 <div class="page" id="page-resumes">
   <div style="padding:72px 5% 100px;max-width:680px;margin:0 auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-      <div style="font-size:1.3rem;font-weight:900;color:var(--dk)">이력서 관리</div>
+      <div style="font-size:1.3rem;font-weight:900;color:var(--dk)" data-i18n="boss_resume_title">이력서 관리</div>
       <span id="resume-count" style="font-size:.82rem;color:var(--g)">총 5건</span>
     </div>
     <!-- 필터 칩 -->
@@ -648,7 +648,7 @@
 <div class="modal-overlay" id="resumeDetailModal" onclick="if(event.target===this)closeModal('resumeDetailModal')">
   <div class="modal" style="max-width:480px;width:96vw;max-height:88vh;overflow:hidden;padding:0;display:flex;flex-direction:column">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid var(--b);flex-shrink:0">
-      <span style="font-size:1rem;font-weight:800;color:var(--dk)">이력서 상세</span>
+      <span style="font-size:1rem;font-weight:800;color:var(--dk)" data-i18n="boss_resume_detail">이력서 상세</span>
       <button onclick="closeModal('resumeDetailModal')" style="background:#f1f5f9;border:none;border-radius:50%;width:30px;height:30px;font-size:1rem;cursor:pointer;color:var(--dk);display:flex;align-items:center;justify-content:center">✕</button>
     </div>
     <div id="resume-detail-body" style="overflow-y:auto;padding:16px;flex:1"></div>
@@ -1006,7 +1006,7 @@
       <input class="minput" id="rv-workplace-custom" type="text" placeholder="업장명 직접 입력" style="display:none">
 
       <div style="background:var(--l);border-radius:12px;padding:16px">
-        <div style="font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--dk)">종합 별점</div>
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--dk)" data-i18n="review_overall">종합 별점</div>
         <div style="display:flex;justify-content:center;margin-bottom:6px">
           <div class="stars-input" id="star-overall" data-val="0">
             <span onclick="setStar('overall',1)">★</span><span onclick="setStar('overall',2)">★</span>
@@ -1018,16 +1018,16 @@
       </div>
 
       <div style="background:var(--l);border-radius:12px;padding:16px">
-        <div style="font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--dk)">세부 평가</div>
-        <div class="star-row"><label>💰 급여 정직성</label><div class="stars-input" id="star-pay" data-val="0"><span onclick="setStar('pay',1)">★</span><span onclick="setStar('pay',2)">★</span><span onclick="setStar('pay',3)">★</span><span onclick="setStar('pay',4)">★</span><span onclick="setStar('pay',5)">★</span></div></div>
-        <div class="star-row"><label>🏢 근무환경</label><div class="stars-input" id="star-env" data-val="0"><span onclick="setStar('env',1)">★</span><span onclick="setStar('env',2)">★</span><span onclick="setStar('env',3)">★</span><span onclick="setStar('env',4)">★</span><span onclick="setStar('env',5)">★</span></div></div>
-        <div class="star-row"><label>💼 업무강도</label><div class="stars-input" id="star-work" data-val="0"><span onclick="setStar('work',1)">★</span><span onclick="setStar('work',2)">★</span><span onclick="setStar('work',3)">★</span><span onclick="setStar('work',4)">★</span><span onclick="setStar('work',5)">★</span></div></div>
-        <div class="star-row"><label>🤝 사장님 소통</label><div class="stars-input" id="star-mgmt" data-val="0"><span onclick="setStar('mgmt',1)">★</span><span onclick="setStar('mgmt',2)">★</span><span onclick="setStar('mgmt',3)">★</span><span onclick="setStar('mgmt',4)">★</span><span onclick="setStar('mgmt',5)">★</span></div></div>
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--dk)" data-i18n="review_detail">세부 평가</div>
+        <div class="star-row"><label data-i18n="review_wage_label">💰 급여 정직성</label><div class="stars-input" id="star-pay" data-val="0"><span onclick="setStar('pay',1)">★</span><span onclick="setStar('pay',2)">★</span><span onclick="setStar('pay',3)">★</span><span onclick="setStar('pay',4)">★</span><span onclick="setStar('pay',5)">★</span></div></div>
+        <div class="star-row"><label data-i18n="review_env_label">🏢 근무환경</label><div class="stars-input" id="star-env" data-val="0"><span onclick="setStar('env',1)">★</span><span onclick="setStar('env',2)">★</span><span onclick="setStar('env',3)">★</span><span onclick="setStar('env',4)">★</span><span onclick="setStar('env',5)">★</span></div></div>
+        <div class="star-row"><label data-i18n="review_intensity">💼 업무강도</label><div class="stars-input" id="star-work" data-val="0"><span onclick="setStar('work',1)">★</span><span onclick="setStar('work',2)">★</span><span onclick="setStar('work',3)">★</span><span onclick="setStar('work',4)">★</span><span onclick="setStar('work',5)">★</span></div></div>
+        <div class="star-row"><label data-i18n="review_comm">🤝 사장님 소통</label><div class="stars-input" id="star-mgmt" data-val="0"><span onclick="setStar('mgmt',1)">★</span><span onclick="setStar('mgmt',2)">★</span><span onclick="setStar('mgmt',3)">★</span><span onclick="setStar('mgmt',4)">★</span><span onclick="setStar('mgmt',5)">★</span></div></div>
       </div>
 
-      <textarea class="minput report-textarea" id="rv-pros" placeholder="👍 좋았던 점 (급여, 분위기, 근무환경 등)"></textarea>
-      <textarea class="minput report-textarea" id="rv-cons" placeholder="👎 아쉬웠던 점 (개선됐으면 하는 점)"></textarea>
-      <button class="msubmit" onclick="submitReview()">후기 등록하기</button>
+      <textarea class="minput report-textarea" id="rv-pros" data-i18n-ph="review_pos_ph" placeholder="👍 좋았던 점 (급여, 분위기, 근무환경 등)"></textarea>
+      <textarea class="minput report-textarea" id="rv-cons" data-i18n-ph="review_neg_ph" placeholder="👎 아쉬웠던 점 (개선됐으면 하는 점)"></textarea>
+      <button class="msubmit" onclick="submitReview()" data-i18n="review_submit_btn">후기 등록하기</button>
     </div>
   </div>
 </div>
@@ -1199,7 +1199,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px 8px;border-bottom:1px solid var(--b);flex-shrink:0">
       <div>
         <span style="font-size:1.05rem;font-weight:900;letter-spacing:.08em;border-bottom:2px solid #000;padding-bottom:3px">STAFF 근로계약서</span>
-        <span id="contract-status-badge" style="display:inline-block;font-size:.68rem;font-weight:700;padding:1px 8px;border-radius:999px;margin-left:8px;vertical-align:middle">미서명</span>
+        <span id="contract-status-badge" data-i18n="contract_unsigned" style="display:inline-block;font-size:.68rem;font-weight:700;padding:1px 8px;border-radius:999px;margin-left:8px;vertical-align:middle">미서명</span>
       </div>
       <button onclick="closeModal('contractModal')" style="flex-shrink:0;background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;color:#0F172A;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
     </div>
@@ -1333,8 +1333,8 @@
         <input type="checkbox" id="contract-agree" style="margin-top:2px;width:15px;height:15px;cursor:pointer;flex-shrink:0">
         <span>본인은 위 근로계약 조건을 충분히 이해하였으며, 이에 동의하고 서명합니다.</span>
       </label>
-      <input class="minput" id="contract-name" type="text" placeholder="근로자 서명 (이름 입력)" style="margin-bottom:8px;font-size:.85rem;padding:9px 12px">
-      <button class="msubmit" onclick="signContract()">동의하고 서명하기</button>
+      <input class="minput" id="contract-name" type="text" data-i18n-ph="contract_sign_ph" placeholder="근로자 서명 (이름 입력)" style="margin-bottom:8px;font-size:.85rem;padding:9px 12px">
+      <button class="msubmit" onclick="signContract()" data-i18n="contract_sign_btn">동의하고 서명하기</button>
     </div>
 
     <div id="contract-signed-info" style="display:none">
@@ -1352,7 +1352,7 @@
         </tr>
       </table>
       <div style="font-size:.72rem;color:var(--g);margin-bottom:8px;text-align:center" id="contract-signed-date"></div>
-      <button class="msubmit" style="background:var(--dk)" onclick="showToast('📄 PDF로 저장됐어요')">PDF 다운로드</button>
+      <button class="msubmit" style="background:var(--dk)" onclick="showToast(t('toast_pdf'))" data-i18n="contract_pdf_btn">PDF 다운로드</button>
     </div>
     </div><!-- end scroll area -->
   </div>
@@ -2020,6 +2020,10 @@ function setLang(code) {
   updateMyPlaceHeader();
   updateWorkHoursDisplay();
   if (mapInstance) { updateMapMarkers(); }
+  renderBossContractList();
+  renderBossPayroll();
+  if (document.getElementById('page-resumes') && document.getElementById('page-resumes').classList.contains('active')) renderResumeList();
+  applyRole();
 }
 
 // ===== RENDER =====
@@ -3177,7 +3181,7 @@ function openContractModal(workerName) {
   const signedNameVal = workerName || contractSignedName;
 
   if (signed) {
-    badge.textContent = '✓ 서명 완료';
+    badge.textContent = t('contract_signed_badge');
     badge.style.background = '#D1FAE5';
     badge.style.color = '#065F46';
     signSection.style.display = 'none';
@@ -3185,7 +3189,7 @@ function openContractModal(workerName) {
     document.getElementById('contract-signed-name').textContent = signedNameVal;
     document.getElementById('contract-signed-date').textContent = `서명일 ${signedDate}`;
   } else {
-    badge.textContent = '미서명';
+    badge.textContent = t('contract_unsigned');
     badge.style.background = '#FEE2E2';
     badge.style.color = '#991B1B';
     signSection.style.display = '';
@@ -3203,7 +3207,7 @@ function signContract() {
   contractSignedName = name;
   const d = new Date();
   contractSignedDate = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
-  showToast('✅ 근로계약서 서명이 완료됐어요!');
+  showToast(t('toast_contract_signed'));
   closeModal('contractModal');
 }
 
@@ -3213,7 +3217,7 @@ function submitReport() {
   const content = document.getElementById('report-content').value.trim();
   if (!type) { showToast('⚠️ 신고 유형을 선택해주세요', true); return; }
   if (!content || content.length < 10) { showToast('⚠️ 상세 내용을 10자 이상 입력해주세요', true); return; }
-  showToast('✅ 익명 신고가 접수됐어요. 24시간 내 검토됩니다.');
+  showToast(t('toast_report_done'));
   closeModal('reportModal');
   document.getElementById('report-type').value = '';
   document.getElementById('report-date').value = '';
@@ -3237,9 +3241,9 @@ function renderBossContractList() {
         <div style="font-size:.93rem;font-weight:700;color:var(--dk)">${w.name}</div>
       </div>
       ${w.signed
-        ? `<span style="font-size:.72rem;font-weight:700;color:#065F46;background:#D1FAE5;padding:4px 10px;border-radius:999px">✓ 서명완료</span>`
-        : `<span style="font-size:.72rem;font-weight:700;color:#991B1B;background:#FEE2E2;padding:4px 10px;border-radius:999px">대기중</span>`}
-      <button onclick="openContractModal('${w.name}')" style="font-size:.78rem;font-weight:700;color:var(--p);background:none;border:1.5px solid var(--p);padding:5px 12px;border-radius:8px;cursor:pointer">보기</button>
+        ? `<span style="font-size:.72rem;font-weight:700;color:#065F46;background:#D1FAE5;padding:4px 10px;border-radius:999px">${t('boss_contract_signed')}</span>`
+        : `<span style="font-size:.72rem;font-weight:700;color:#991B1B;background:#FEE2E2;padding:4px 10px;border-radius:999px">${t('boss_contract_pending')}</span>`}
+      <button onclick="openContractModal('${w.name}')" style="font-size:.78rem;font-weight:700;color:var(--p);background:none;border:1.5px solid var(--p);padding:5px 12px;border-radius:8px;cursor:pointer">${t('boss_contract_view')}</button>
     </div>
   `).join('');
   const lastBorder = list.querySelector('div:last-child');
@@ -3379,11 +3383,11 @@ function applyRole() {
   const jobsNavTab = document.querySelector('.nav-tab[onclick*="jobs"]');
   const jobsBtTab = document.getElementById('bt-jobs');
   if (jobsNavTab) {
-    jobsNavTab.textContent = isBoss ? '이력서 관리' : '알바 찾기';
+    jobsNavTab.textContent = isBoss ? t('boss_jobs_tab') : t('nav_jobs');
     jobsNavTab.setAttribute('onclick', isBoss ? "showPage('resumes')" : "showPage('jobs')");
   }
   if (jobsBtTab) {
-    jobsBtTab.querySelector('span:last-child').textContent = isBoss ? '이력서' : '알바 찾기';
+    jobsBtTab.querySelector('span:last-child').textContent = isBoss ? t('boss_jobs_bottom') : t('nav_jobs');
     jobsBtTab.setAttribute('onclick', isBoss ? "showPage('resumes')" : "showPage('jobs')");
   }
   // 홈 히어로
@@ -3418,7 +3422,7 @@ const resumeData = [
 ];
 let resumeFilter = 'all';
 
-const statusLabel = { pending:'검토전', accept:'수락', reject:'거절' };
+const statusLabel = { pending:()=>t('boss_resume_pending'), accept:()=>t('boss_resume_accept'), reject:()=>t('boss_resume_reject') };
 const statusStyle = {
   pending:'background:#FEF3C7;color:#92400E',
   accept:'background:#D1FAE5;color:#065F46',
@@ -3436,7 +3440,7 @@ function renderResumeList() {
   const list = document.getElementById('resume-list');
   if (!list) return;
   const filtered = resumeFilter === 'all' ? resumeData : resumeData.filter(r => r.status === resumeFilter);
-  document.getElementById('resume-count').textContent = `총 ${filtered.length}건`;
+  document.getElementById('resume-count').textContent = t('boss_resume_total').replace('{n}', filtered.length);
   list.innerHTML = filtered.map(r => `
     <div class="resume-card" onclick="openResumeDetail(${r.id})">
       <div style="width:44px;height:44px;border-radius:50%;background:${r.avatar};flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:900">${r.name.charAt(0)}</div>
@@ -3444,7 +3448,7 @@ function renderResumeList() {
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
           <span style="font-weight:800;font-size:.95rem;color:var(--dk)">${r.name}</span>
           <span style="font-size:.78rem;color:var(--g)">${r.age}세</span>
-          <span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]}</span>
+          <span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]()}</span>
         </div>
         <div style="font-size:.8rem;color:var(--g);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.schedule}</div>
         <div style="font-size:.75rem;color:var(--g);margin-top:1px">${r.date} 지원</div>
@@ -3462,23 +3466,23 @@ function openResumeDetail(id) {
       <div style="width:56px;height:56px;border-radius:50%;background:${r.avatar};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;font-weight:900;flex-shrink:0">${r.name.charAt(0)}</div>
       <div>
         <div style="font-size:1.1rem;font-weight:800;color:var(--dk)">${r.name} <span style="font-size:.85rem;color:var(--g);font-weight:400">${r.age}세</span></div>
-        <span style="font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]}</span>
+        <span style="font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]()}</span>
       </div>
     </div>
     <div style="display:grid;gap:10px;font-size:.85rem">
       ${[
-        ['지원 포지션', r.position],
-        ['희망 시급', r.wage.toLocaleString() + '원'],
-        ['근무 가능 시간', r.schedule],
-        ['경력', r.experience],
-        ['지원일', r.date],
+        [t('boss_resume_position'), r.position],
+        [t('boss_resume_wage'), r.wage.toLocaleString() + '원'],
+        [t('boss_resume_schedule'), r.schedule],
+        [t('boss_resume_exp'), r.experience],
+        [t('boss_resume_apply_date'), r.date],
       ].map(([k,v]) => `
         <div style="display:flex;gap:12px;padding:10px 12px;background:#F8FAFC;border-radius:10px">
           <span style="color:var(--g);min-width:90px;flex-shrink:0">${k}</span>
           <span style="font-weight:600;color:var(--dk)">${v}</span>
         </div>`).join('')}
       <div style="padding:12px;background:#F8FAFC;border-radius:10px">
-        <div style="color:var(--g);margin-bottom:6px;font-size:.8rem">자기소개</div>
+        <div style="color:var(--g);margin-bottom:6px;font-size:.8rem">${t('boss_resume_intro')}</div>
         <div style="color:var(--dk);font-weight:500;line-height:1.6">${r.intro}</div>
       </div>
     </div>
@@ -3486,11 +3490,11 @@ function openResumeDetail(id) {
   const btns = document.getElementById('resume-action-btns');
   if (r.status === 'pending') {
     btns.innerHTML = `
-      <button onclick="setResumeStatus(${r.id},'reject')" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid #EF4444;background:#fff;color:#EF4444;font-weight:700;cursor:pointer">거절</button>
-      <button onclick="setResumeStatus(${r.id},'accept')" style="flex:1;padding:11px;border-radius:12px;border:none;background:var(--p);color:#fff;font-weight:700;cursor:pointer">수락</button>
+      <button onclick="setResumeStatus(${r.id},'reject')" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid #EF4444;background:#fff;color:#EF4444;font-weight:700;cursor:pointer">${t('boss_resume_btn_reject')}</button>
+      <button onclick="setResumeStatus(${r.id},'accept')" style="flex:1;padding:11px;border-radius:12px;border:none;background:var(--p);color:#fff;font-weight:700;cursor:pointer">${t('boss_resume_btn_accept')}</button>
     `;
   } else {
-    btns.innerHTML = `<button onclick="setResumeStatus(${r.id},'pending')" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--b);background:#fff;color:var(--g);font-weight:700;cursor:pointer">검토전으로 되돌리기</button>`;
+    btns.innerHTML = `<button onclick="setResumeStatus(${r.id},'pending')" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--b);background:#fff;color:var(--g);font-weight:700;cursor:pointer">${t('boss_resume_btn_reset')}</button>`;
   }
   openModal('resumeDetailModal');
 }
@@ -3501,7 +3505,7 @@ function setResumeStatus(id, status) {
   r.status = status;
   closeModal('resumeDetailModal');
   renderResumeList();
-  showToast(status === 'accept' ? '✅ 수락했어요' : status === 'reject' ? '❌ 거절했어요' : '↩️ 검토전으로 변경했어요');
+  showToast(status === 'accept' ? t('toast_resume_accept') : status === 'reject' ? t('toast_resume_reject') : t('toast_resume_reset'));
 }
 
 // ===== BOSS DATA =====
@@ -3728,7 +3732,7 @@ function renderBossPayroll() {
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
         <button onclick="openPayslip(${w.id})" style="padding:6px 12px;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid var(--b);background:#fff;color:var(--dk);cursor:pointer;white-space:nowrap">📄 명세서</button>
-        <button class="boss-pay-approve${paid?' paid':''}" onclick="approvePay(${w.id},this)" ${paid?'disabled':''}>${paid?'지급 완료':'지급 수락'}</button>
+        <button class="boss-pay-approve${paid?' paid':''}" onclick="approvePay(${w.id},this)" ${paid?'disabled':''}>${paid?t('boss_pay_done'):t('boss_pay_accept')}</button>
       </div>
     </div>`;
   });
@@ -3738,10 +3742,10 @@ function renderBossPayroll() {
 
 function approvePay(workerId, btn) {
   bossPaid[workerId] = true;
-  btn.textContent = '지급 완료';
+  btn.textContent = t('boss_pay_done');
   btn.classList.add('paid');
   btn.disabled = true;
-  showToast('✅ 지급 수락 완료');
+  showToast(t('toast_pay_accepted'));
 }
 
 function openPayslip(workerId) {
