@@ -3051,6 +3051,8 @@ function renderWageCalc() {
     overtimePay = Math.round(overtimeHours * wage * 0.5);
   }
   const total = base + juHuPay + nightPay + publicHolPay + overtimePay;
+  const tax = Math.round(total * 0.033);
+  const takeHome = total - tax;
 
   const won = currentLang === 'ko' ? '원' : currentLang === 'ja' ? 'ウォン' : currentLang === 'zh' ? '韩元' : '₩';
   const rowsEl = document.getElementById('wage-rows');
@@ -3078,10 +3080,15 @@ function renderWageCalc() {
       <div class="wage-breakdown-row"><span class="wl">${t('mp_juhyu')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${juHuPay.toLocaleString()}${won}</span><div class="wage-detail">${juhyuDetail}</div></div>
       <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${nightPay.toLocaleString()}${won}</span><div class="wage-detail">${nightHoursR}${hu} × ${wage.toLocaleString()}${won} × 50% (22시~익일6시)</div></div>
       ${holRow}${overtimeRow}
+      <div class="wage-breakdown-row"><span class="wl" style="color:#EF4444">${t('salary_tax')}</span><span class="wr" style="color:#EF4444" onclick="toggleWageDetail(this)">-${tax.toLocaleString()}${won}</span><div class="wage-detail">${total.toLocaleString()}${won} × 3.3%</div></div>
     `;
   }
   const totalEl = document.getElementById('wage-total');
-  if (totalEl) totalEl.textContent = total.toLocaleString() + (currentLang==='ko'?'원':currentLang==='ja'?'ウォン':currentLang==='zh'?'韩元':'₩');
+  if (totalEl) totalEl.textContent = takeHome.toLocaleString() + (currentLang==='ko'?'원':currentLang==='ja'?'ウォン':currentLang==='zh'?'韩元':'₩');
+  const totalLblEl = document.querySelector('.wage-total-row .wtl');
+  if (totalLblEl) totalLblEl.setAttribute('data-i18n', 'salary_takehome'), totalLblEl.textContent = t('salary_takehome');
+    `;
+  }
 
   const noteEl = document.getElementById('wage-note');
   const noteTextEl = document.getElementById('wage-note-text');
@@ -3095,8 +3102,6 @@ function renderWageCalc() {
   }
 
   // 홈 히어로 섹션 동기화
-  const tax = Math.round(total * 0.033);
-  const takeHome = total - tax;
   const heroBaseLbl = document.getElementById('hero-base-lbl');
   const heroBaseVal = document.getElementById('hero-base-val');
   const heroHolidayVal = document.getElementById('hero-holiday-val');
