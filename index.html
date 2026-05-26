@@ -3051,8 +3051,12 @@ function renderWageCalc() {
     overtimePay = Math.round(overtimeHours * wage * 0.5);
   }
   const total = base + juHuPay + nightPay + publicHolPay + overtimePay;
-  const tax = Math.round(total * 0.033);
-  const takeHome = total - tax;
+  // 공제: 고용보험 0.9% 항상, 월 60시간 이상이면 국민연금 4.5% + 건강보험 3.545% 추가
+  const empInsurance = Math.round(total * 0.009);
+  const pension    = totalHours >= 60 ? Math.round(total * 0.045) : 0;
+  const health     = totalHours >= 60 ? Math.round(total * 0.03545) : 0;
+  const totalDeduct = empInsurance + pension + health;
+  const takeHome = total - totalDeduct;
 
   const won = currentLang === 'ko' ? '원' : currentLang === 'ja' ? 'ウォン' : currentLang === 'zh' ? '韩元' : '₩';
   const rowsEl = document.getElementById('wage-rows');
@@ -3080,15 +3084,15 @@ function renderWageCalc() {
       <div class="wage-breakdown-row"><span class="wl">${t('mp_juhyu')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${juHuPay.toLocaleString()}${won}</span><div class="wage-detail">${juhyuDetail}</div></div>
       <div class="wage-breakdown-row"><span class="wl">${t('mp_night_pay')}</span><span class="wr plus" onclick="toggleWageDetail(this)">+${nightPay.toLocaleString()}${won}</span><div class="wage-detail">${nightHoursR}${hu} × ${wage.toLocaleString()}${won} × 50% (22시~익일6시)</div></div>
       ${holRow}${overtimeRow}
-      <div class="wage-breakdown-row"><span class="wl" style="color:#EF4444">${t('salary_tax')}</span><span class="wr" style="color:#EF4444" onclick="toggleWageDetail(this)">-${tax.toLocaleString()}${won}</span><div class="wage-detail">${total.toLocaleString()}${won} × 3.3%</div></div>
+      <div class="wage-breakdown-row"><span class="wl" style="color:#EF4444">고용보험</span><span class="wr" style="color:#EF4444" onclick="toggleWageDetail(this)">-${empInsurance.toLocaleString()}${won}</span><div class="wage-detail">${total.toLocaleString()}${won} × 0.9%</div></div>
+      ${pension > 0 ? `<div class="wage-breakdown-row"><span class="wl" style="color:#EF4444">국민연금</span><span class="wr" style="color:#EF4444" onclick="toggleWageDetail(this)">-${pension.toLocaleString()}${won}</span><div class="wage-detail">${total.toLocaleString()}${won} × 4.5% (월 60h 이상)</div></div>` : ''}
+      ${health > 0 ? `<div class="wage-breakdown-row"><span class="wl" style="color:#EF4444">건강보험</span><span class="wr" style="color:#EF4444" onclick="toggleWageDetail(this)">-${health.toLocaleString()}${won}</span><div class="wage-detail">${total.toLocaleString()}${won} × 3.545% (월 60h 이상)</div></div>` : ''}
     `;
   }
   const totalEl = document.getElementById('wage-total');
   if (totalEl) totalEl.textContent = takeHome.toLocaleString() + (currentLang==='ko'?'원':currentLang==='ja'?'ウォン':currentLang==='zh'?'韩元':'₩');
   const totalLblEl = document.querySelector('.wage-total-row .wtl');
   if (totalLblEl) totalLblEl.setAttribute('data-i18n', 'salary_takehome'), totalLblEl.textContent = t('salary_takehome');
-    `;
-  }
 
   const noteEl = document.getElementById('wage-note');
   const noteTextEl = document.getElementById('wage-note-text');
@@ -3112,7 +3116,7 @@ function renderWageCalc() {
   if (heroBaseVal) heroBaseVal.textContent = base.toLocaleString() + won;
   if (heroHolidayVal) heroHolidayVal.textContent = '+' + juHuPay.toLocaleString() + won;
   if (heroNightVal) heroNightVal.textContent = '+' + (nightPay + publicHolPay).toLocaleString() + won;
-  if (heroTaxVal) heroTaxVal.textContent = '-' + tax.toLocaleString() + won;
+  if (heroTaxVal) heroTaxVal.textContent = '-' + totalDeduct.toLocaleString() + won;
   if (heroTotalVal) heroTotalVal.textContent = takeHome.toLocaleString() + won;
 }
 
