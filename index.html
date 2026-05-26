@@ -563,7 +563,7 @@
       <div id="hero-boss-view" style="display:none">
         <div class="boss-salary-ttl" data-i18n="boss_salary_ttl">이번 달 지출 예상 급여 💼</div>
         <div id="hero-boss-list"></div>
-        <div class="boss-total-row"><span style="font-weight:700;font-size:.93rem">총 지급 예정</span><span style="font-size:1.25rem;font-weight:900;color:var(--p)" id="hero-boss-total">0원</span></div>
+        <div class="boss-total-row"><span style="font-weight:700;font-size:.93rem" data-i18n="boss_total_pay">총 지급 예정</span><span style="font-size:1.25rem;font-weight:900;color:var(--p)" id="hero-boss-total">0원</span></div>
       </div>
     </div>
   </div>
@@ -629,10 +629,10 @@
     </div>
     <!-- 필터 칩 -->
     <div style="display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px">
-      <button class="resume-filter active" onclick="filterResumes('all',this)">전체</button>
-      <button class="resume-filter" onclick="filterResumes('pending',this)">검토전</button>
-      <button class="resume-filter" onclick="filterResumes('accept',this)">수락</button>
-      <button class="resume-filter" onclick="filterResumes('reject',this)">거절</button>
+      <button class="resume-filter active" onclick="filterResumes('all',this)" data-i18n="fc_all">전체</button>
+      <button class="resume-filter" onclick="filterResumes('pending',this)" data-i18n="boss_resume_pending">검토전</button>
+      <button class="resume-filter" onclick="filterResumes('accept',this)" data-i18n="boss_resume_accept">수락</button>
+      <button class="resume-filter" onclick="filterResumes('reject',this)" data-i18n="boss_resume_reject">거절</button>
     </div>
     <style>
       .resume-filter{padding:7px 16px;border-radius:999px;border:1.5px solid var(--b);background:#fff;font-size:.82rem;font-weight:600;color:var(--g);cursor:pointer;white-space:nowrap;transition:all .15s}
@@ -752,13 +752,13 @@
       <div style="background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:14px">
         <div style="font-size:.97rem;font-weight:800;margin-bottom:14px" id="boss-payroll-title"></div>
         <div id="boss-payroll-list"></div>
-        <div class="boss-total-row" style="margin-top:12px"><span style="font-weight:700">총 지급 예정</span><span style="font-size:1.2rem;font-weight:900;color:var(--p)" id="boss-payroll-total"></span></div>
+        <div class="boss-total-row" style="margin-top:12px"><span style="font-weight:700" data-i18n="boss_total_pay">총 지급 예정</span><span style="font-size:1.2rem;font-weight:900;color:var(--p)" id="boss-payroll-total"></span></div>
       </div>
       <!-- 직원 근로계약서 -->
       <div style="background:#fff;border-radius:16px;border:1.5px solid var(--b);padding:18px 20px;margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <div style="font-size:.97rem;font-weight:800" data-i18n="boss_contract_title">직원 근로계약서</div>
-          <span style="font-size:.78rem;color:var(--g)">총 3명</span>
+          <span style="font-size:.78rem;color:var(--g)" id="boss-contract-count">총 3명</span>
         </div>
         <div id="boss-contract-list"></div>
       </div>
@@ -1140,27 +1140,27 @@
 
     <!-- 실지급액 -->
     <div style="background:#FFF8E7;border:1.5px solid #F5C842;border-radius:14px;padding:18px 20px;margin-bottom:14px;text-align:center">
-      <div style="font-size:.82rem;color:#92700A;font-weight:600;margin-bottom:6px">실지급액</div>
+      <div style="font-size:.82rem;color:#92700A;font-weight:600;margin-bottom:6px" data-i18n="boss_payslip_net">실지급액</div>
       <div style="font-size:1.9rem;font-weight:900;color:#1E293B" id="ps-net"></div>
     </div>
 
     <!-- 지급내역 -->
     <div style="background:#fff;border:1.5px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:10px">
       <div style="display:flex;background:#F8FAFC;padding:10px 16px;font-size:.82rem;font-weight:800;color:var(--g);border-bottom:1px solid var(--b)">
-        <span style="flex:1">지급내역</span><span>지급액</span>
+        <span style="flex:1" data-i18n="boss_payslip_pay_items">지급내역</span><span data-i18n="boss_payslip_pay_amt">지급액</span>
       </div>
       <div style="padding:0 16px">
         <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
-          <span>기본급</span><span style="font-weight:700" id="ps-base"></span>
+          <span data-i18n="boss_payslip_base">기본급</span><span style="font-weight:700" id="ps-base"></span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
-          <span>연장수당</span><span style="font-weight:700" id="ps-overtime"></span>
+          <span data-i18n="boss_payslip_overtime">연장수당</span><span style="font-weight:700" id="ps-overtime"></span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
-          <span>야간수당</span><span style="font-weight:700" id="ps-night"></span>
+          <span data-i18n="boss_payslip_night">야간수당</span><span style="font-weight:700" id="ps-night"></span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:.86rem;font-weight:800">
-          <span>지급액 계</span><span id="ps-gross"></span>
+          <span data-i18n="boss_payslip_gross">지급액 계</span><span id="ps-gross"></span>
         </div>
       </div>
     </div>
@@ -1168,17 +1168,17 @@
     <!-- 공제내역 -->
     <div style="background:#fff;border:1.5px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:14px">
       <div style="display:flex;background:#F8FAFC;padding:10px 16px;font-size:.82rem;font-weight:800;color:var(--g);border-bottom:1px solid var(--b)">
-        <span style="flex:1">공제내역</span><span>공제액</span>
+        <span style="flex:1" data-i18n="boss_payslip_deduct_items">공제내역</span><span data-i18n="boss_payslip_deduct_amt">공제액</span>
       </div>
       <div style="padding:0 16px">
         <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
-          <span>국민연금 (4.5%)</span><span style="font-weight:700" id="ps-pension"></span>
+          <span data-i18n="boss_payslip_pension">국민연금 (4.5%)</span><span style="font-weight:700" id="ps-pension"></span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);font-size:.86rem">
-          <span>고용보험 (0.9%)</span><span style="font-weight:700" id="ps-employ"></span>
+          <span data-i18n="boss_payslip_employ">고용보험 (0.9%)</span><span style="font-weight:700" id="ps-employ"></span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:.86rem;font-weight:800">
-          <span>공제액 계</span><span id="ps-deduct"></span>
+          <span data-i18n="boss_payslip_deduct_total">공제액 계</span><span id="ps-deduct"></span>
         </div>
       </div>
     </div>
@@ -1186,7 +1186,7 @@
     <!-- 계산방법 -->
     <details style="border:1.5px solid var(--b);border-radius:14px;overflow:hidden">
       <summary style="padding:12px 16px;font-size:.85rem;font-weight:700;cursor:pointer;background:#F8FAFC;list-style:none;display:flex;justify-content:space-between;align-items:center">
-        계산방법 등 <span style="font-size:.7rem;color:var(--g)">▼</span>
+        <span data-i18n="boss_payslip_calc_label">계산방법 등</span> <span style="font-size:.7rem;color:var(--g)">▼</span>
       </summary>
       <div style="padding:12px 16px;font-size:.82rem;background:#fff" id="ps-calc-detail"></div>
     </details>
@@ -1654,17 +1654,31 @@ const LANGS = {
     mp_overtime:'연장수당', mp_ws_contracted:'주 계약 근무시간 (연장수당 계산용, 시간)',
     mp_contracted_ph:'미입력 시 연장수당 미계산', mp_overtime_detail:'h × 시급 × 50%',
     mp_ws_large:'5인 이상 사업장 (야간수당·연장수당 적용)', mp_small_note:'※ 5인 미만 사업장: 야간·연장수당 미적용',
+    boss_total_pay:'총 지급 예정', boss_contract_count:'총 {n}명',
+    boss_unscheduled:'미배정', boss_dayoff:'휴무', boss_open:'오픈', boss_close:'마감',
+    boss_add_shift:'+ 근무 추가', boss_coming_soon:'준비 중입니다',
+    boss_resume_empty:'해당 항목이 없습니다',
+    boss_payslip_net:'실지급액', boss_payslip_pay_items:'지급내역', boss_payslip_pay_amt:'지급액',
+    boss_payslip_deduct_items:'공제내역', boss_payslip_deduct_amt:'공제액',
+    boss_payslip_base:'기본급', boss_payslip_overtime:'연장수당', boss_payslip_night:'야간수당',
+    boss_payslip_gross:'지급액 계', boss_payslip_deduct_total:'공제액 계',
+    boss_payslip_pension:'국민연금 (4.5%)', boss_payslip_employ:'고용보험 (0.9%)',
+    boss_payslip_base_detail:'기본급 (시급×기본근무시간 / 유급휴일수당 포함)',
+    boss_payslip_night_detail:'야간수당 (시급×0.5×야간근로시간)',
+    boss_payslip_overtime_detail:'연장수당 (시급×0.5×연장시간)',
+    boss_date_fmt:'{m}월 {d}일 {day}요일', boss_payslip_calc_label:'계산방법 등',
     // Boss
     boss_resume_title:'이력서 관리', boss_resume_tab:'이력서', boss_resume_detail:'이력서 상세',
     boss_resume_total:'총 {n}건',
     boss_resume_pending:'검토전', boss_resume_accept:'수락', boss_resume_reject:'거절',
     boss_resume_position:'지원 포지션', boss_resume_wage:'희망 시급', boss_resume_schedule:'근무 가능 시간',
-    boss_resume_exp:'경력', boss_resume_apply_date:'지원일', boss_resume_intro:'자기소개',
+    boss_resume_exp:'경력', boss_resume_apply_date:'지원일', boss_resume_apply_suffix:'지원', boss_resume_intro:'자기소개',
     boss_resume_btn_accept:'수락', boss_resume_btn_reject:'거절', boss_resume_btn_reset:'검토전으로 되돌리기',
     boss_salary_ttl:'이번 달 지출 예상 급여 💼',
     boss_payroll_month:'{m}월 급여 지급',
     boss_pay_accept:'지급 수락', boss_pay_done:'지급 완료', boss_pay_toast:'✅ 지급 수락 완료',
-    boss_payslip_title:'{y}년 {m}월 급여명세서',
+    boss_payslip_title:'{y}년 {m}월 급여명세서', boss_payslip_btn:'📄 명세서',
+    boss_workers_label:'근무자', boss_schedule_stat:'{n}명 · {h}h',
     boss_contract_title:'직원 근로계약서', boss_contract_total:'총 {n}명',
     boss_contract_signed:'✓ 서명완료', boss_contract_pending:'대기중', boss_contract_view:'보기',
     boss_jobs_tab:'이력서 관리', boss_jobs_bottom:'이력서',
@@ -1757,16 +1771,30 @@ const LANGS = {
     mp_overtime:'Overtime Pay', mp_ws_contracted:'Contracted Weekly Hours (for overtime)',
     mp_contracted_ph:'Leave blank to skip overtime calc', mp_overtime_detail:'h × wage × 50%',
     mp_ws_large:'5+ Employee Workplace (night/overtime pay applies)', mp_small_note:'※ Under 5 employees: no night/overtime pay',
+    boss_total_pay:'Total Expected', boss_contract_count:'{n} employees',
+    boss_unscheduled:'Unassigned', boss_dayoff:'Day Off', boss_open:'Open', boss_close:'Close',
+    boss_add_shift:'+ Add Shift', boss_coming_soon:'Coming soon',
+    boss_resume_empty:'No results found',
+    boss_payslip_net:'Net Pay', boss_payslip_pay_items:'Pay Items', boss_payslip_pay_amt:'Amount',
+    boss_payslip_deduct_items:'Deductions', boss_payslip_deduct_amt:'Amount',
+    boss_payslip_base:'Base Pay', boss_payslip_overtime:'Overtime', boss_payslip_night:'Night Pay',
+    boss_payslip_gross:'Gross Total', boss_payslip_deduct_total:'Total Deductions',
+    boss_payslip_pension:'Pension (4.5%)', boss_payslip_employ:'Employment Insurance (0.9%)',
+    boss_payslip_base_detail:'Base pay (hourly × base hours / incl. holiday pay)',
+    boss_payslip_night_detail:'Night pay (hourly × 0.5 × night hours)',
+    boss_payslip_overtime_detail:'Overtime (hourly × 0.5 × overtime hours)',
+    boss_date_fmt:'{day} {m}/{d}', boss_payslip_calc_label:'Calculation Details',
     boss_resume_title:'Resume Management', boss_resume_tab:'Resumes', boss_resume_detail:'Resume Details',
     boss_resume_total:'{n} total',
     boss_resume_pending:'Pending', boss_resume_accept:'Accepted', boss_resume_reject:'Rejected',
     boss_resume_position:'Position', boss_resume_wage:'Desired Wage', boss_resume_schedule:'Availability',
-    boss_resume_exp:'Experience', boss_resume_apply_date:'Applied', boss_resume_intro:'Introduction',
+    boss_resume_exp:'Experience', boss_resume_apply_date:'Applied', boss_resume_apply_suffix:'applied', boss_resume_intro:'Introduction',
     boss_resume_btn_accept:'Accept', boss_resume_btn_reject:'Reject', boss_resume_btn_reset:'Reset to Pending',
     boss_salary_ttl:'Expected Payroll This Month 💼',
     boss_payroll_month:'Month {m} Payroll',
     boss_pay_accept:'Approve Pay', boss_pay_done:'Paid', boss_pay_toast:'✅ Payment approved',
-    boss_payslip_title:'{y}/{m} Payslip',
+    boss_payslip_title:'{y}/{m} Payslip', boss_payslip_btn:'📄 Payslip',
+    boss_workers_label:'Workers', boss_schedule_stat:'{n} · {h}h',
     boss_contract_title:'Employee Contracts', boss_contract_total:'{n} employees',
     boss_contract_signed:'✓ Signed', boss_contract_pending:'Pending', boss_contract_view:'View',
     boss_jobs_tab:'Resumes', boss_jobs_bottom:'Resumes',
@@ -1855,16 +1883,30 @@ const LANGS = {
     mp_overtime:'残業手当', mp_ws_contracted:'週契約勤務時間（残業手当計算用）',
     mp_contracted_ph:'未入力時は残業手当未計算', mp_overtime_detail:'h × 時給 × 50%',
     mp_ws_large:'5人以上の職場（深夜・残業手当適用）', mp_small_note:'※ 5人未満：深夜・残業手当なし',
+    boss_total_pay:'総支給予定', boss_contract_count:'合計{n}名',
+    boss_unscheduled:'未配置', boss_dayoff:'休み', boss_open:'オープン', boss_close:'クローズ',
+    boss_add_shift:'+ シフト追加', boss_coming_soon:'準備中です',
+    boss_resume_empty:'該当する項目がありません',
+    boss_payslip_net:'実支給額', boss_payslip_pay_items:'支給内訳', boss_payslip_pay_amt:'支給額',
+    boss_payslip_deduct_items:'控除内訳', boss_payslip_deduct_amt:'控除額',
+    boss_payslip_base:'基本給', boss_payslip_overtime:'残業手当', boss_payslip_night:'深夜手当',
+    boss_payslip_gross:'支給額合計', boss_payslip_deduct_total:'控除額合計',
+    boss_payslip_pension:'厚生年金 (4.5%)', boss_payslip_employ:'雇用保険 (0.9%)',
+    boss_payslip_base_detail:'基本給（時給×基本勤務時間 / 有給休日手当含む）',
+    boss_payslip_night_detail:'深夜手当（時給×0.5×深夜勤務時間）',
+    boss_payslip_overtime_detail:'残業手当（時給×0.5×残業時間）',
+    boss_date_fmt:'{m}月{d}日 {day}曜日',
     boss_resume_title:'履歴書管理', boss_resume_tab:'履歴書', boss_resume_detail:'履歴書詳細',
     boss_resume_total:'合計{n}件',
     boss_resume_pending:'未確認', boss_resume_accept:'採用', boss_resume_reject:'不採用',
     boss_resume_position:'志望職種', boss_resume_wage:'希望時給', boss_resume_schedule:'勤務可能時間',
-    boss_resume_exp:'経歴', boss_resume_apply_date:'応募日', boss_resume_intro:'自己紹介',
+    boss_resume_exp:'経歴', boss_resume_apply_date:'応募日', boss_resume_apply_suffix:'応募', boss_resume_intro:'自己紹介',
     boss_resume_btn_accept:'採用する', boss_resume_btn_reject:'不採用にする', boss_resume_btn_reset:'未確認に戻す',
     boss_salary_ttl:'今月の支出予定給与 💼',
     boss_payroll_month:'{m}月給与支払',
     boss_pay_accept:'支払承認', boss_pay_done:'支払済', boss_pay_toast:'✅ 支払承認完了',
-    boss_payslip_title:'{y}年{m}月給与明細',
+    boss_payslip_title:'{y}年{m}月給与明細', boss_payslip_btn:'📄 明細書',
+    boss_workers_label:'スタッフ', boss_schedule_stat:'{n}名 · {h}h',
     boss_contract_title:'従業員労働契約書', boss_contract_total:'合計{n}名',
     boss_contract_signed:'✓ 署名完了', boss_contract_pending:'保留中', boss_contract_view:'見る',
     boss_jobs_tab:'履歴書管理', boss_jobs_bottom:'履歴書',
@@ -1953,16 +1995,30 @@ const LANGS = {
     mp_overtime:'加班补贴', mp_ws_contracted:'每周合同工时（加班补贴计算用）',
     mp_contracted_ph:'不填则不计算加班补贴', mp_overtime_detail:'h × 时薪 × 50%',
     mp_ws_large:'5人以上工作场所（夜班·加班补贴适用）', mp_small_note:'※ 5人未满：无夜班·加班补贴',
+    boss_total_pay:'预计总支付', boss_contract_count:'共{n}人',
+    boss_unscheduled:'未分配', boss_dayoff:'休息', boss_open:'开店', boss_close:'关店',
+    boss_add_shift:'+ 添加班次', boss_coming_soon:'准备中',
+    boss_resume_empty:'暂无结果',
+    boss_payslip_net:'实发工资', boss_payslip_pay_items:'支付明细', boss_payslip_pay_amt:'金额',
+    boss_payslip_deduct_items:'扣除明细', boss_payslip_deduct_amt:'金额',
+    boss_payslip_base:'基本工资', boss_payslip_overtime:'加班费', boss_payslip_night:'夜班补贴',
+    boss_payslip_gross:'应发合计', boss_payslip_deduct_total:'扣除合计',
+    boss_payslip_pension:'养老保险 (4.5%)', boss_payslip_employ:'失业保险 (0.9%)',
+    boss_payslip_base_detail:'基本工资（时薪×基本工时 / 含带薪假日补贴）',
+    boss_payslip_night_detail:'夜班补贴（时薪×0.5×夜班工时）',
+    boss_payslip_overtime_detail:'加班费（时薪×0.5×加班工时）',
+    boss_date_fmt:'{m}月{d}日 {day}',
     boss_resume_title:'简历管理', boss_resume_tab:'简历', boss_resume_detail:'简历详情',
     boss_resume_total:'共{n}条',
     boss_resume_pending:'待审核', boss_resume_accept:'通过', boss_resume_reject:'拒绝',
     boss_resume_position:'申请职位', boss_resume_wage:'期望时薪', boss_resume_schedule:'可工作时间',
-    boss_resume_exp:'工作经验', boss_resume_apply_date:'申请日期', boss_resume_intro:'自我介绍',
+    boss_resume_exp:'工作经验', boss_resume_apply_date:'申请日期', boss_resume_apply_suffix:'申请', boss_resume_intro:'自我介绍',
     boss_resume_btn_accept:'通过', boss_resume_btn_reject:'拒绝', boss_resume_btn_reset:'重置为待审',
     boss_salary_ttl:'本月预计工资支出 💼',
     boss_payroll_month:'{m}月工资发放',
     boss_pay_accept:'批准支付', boss_pay_done:'已支付', boss_pay_toast:'✅ 支付已批准',
-    boss_payslip_title:'{y}年{m}月工资单',
+    boss_payslip_title:'{y}年{m}月工资单', boss_payslip_btn:'📄 工资单',
+    boss_workers_label:'员工', boss_schedule_stat:'{n}人 · {h}h',
     boss_contract_title:'员工劳动合同', boss_contract_total:'共{n}人',
     boss_contract_signed:'✓ 已签名', boss_contract_pending:'待处理', boss_contract_view:'查看',
     boss_jobs_tab:'简历管理', boss_jobs_bottom:'简历',
@@ -2022,6 +2078,7 @@ function setLang(code) {
   if (mapInstance) { updateMapMarkers(); }
   renderBossContractList();
   renderBossPayroll();
+  if (bossSelectedDate) selectBossDate(bossSelectedDate);
   if (document.getElementById('page-resumes') && document.getElementById('page-resumes').classList.contains('active')) renderResumeList();
   applyRole();
 }
@@ -3243,6 +3300,8 @@ const bossContractData = [
 function renderBossContractList() {
   const list = document.getElementById('boss-contract-list');
   if (!list) return;
+  const countEl = document.getElementById('boss-contract-count');
+  if (countEl) countEl.textContent = t('boss_contract_count').replace('{n}', bossContractData.length);
   list.innerHTML = bossContractData.map(w => `
     <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--b)">
       <div style="width:36px;height:36px;border-radius:50%;background:${w.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900;flex-shrink:0">${w.name.charAt(0)}</div>
@@ -3460,11 +3519,11 @@ function renderResumeList() {
           <span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;${statusStyle[r.status]}">${statusLabel[r.status]()}</span>
         </div>
         <div style="font-size:.8rem;color:var(--g);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.schedule}</div>
-        <div style="font-size:.75rem;color:var(--g);margin-top:1px">${r.date} 지원</div>
+        <div style="font-size:.75rem;color:var(--g);margin-top:1px">${r.date} ${t('boss_resume_apply_suffix')}</div>
       </div>
       <svg viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
-  `).join('') || '<div style="text-align:center;color:var(--g);padding:40px 0;font-size:.9rem">해당 항목이 없습니다</div>';
+  `).join('') || `<div style="text-align:center;color:var(--g);padding:40px 0;font-size:.9rem">${t('boss_resume_empty')}</div>`;
 }
 
 function openResumeDetail(id) {
@@ -3594,8 +3653,7 @@ function selectBossDate(ds) {
   renderBossCalendar();
   const sec = document.getElementById('boss-schedule-section');
   const d = new Date(ds);
-  const days = ['일','월','화','수','목','금','토'];
-  const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
+  const dateLabel = t('boss_date_fmt').replace('{m}', d.getMonth()+1).replace('{d}', d.getDate()).replace('{day}', t('day_names')[d.getDay()]);
   const recs = bossSchedules[ds] || [];
 
   const HOUR_W = 34; // px per hour
@@ -3629,7 +3687,7 @@ function selectBossDate(ds) {
     const r = recs.find(rec => rec.workerId === w.id);
     const initial = w.name.charAt(0);
     let barHtml = '';
-    let hoursText = '미배정';
+    let hoursText = t('boss_unscheduled');
     let hoursColor = '#94A3B8';
 
     if (r) {
@@ -3637,19 +3695,19 @@ function selectBossDate(ds) {
       const [eh,em] = r.end.split(':').map(Number);
       const mins = (eh*60+em) - (sh*60+sm);
       const hrs = Math.round(mins / 60);
-      hoursText = `${hrs}시간`;
+      hoursText = `${hrs}${t('mp_hour_unit')}`;
       hoursColor = w.color;
       const left = (sh + sm/60) * HOUR_W;
       const width = Math.max(mins/60 * HOUR_W, 8);
       const timeText = `${r.start}-${r.end}`;
-      const statusBadge = sh < 14 ? '오픈' : '마감';
+      const statusBadge = sh < 14 ? t('boss_open') : t('boss_close');
       barHtml = `<div style="position:absolute;left:${left}px;width:${width}px;top:10px;bottom:10px;border-radius:9px;background:${w.color};display:flex;align-items:center;padding:0 10px;gap:5px;overflow:hidden;z-index:2;box-shadow:0 2px 8px ${w.color}55">
         <span style="color:#fff;font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0">${timeText}</span>
         <span style="background:rgba(255,255,255,0.3);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0">${hrs}h</span>
         <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;white-space:nowrap;flex-shrink:0">${statusBadge}</span>
       </div>`;
     } else {
-      barHtml = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:12px;font-weight:600;letter-spacing:.04em">휴무</div>`;
+      barHtml = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#CBD5E1;font-size:12px;font-weight:600;letter-spacing:.04em">${t('boss_dayoff')}</div>`;
     }
 
     return `<div style="display:flex;align-items:center;height:64px;border-bottom:1px solid #F1F5F9">
@@ -3672,8 +3730,8 @@ function selectBossDate(ds) {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
       <div style="font-size:1.05rem;font-weight:900;color:#1E293B">${dateLabel}</div>
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:.83rem;color:#64748B;font-weight:600">근무자 <b style="color:#1E293B">${activeCount}명</b> · <b style="color:#1E293B">${totalHours}h</b></span>
-        <button onclick="showToast('준비 중입니다')" style="background:#1E293B;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">+ 근무 추가</button>
+        <span style="font-size:.83rem;color:#64748B;font-weight:600">${t('boss_workers_label')} <b style="color:#1E293B">${t('boss_schedule_stat').replace('{n}',activeCount).replace('{h}',totalHours)}</b></span>
+        <button onclick="showToast(t('boss_coming_soon'))" style="background:#1E293B;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">${t('boss_add_shift')}</button>
       </div>
     </div>
     <div data-drag-scroll style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none">
@@ -3715,7 +3773,7 @@ function renderBossPayroll() {
   const list = document.getElementById('boss-payroll-list');
   const totalEl = document.getElementById('boss-payroll-total');
   if (!title || !list) return;
-  title.textContent = `${bossCalMonth+1}월 급여 지급`;
+  title.textContent = t('boss_payroll_month').replace('{m}', bossCalMonth+1);
   const won = '원';
   let grandTotal = 0;
   const rows = bossWorkers.map(w => {
@@ -3740,7 +3798,7 @@ function renderBossPayroll() {
         <span style="font-size:.95rem;font-weight:800;color:var(--p);padding-left:15px">${pay.toLocaleString()}${won}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-        <button onclick="openPayslip(${w.id})" style="padding:6px 12px;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid var(--b);background:#fff;color:var(--dk);cursor:pointer;white-space:nowrap">📄 명세서</button>
+        <button onclick="openPayslip(${w.id})" style="padding:6px 12px;border-radius:8px;font-size:.78rem;font-weight:700;border:1.5px solid var(--b);background:#fff;color:var(--dk);cursor:pointer;white-space:nowrap">${t('boss_payslip_btn')}</button>
         <button class="boss-pay-approve${paid?' paid':''}" onclick="approvePay(${w.id},this)" ${paid?'disabled':''}>${paid?t('boss_pay_done'):t('boss_pay_accept')}</button>
       </div>
     </div>`;
@@ -3798,7 +3856,7 @@ function openPayslip(workerId) {
   const net       = gross - deduct;
 
   const fmt = v => v.toLocaleString() + '원';
-  document.getElementById('ps-month').textContent = `${bossCalYear}년 ${bossCalMonth+1}월 급여명세서`;
+  document.getElementById('ps-month').textContent = t('boss_payslip_title').replace('{y}', bossCalYear).replace('{m}', bossCalMonth+1);
   document.getElementById('ps-name').textContent = w.name;
   document.getElementById('ps-net').textContent = fmt(net);
   document.getElementById('ps-base').textContent = fmt(basePay);
@@ -3810,16 +3868,16 @@ function openPayslip(workerId) {
   document.getElementById('ps-deduct').textContent = fmt(deduct);
   document.getElementById('ps-calc-detail').innerHTML = `
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b)">
-      <span>기본급 (시급×기본근무시간 / 유급휴일수당 포함)</span>
-      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${baseHours.toFixed(1)}시간</span>
+      <span>${t('boss_payslip_base_detail')}</span>
+      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${baseHours.toFixed(1)}h</span>
     </div>
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b)">
-      <span>야간수당 (시급×0.5×야간근로시간)</span>
-      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${nightHours.toFixed(1)}시간</span>
+      <span>${t('boss_payslip_night_detail')}</span>
+      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${nightHours.toFixed(1)}h</span>
     </div>
     <div style="display:flex;justify-content:space-between;padding:6px 0">
-      <span>연장수당 (시급×0.5×연장시간)</span>
-      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${overtimeHours.toFixed(1)}시간</span>
+      <span>${t('boss_payslip_overtime_detail')}</span>
+      <span style="font-weight:700;white-space:nowrap;margin-left:8px">${overtimeHours.toFixed(1)}h</span>
     </div>
   `;
   openModal('payslipModal');
